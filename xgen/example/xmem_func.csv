@@ -1,0 +1,1275 @@
+#Apply the patch from openhevc_remove_fill_ref_sample_in_xmem2.patch
+func_name,is_array,offset,varname,dir,width,depth,remark
+innerloop_ff_hevc_extract_rbsp_1_hls,0,640,zero_i,in,8,1,
+innerloop_ff_hevc_extract_rbsp_1_hls,0,640,zero_o,out,8,1,
+innerloop_ff_hevc_extract_rbsp_1_hls,0,1116,loop_init,in,32,1,
+innerloop_ff_hevc_extract_rbsp_1_hls,0,1124,loop_len,in,32,1,
+innerloop_ff_hevc_extract_rbsp_1_hls,0,1120,loop_inc,in,32,1,
+innerloop_ff_hevc_extract_rbsp_1_hls,0,1128,loop_cnt,out,32,1,
+#innerloop_ff_hevc_extract_rbsp_2_hls,0,0,skipped_bytes_pos_is_null,in,8,1,apcall_arg
+innerloop_ff_hevc_extract_rbsp_2_hls,0,632,si_loop_i,in,32,1,
+innerloop_ff_hevc_extract_rbsp_2_hls,0,632,si_loop_o,out,32,1,
+innerloop_ff_hevc_extract_rbsp_2_hls,0,636,di_loop_i,in,32,1,
+innerloop_ff_hevc_extract_rbsp_2_hls,0,636,di_loop_o,out,32,1,
+innerloop_ff_hevc_extract_rbsp_2_hls,0,640,zero_i,in,8,1,
+innerloop_ff_hevc_extract_rbsp_2_hls,0,640,zero_o,out,8,1,
+innerloop_ff_hevc_extract_rbsp_2_hls,0,628,skipped_bytes_i,in,32,1,
+innerloop_ff_hevc_extract_rbsp_2_hls,0,628,skipped_bytes_o,out,32,1,
+innerloop_ff_hevc_extract_rbsp_2_hls,1,8232,skipped_bytes_pos_d0,out,32,1024,addr_width=10
+innerloop_ff_hevc_extract_rbsp_2_hls,0,1116,loop_init,in,32,1,
+innerloop_ff_hevc_extract_rbsp_2_hls,0,1124,loop_len,in,32,1,
+innerloop_ff_hevc_extract_rbsp_2_hls,0,1120,loop_inc,in,32,1,
+innerloop_ff_hevc_extract_rbsp_2_hls,0,1128,loop_cnt,out,32,1,
+#fill_ref_samples_mtdma_top_wrp,0,0,x0,in,13,1,apcall_arg
+#fill_ref_samples_mtdma_top_wrp,0,0,y0,in,13,1,apcall_arg
+#fill_ref_samples_mtdma_top_wrp,0,0,cidx,in,2,1,apcall_arg
+#fill_ref_samples_mtdma_top_wrp,0,0,mode,in,2,1,apcall_arg
+#fill_ref_samples_mtdma_top_wrp,0,0,log2TrSize_shifted,in,3,1,apcall_arg
+#fill_ref_samples_mtdma_top_wrp,0,0,shift,in,1,1,apcall_arg
+fill_ref_samples_mtdma_top_wrp,0,644,numIntraNeighbor,in,6,1,
+fill_ref_samples_mtdma_top_wrp,0,648,totalUnits,in,8,1,
+fill_ref_samples_mtdma_top_wrp,0,652,aboveUnits,in,8,1,
+fill_ref_samples_mtdma_top_wrp,0,656,leftUnits,in,8,1,
+fill_ref_samples_mtdma_top_wrp,0,660,unitWidth,in,8,1,
+fill_ref_samples_mtdma_top_wrp,0,664,unitHeight,in,8,1,
+fill_ref_samples_mtdma_top_wrp,0,668,log2TrSize,in,3,1,
+fill_ref_samples_mtdma_top_wrp,0,672,bNeighborFlags,in,65,1,
+fill_ref_samples_mtdma_top_wrp,0,684,numIntraNeighbor_c,in,6,1,
+fill_ref_samples_mtdma_top_wrp,0,688,totalUnits_c,in,8,1,
+fill_ref_samples_mtdma_top_wrp,0,692,aboveUnits_c,in,8,1,
+fill_ref_samples_mtdma_top_wrp,0,696,leftUnits_c,in,8,1,
+fill_ref_samples_mtdma_top_wrp,0,700,unitWidth_c,in,8,1,
+fill_ref_samples_mtdma_top_wrp,0,704,unitHeight_c,in,8,1,
+fill_ref_samples_mtdma_top_wrp,0,708,log2TrSize_c,in,3,1,
+fill_ref_samples_mtdma_top_wrp,0,712,bNeighborFlags_c,in,65,1,
+#hevc_find_frame_end_hls,0,0,buff_size_i,in,32,1,apcall_arg
+hevc_find_frame_end_hls,0,0,state64_i,in,64,1,
+hevc_find_frame_end_hls,0,0,state64_o,out,64,1,
+hevc_find_frame_end_hls,0,8,frame_start_found_i,in,32,1,
+hevc_find_frame_end_hls,0,8,frame_start_found_o,out,32,1,
+#intra_prediction_unit_ex_hls,0,0,x0,in,32,1,apcall_arg
+#intra_prediction_unit_ex_hls,0,0,y0,in,32,1,apcall_arg
+#intra_prediction_unit_ex_hls,0,0,log2_cb_size,in,32,1,apcall_arg
+intra_prediction_unit_ex_hls,1,520,prev_intra_luma_pred_flag_0_i,in,8,4,(complete partition) parent_func
+intra_prediction_unit_ex_hls,1,520,prev_intra_luma_pred_flag_0_o,out,8,4,(complete partition) parent_func
+intra_prediction_unit_ex_hls,1,521,prev_intra_luma_pred_flag_1_i,in,8,4,(complete partition) parent_func
+intra_prediction_unit_ex_hls,1,521,prev_intra_luma_pred_flag_1_o,out,8,4,(complete partition) parent_func
+intra_prediction_unit_ex_hls,1,522,prev_intra_luma_pred_flag_2_i,in,8,4,(complete partition) parent_func
+intra_prediction_unit_ex_hls,1,522,prev_intra_luma_pred_flag_2_o,out,8,4,(complete partition) parent_func
+intra_prediction_unit_ex_hls,1,523,prev_intra_luma_pred_flag_3_i,in,8,4,(complete partition) parent_func
+intra_prediction_unit_ex_hls,1,523,prev_intra_luma_pred_flag_3_o,out,8,4,(complete partition) parent_func
+intra_prediction_unit_ex_hls,0,564,part_mode,in,8,1,parent_func
+intra_prediction_unit_ex_hls,0,396,min_pu_width,in,32,1,parent_func
+intra_prediction_unit_ex_hls,0,372,log2_min_pu_size,in,32,1,parent_func
+intra_prediction_unit_ex_hls,0,360,log2_ctb_size,in,32,1,parent_func
+intra_prediction_unit_ex_hls,0,604,ctb_up_flag,in,8,1,parent_func
+intra_prediction_unit_ex_hls,0,608,ctb_left_flag,in,8,1,parent_func
+intra_prediction_unit_ex_hls,1,512,pu_intra_pred_mode_0_i,in,8,4,(complete partition) parent_func
+intra_prediction_unit_ex_hls,1,512,pu_intra_pred_mode_0_o,out,8,4,(complete partition) parent_func
+intra_prediction_unit_ex_hls,1,513,pu_intra_pred_mode_1_i,in,8,4,(complete partition) parent_func
+intra_prediction_unit_ex_hls,1,513,pu_intra_pred_mode_1_o,out,8,4,(complete partition) parent_func
+intra_prediction_unit_ex_hls,1,514,pu_intra_pred_mode_2_i,in,8,4,(complete partition) parent_func
+intra_prediction_unit_ex_hls,1,514,pu_intra_pred_mode_2_o,out,8,4,(complete partition) parent_func
+intra_prediction_unit_ex_hls,1,515,pu_intra_pred_mode_3_i,in,8,4,(complete partition) parent_func
+intra_prediction_unit_ex_hls,1,515,pu_intra_pred_mode_3_o,out,8,4,(complete partition) parent_func
+intra_prediction_unit_ex_hls,1,508,pu_chroma_mode_c_0,out,8,4,(complete partition) parent_func
+intra_prediction_unit_ex_hls,1,509,pu_chroma_mode_c_1,out,8,4,(complete partition) parent_func
+intra_prediction_unit_ex_hls,1,510,pu_chroma_mode_c_2,out,8,4,(complete partition) parent_func
+intra_prediction_unit_ex_hls,1,511,pu_chroma_mode_c_3,out,8,4,(complete partition) parent_func
+intra_prediction_unit_ex_hls,1,516,pu_intra_pred_mode_c_0,out,8,4,(complete partition) parent_func
+intra_prediction_unit_ex_hls,1,517,pu_intra_pred_mode_c_1,out,8,4,(complete partition) parent_func
+intra_prediction_unit_ex_hls,1,518,pu_intra_pred_mode_c_2,out,8,4,(complete partition) parent_func
+intra_prediction_unit_ex_hls,1,519,pu_intra_pred_mode_c_3,out,8,4,(complete partition) parent_func
+intra_prediction_unit_ex_hls,0,324,chroma_array_type,in,32,1,parent_func
+intra_prediction_unit_ex_hls,0,576,max_trafo_depth,out,8,1,parent_func
+intra_prediction_unit_ex_hls,0,384,max_transform_hierarchy_depth_intra,in,32,1,parent_func
+intra_prediction_unit_ex_hls,0,568,intra_split_flag,in,8,1,parent_func
+intra_prediction_unit_ex_hls,0,1252,dc_tab_ipm_p,in,32,1,xmem_dcache_pointer parent_func
+#hls_transform_unit_ex_hls,0,0,tid,in,32,1,apcall_arg
+#hls_transform_unit_ex_hls,0,0,x0,in,32,1,apcall_arg
+#hls_transform_unit_ex_hls,0,0,y0,in,32,1,apcall_arg
+#hls_transform_unit_ex_hls,0,0,xBase,in,32,1,apcall_arg
+#hls_transform_unit_ex_hls,0,0,yBase,in,32,1,apcall_arg
+#hls_transform_unit_ex_hls,0,0,log2_cb_size,in,32,1,apcall_arg
+#hls_transform_unit_ex_hls,0,0,log2_size,in,32,1,apcall_arg
+#hls_transform_unit_ex_hls,0,0,blk_idx,in,32,1,apcall_arg
+hls_transform_unit_ex_hls,0,20,cbf_luma,in,32,1,parent_func
+hls_transform_unit_ex_hls,0,16,cbf_data,in,8,1,parent_func
+hls_transform_unit_ex_hls,0,1260,dc_min_tb_addr_zs_p,in,32,1,xmem_dcache_pointer parent_func
+hls_transform_unit_ex_hls,0,1156,chroma_qp_offset_list_len_minus1,in,8,1,parent_func
+hls_transform_unit_ex_hls,0,1264,dc_cb_qp_offset_list_p,in,32,1,xmem_dcache_pointer parent_func
+hls_transform_unit_ex_hls,0,1268,dc_cr_qp_offset_list_p,in,32,1,xmem_dcache_pointer parent_func
+hls_transform_unit_ex_hls,0,1132,qp_bd_offset,in,32,1,parent_func
+hls_transform_unit_ex_hls,0,1272,dc_qp_y_tab_p,in,32,1,xmem_dcache_pointer parent_func
+hls_transform_unit_ex_hls,0,560,pred_mode,in,8,1,parent_func
+hls_transform_unit_ex_hls,1,336,hshift_0,in,32,3,(complete partition) parent_func
+hls_transform_unit_ex_hls,1,340,hshift_1,in,32,3,(complete partition) parent_func
+hls_transform_unit_ex_hls,1,344,hshift_2,in,32,3,(complete partition) parent_func
+hls_transform_unit_ex_hls,1,348,vshift_0,in,32,3,(complete partition) parent_func
+hls_transform_unit_ex_hls,1,352,vshift_1,in,32,3,(complete partition) parent_func
+hls_transform_unit_ex_hls,1,356,vshift_2,in,32,3,(complete partition) parent_func
+hls_transform_unit_ex_hls,0,484,tu_intra_pred_mode,in,32,1,parent_func
+hls_transform_unit_ex_hls,0,488,tu_intra_pred_mode_c,in,32,1,parent_func
+hls_transform_unit_ex_hls,0,572,cu_transquant_bypass_flag,in,8,1,parent_func
+hls_transform_unit_ex_hls,0,492,tu_cu_qp_offset_cb,out,8,1,parent_func
+hls_transform_unit_ex_hls,0,496,tu_cu_qp_offset_cr,out,8,1,parent_func
+hls_transform_unit_ex_hls,0,536,qp_y_i,in,8,1,parent_func
+hls_transform_unit_ex_hls,0,536,qp_y_o,out,8,1,parent_func
+hls_transform_unit_ex_hls,0,168,log2_trafo_size,out,32,1,parent_func
+hls_transform_unit_ex_hls,0,56,log2_trafo_size_c_i,in,8,1,parent_func
+hls_transform_unit_ex_hls,0,56,log2_trafo_size_c_o,out,8,1,parent_func
+hls_transform_unit_ex_hls,0,48,scan_idx_i,in,8,1,parent_func
+hls_transform_unit_ex_hls,0,48,scan_idx_o,out,8,1,parent_func
+hls_transform_unit_ex_hls,0,52,scan_idx_c,out,8,1,parent_func
+hls_transform_unit_ex_hls,0,1136,cmdr_run_i,in,8,1,parent_func
+hls_transform_unit_ex_hls,0,1136,cmdr_run_o,out,8,1,parent_func
+hls_transform_unit_ex_hls,1,1240,buf_data_0,in,32,3,(complete partition) parent_func
+hls_transform_unit_ex_hls,1,1244,buf_data_1,in,32,3,(complete partition) parent_func
+hls_transform_unit_ex_hls,1,1248,buf_data_2,in,32,3,(complete partition) parent_func
+hls_transform_unit_ex_hls,1,1144,xm_linesize_0,in,32,3,(complete partition) parent_func
+hls_transform_unit_ex_hls,1,1148,xm_linesize_1,in,32,3,(complete partition) parent_func
+hls_transform_unit_ex_hls,1,1152,xm_linesize_2,in,32,3,(complete partition) parent_func
+hls_transform_unit_ex_hls,0,1140,pixel_shift,in,32,1,parent_func
+hls_transform_unit_ex_hls,0,160,nPbW,out,32,1,parent_func
+hls_transform_unit_ex_hls,0,164,nPbH,out,32,1,parent_func
+hls_transform_unit_ex_hls,0,580,cand_up,out,1,1,parent_func
+hls_transform_unit_ex_hls,0,584,cand_left,out,1,1,parent_func
+hls_transform_unit_ex_hls,0,588,cand_up_left,out,1,1,parent_func
+hls_transform_unit_ex_hls,0,592,cand_up_right_sap,out,1,1,parent_func
+hls_transform_unit_ex_hls,0,596,cand_up_right,out,1,1,parent_func
+hls_transform_unit_ex_hls,0,600,cand_bottom_left_i,in,1,1,parent_func
+hls_transform_unit_ex_hls,0,600,cand_bottom_left_o,out,1,1,parent_func
+hls_transform_unit_ex_hls,0,1488,cand_up_c,out,1,1,parent_func
+hls_transform_unit_ex_hls,0,1492,cand_left_c,out,1,1,parent_func
+hls_transform_unit_ex_hls,0,1496,cand_up_left_c,out,1,1,parent_func
+hls_transform_unit_ex_hls,0,1500,cand_up_right_sap_c,out,1,1,parent_func
+hls_transform_unit_ex_hls,0,1504,cand_up_right_c,out,1,1,parent_func
+hls_transform_unit_ex_hls,0,1508,cand_bottom_left_c_i,in,1,1,parent_func
+hls_transform_unit_ex_hls,0,1508,cand_bottom_left_c_o,out,1,1,parent_func
+hls_transform_unit_ex_hls,0,360,log2_ctb_size,in,32,1,parent_func
+hls_transform_unit_ex_hls,0,604,ctb_up_flag,in,1,1,parent_func
+hls_transform_unit_ex_hls,0,608,ctb_left_flag,in,1,1,parent_func
+hls_transform_unit_ex_hls,0,612,ctb_up_left_flag,in,1,1,parent_func
+hls_transform_unit_ex_hls,0,616,ctb_up_right_flag,in,1,1,parent_func
+hls_transform_unit_ex_hls,0,620,end_of_tiles_x,in,16,1,parent_func
+hls_transform_unit_ex_hls,0,624,end_of_tiles_y,in,16,1,parent_func
+hls_transform_unit_ex_hls,0,472,tu_is_cu_chroma_qp_offset_coded_i,in,8,1,parent_func
+hls_transform_unit_ex_hls,0,472,tu_is_cu_chroma_qp_offset_coded_o,out,8,1,parent_func
+hls_transform_unit_ex_hls,0,476,tu_is_cu_qp_delta_coded_i,in,8,1,parent_func
+hls_transform_unit_ex_hls,0,476,tu_is_cu_qp_delta_coded_o,out,8,1,parent_func
+hls_transform_unit_ex_hls,0,468,tu_cu_qp_delta,out,32,1,parent_func
+hls_transform_unit_ex_hls,0,500,tu_cross_pf,out,8,1,parent_func
+hls_transform_unit_ex_hls,0,532,first_qp_group_i,in,8,1,parent_func
+hls_transform_unit_ex_hls,0,532,first_qp_group_o,out,8,1,parent_func
+hls_transform_unit_ex_hls,0,328,chroma_format_idc,in,32,1,parent_func
+hls_transform_unit_ex_hls,0,448,cu_chroma_qp_offset_enabled_flag,in,8,1,parent_func
+hls_transform_unit_ex_hls,0,428,cu_qp_delta_enabled_flag,in,8,1,parent_func
+hls_transform_unit_ex_hls,0,540,qPy_pred,in,32,1,parent_func
+hls_transform_unit_ex_hls,0,436,diff_cu_qp_delta_depth,in,32,1,parent_func
+hls_transform_unit_ex_hls,0,368,log2_min_cb_size,in,32,1,parent_func
+hls_transform_unit_ex_hls,0,392,min_cb_width,in,32,1,parent_func
+hls_transform_unit_ex_hls,0,460,slice_qp,in,8,1,parent_func
+#hls_transform_unit_ex_hls_dup1,0,0,tid,in,32,1,apcall_arg
+#hls_transform_unit_ex_hls_dup1,0,0,x0,in,32,1,apcall_arg
+#hls_transform_unit_ex_hls_dup1,0,0,y0,in,32,1,apcall_arg
+#hls_transform_unit_ex_hls_dup1,0,0,xBase,in,32,1,apcall_arg
+#hls_transform_unit_ex_hls_dup1,0,0,yBase,in,32,1,apcall_arg
+#hls_transform_unit_ex_hls_dup1,0,0,log2_cb_size,in,32,1,apcall_arg
+#hls_transform_unit_ex_hls_dup1,0,0,log2_size,in,32,1,apcall_arg
+#hls_transform_unit_ex_hls_dup1,0,0,blk_idx,in,32,1,apcall_arg
+hls_transform_unit_ex_hls_dup1,0,20,cbf_luma,in,32,1,parent_func
+hls_transform_unit_ex_hls_dup1,0,16,cbf_data,in,8,1,parent_func
+hls_transform_unit_ex_hls_dup1,0,1260,dc_min_tb_addr_zs_p,in,32,1,xmem_dcache_pointer parent_func
+hls_transform_unit_ex_hls_dup1,0,1156,chroma_qp_offset_list_len_minus1,in,8,1,parent_func
+hls_transform_unit_ex_hls_dup1,0,1264,dc_cb_qp_offset_list_p,in,32,1,xmem_dcache_pointer parent_func
+hls_transform_unit_ex_hls_dup1,0,1268,dc_cr_qp_offset_list_p,in,32,1,xmem_dcache_pointer parent_func
+hls_transform_unit_ex_hls_dup1,0,1132,qp_bd_offset,in,32,1,parent_func
+hls_transform_unit_ex_hls_dup1,0,1272,dc_qp_y_tab_p,in,32,1,xmem_dcache_pointer parent_func
+hls_transform_unit_ex_hls_dup1,0,560,pred_mode,in,8,1,parent_func
+hls_transform_unit_ex_hls_dup1,1,336,hshift_0,in,32,3,(complete partition) parent_func
+hls_transform_unit_ex_hls_dup1,1,340,hshift_1,in,32,3,(complete partition) parent_func
+hls_transform_unit_ex_hls_dup1,1,344,hshift_2,in,32,3,(complete partition) parent_func
+hls_transform_unit_ex_hls_dup1,1,348,vshift_0,in,32,3,(complete partition) parent_func
+hls_transform_unit_ex_hls_dup1,1,352,vshift_1,in,32,3,(complete partition) parent_func
+hls_transform_unit_ex_hls_dup1,1,356,vshift_2,in,32,3,(complete partition) parent_func
+hls_transform_unit_ex_hls_dup1,0,484,tu_intra_pred_mode,in,32,1,parent_func
+hls_transform_unit_ex_hls_dup1,0,488,tu_intra_pred_mode_c,in,32,1,parent_func
+hls_transform_unit_ex_hls_dup1,0,572,cu_transquant_bypass_flag,in,8,1,parent_func
+hls_transform_unit_ex_hls_dup1,0,492,tu_cu_qp_offset_cb,out,8,1,parent_func
+hls_transform_unit_ex_hls_dup1,0,496,tu_cu_qp_offset_cr,out,8,1,parent_func
+hls_transform_unit_ex_hls_dup1,0,536,qp_y_i,in,8,1,parent_func
+hls_transform_unit_ex_hls_dup1,0,536,qp_y_o,out,8,1,parent_func
+hls_transform_unit_ex_hls_dup1,0,168,log2_trafo_size,out,32,1,parent_func
+hls_transform_unit_ex_hls_dup1,0,56,log2_trafo_size_c_i,in,8,1,parent_func
+hls_transform_unit_ex_hls_dup1,0,56,log2_trafo_size_c_o,out,8,1,parent_func
+hls_transform_unit_ex_hls_dup1,0,48,scan_idx_i,in,8,1,parent_func
+hls_transform_unit_ex_hls_dup1,0,48,scan_idx_o,out,8,1,parent_func
+hls_transform_unit_ex_hls_dup1,0,52,scan_idx_c,out,8,1,parent_func
+hls_transform_unit_ex_hls_dup1,0,1136,cmdr_run_i,in,8,1,parent_func
+hls_transform_unit_ex_hls_dup1,0,1136,cmdr_run_o,out,8,1,parent_func
+hls_transform_unit_ex_hls_dup1,1,1240,buf_data_0,in,32,3,(complete partition) parent_func
+hls_transform_unit_ex_hls_dup1,1,1244,buf_data_1,in,32,3,(complete partition) parent_func
+hls_transform_unit_ex_hls_dup1,1,1248,buf_data_2,in,32,3,(complete partition) parent_func
+hls_transform_unit_ex_hls_dup1,1,1144,xm_linesize_0,in,32,3,(complete partition) parent_func
+hls_transform_unit_ex_hls_dup1,1,1148,xm_linesize_1,in,32,3,(complete partition) parent_func
+hls_transform_unit_ex_hls_dup1,1,1152,xm_linesize_2,in,32,3,(complete partition) parent_func
+hls_transform_unit_ex_hls_dup1,0,1140,pixel_shift,in,32,1,parent_func
+hls_transform_unit_ex_hls_dup1,0,160,nPbW,out,32,1,parent_func
+hls_transform_unit_ex_hls_dup1,0,164,nPbH,out,32,1,parent_func
+hls_transform_unit_ex_hls_dup1,0,580,cand_up,out,1,1,parent_func
+hls_transform_unit_ex_hls_dup1,0,584,cand_left,out,1,1,parent_func
+hls_transform_unit_ex_hls_dup1,0,588,cand_up_left,out,1,1,parent_func
+hls_transform_unit_ex_hls_dup1,0,592,cand_up_right_sap,out,1,1,parent_func
+hls_transform_unit_ex_hls_dup1,0,596,cand_up_right,out,1,1,parent_func
+hls_transform_unit_ex_hls_dup1,0,600,cand_bottom_left_i,in,1,1,parent_func
+hls_transform_unit_ex_hls_dup1,0,600,cand_bottom_left_o,out,1,1,parent_func
+hls_transform_unit_ex_hls_dup1,0,1488,cand_up_c,out,1,1,parent_func
+hls_transform_unit_ex_hls_dup1,0,1492,cand_left_c,out,1,1,parent_func
+hls_transform_unit_ex_hls_dup1,0,1496,cand_up_left_c,out,1,1,parent_func
+hls_transform_unit_ex_hls_dup1,0,1500,cand_up_right_sap_c,out,1,1,parent_func
+hls_transform_unit_ex_hls_dup1,0,1504,cand_up_right_c,out,1,1,parent_func
+hls_transform_unit_ex_hls_dup1,0,1508,cand_bottom_left_c_i,in,1,1,parent_func
+hls_transform_unit_ex_hls_dup1,0,1508,cand_bottom_left_c_o,out,1,1,parent_func
+hls_transform_unit_ex_hls_dup1,0,360,log2_ctb_size,in,32,1,parent_func
+hls_transform_unit_ex_hls_dup1,0,604,ctb_up_flag,in,1,1,parent_func
+hls_transform_unit_ex_hls_dup1,0,608,ctb_left_flag,in,1,1,parent_func
+hls_transform_unit_ex_hls_dup1,0,612,ctb_up_left_flag,in,1,1,parent_func
+hls_transform_unit_ex_hls_dup1,0,616,ctb_up_right_flag,in,1,1,parent_func
+hls_transform_unit_ex_hls_dup1,0,620,end_of_tiles_x,in,16,1,parent_func
+hls_transform_unit_ex_hls_dup1,0,624,end_of_tiles_y,in,16,1,parent_func
+hls_transform_unit_ex_hls_dup1,0,472,tu_is_cu_chroma_qp_offset_coded_i,in,8,1,parent_func
+hls_transform_unit_ex_hls_dup1,0,472,tu_is_cu_chroma_qp_offset_coded_o,out,8,1,parent_func
+hls_transform_unit_ex_hls_dup1,0,476,tu_is_cu_qp_delta_coded_i,in,8,1,parent_func
+hls_transform_unit_ex_hls_dup1,0,476,tu_is_cu_qp_delta_coded_o,out,8,1,parent_func
+hls_transform_unit_ex_hls_dup1,0,468,tu_cu_qp_delta,out,32,1,parent_func
+hls_transform_unit_ex_hls_dup1,0,500,tu_cross_pf,out,8,1,parent_func
+hls_transform_unit_ex_hls_dup1,0,532,first_qp_group_i,in,8,1,parent_func
+hls_transform_unit_ex_hls_dup1,0,532,first_qp_group_o,out,8,1,parent_func
+hls_transform_unit_ex_hls_dup1,0,328,chroma_format_idc,in,32,1,parent_func
+hls_transform_unit_ex_hls_dup1,0,448,cu_chroma_qp_offset_enabled_flag,in,8,1,parent_func
+hls_transform_unit_ex_hls_dup1,0,428,cu_qp_delta_enabled_flag,in,8,1,parent_func
+hls_transform_unit_ex_hls_dup1,0,540,qPy_pred,in,32,1,parent_func
+hls_transform_unit_ex_hls_dup1,0,436,diff_cu_qp_delta_depth,in,32,1,parent_func
+hls_transform_unit_ex_hls_dup1,0,368,log2_min_cb_size,in,32,1,parent_func
+hls_transform_unit_ex_hls_dup1,0,392,min_cb_width,in,32,1,parent_func
+hls_transform_unit_ex_hls_dup1,0,460,slice_qp,in,8,1,parent_func
+#hls_transform_unit_ex_hls_dup2,0,0,tid,in,32,1,apcall_arg
+#hls_transform_unit_ex_hls_dup2,0,0,x0,in,32,1,apcall_arg
+#hls_transform_unit_ex_hls_dup2,0,0,y0,in,32,1,apcall_arg
+#hls_transform_unit_ex_hls_dup2,0,0,xBase,in,32,1,apcall_arg
+#hls_transform_unit_ex_hls_dup2,0,0,yBase,in,32,1,apcall_arg
+#hls_transform_unit_ex_hls_dup2,0,0,log2_cb_size,in,32,1,apcall_arg
+#hls_transform_unit_ex_hls_dup2,0,0,log2_size,in,32,1,apcall_arg
+#hls_transform_unit_ex_hls_dup2,0,0,blk_idx,in,32,1,apcall_arg
+hls_transform_unit_ex_hls_dup2,0,20,cbf_luma,in,32,1,parent_func
+hls_transform_unit_ex_hls_dup2,0,16,cbf_data,in,8,1,parent_func
+hls_transform_unit_ex_hls_dup2,0,1260,dc_min_tb_addr_zs_p,in,32,1,xmem_dcache_pointer parent_func
+hls_transform_unit_ex_hls_dup2,0,1156,chroma_qp_offset_list_len_minus1,in,8,1,parent_func
+hls_transform_unit_ex_hls_dup2,0,1264,dc_cb_qp_offset_list_p,in,32,1,xmem_dcache_pointer parent_func
+hls_transform_unit_ex_hls_dup2,0,1268,dc_cr_qp_offset_list_p,in,32,1,xmem_dcache_pointer parent_func
+hls_transform_unit_ex_hls_dup2,0,1132,qp_bd_offset,in,32,1,parent_func
+hls_transform_unit_ex_hls_dup2,0,1272,dc_qp_y_tab_p,in,32,1,xmem_dcache_pointer parent_func
+hls_transform_unit_ex_hls_dup2,0,560,pred_mode,in,8,1,parent_func
+hls_transform_unit_ex_hls_dup2,1,336,hshift_0,in,32,3,(complete partition) parent_func
+hls_transform_unit_ex_hls_dup2,1,340,hshift_1,in,32,3,(complete partition) parent_func
+hls_transform_unit_ex_hls_dup2,1,344,hshift_2,in,32,3,(complete partition) parent_func
+hls_transform_unit_ex_hls_dup2,1,348,vshift_0,in,32,3,(complete partition) parent_func
+hls_transform_unit_ex_hls_dup2,1,352,vshift_1,in,32,3,(complete partition) parent_func
+hls_transform_unit_ex_hls_dup2,1,356,vshift_2,in,32,3,(complete partition) parent_func
+hls_transform_unit_ex_hls_dup2,0,484,tu_intra_pred_mode,in,32,1,parent_func
+hls_transform_unit_ex_hls_dup2,0,488,tu_intra_pred_mode_c,in,32,1,parent_func
+hls_transform_unit_ex_hls_dup2,0,572,cu_transquant_bypass_flag,in,8,1,parent_func
+hls_transform_unit_ex_hls_dup2,0,492,tu_cu_qp_offset_cb,out,8,1,parent_func
+hls_transform_unit_ex_hls_dup2,0,496,tu_cu_qp_offset_cr,out,8,1,parent_func
+hls_transform_unit_ex_hls_dup2,0,536,qp_y_i,in,8,1,parent_func
+hls_transform_unit_ex_hls_dup2,0,536,qp_y_o,out,8,1,parent_func
+hls_transform_unit_ex_hls_dup2,0,168,log2_trafo_size,out,32,1,parent_func
+hls_transform_unit_ex_hls_dup2,0,56,log2_trafo_size_c_i,in,8,1,parent_func
+hls_transform_unit_ex_hls_dup2,0,56,log2_trafo_size_c_o,out,8,1,parent_func
+hls_transform_unit_ex_hls_dup2,0,48,scan_idx_i,in,8,1,parent_func
+hls_transform_unit_ex_hls_dup2,0,48,scan_idx_o,out,8,1,parent_func
+hls_transform_unit_ex_hls_dup2,0,52,scan_idx_c,out,8,1,parent_func
+hls_transform_unit_ex_hls_dup2,0,1136,cmdr_run_i,in,8,1,parent_func
+hls_transform_unit_ex_hls_dup2,0,1136,cmdr_run_o,out,8,1,parent_func
+hls_transform_unit_ex_hls_dup2,1,1240,buf_data_0,in,32,3,(complete partition) parent_func
+hls_transform_unit_ex_hls_dup2,1,1244,buf_data_1,in,32,3,(complete partition) parent_func
+hls_transform_unit_ex_hls_dup2,1,1248,buf_data_2,in,32,3,(complete partition) parent_func
+hls_transform_unit_ex_hls_dup2,1,1144,xm_linesize_0,in,32,3,(complete partition) parent_func
+hls_transform_unit_ex_hls_dup2,1,1148,xm_linesize_1,in,32,3,(complete partition) parent_func
+hls_transform_unit_ex_hls_dup2,1,1152,xm_linesize_2,in,32,3,(complete partition) parent_func
+hls_transform_unit_ex_hls_dup2,0,1140,pixel_shift,in,32,1,parent_func
+hls_transform_unit_ex_hls_dup2,0,160,nPbW,out,32,1,parent_func
+hls_transform_unit_ex_hls_dup2,0,164,nPbH,out,32,1,parent_func
+hls_transform_unit_ex_hls_dup2,0,580,cand_up,out,1,1,parent_func
+hls_transform_unit_ex_hls_dup2,0,584,cand_left,out,1,1,parent_func
+hls_transform_unit_ex_hls_dup2,0,588,cand_up_left,out,1,1,parent_func
+hls_transform_unit_ex_hls_dup2,0,592,cand_up_right_sap,out,1,1,parent_func
+hls_transform_unit_ex_hls_dup2,0,596,cand_up_right,out,1,1,parent_func
+hls_transform_unit_ex_hls_dup2,0,600,cand_bottom_left_i,in,1,1,parent_func
+hls_transform_unit_ex_hls_dup2,0,600,cand_bottom_left_o,out,1,1,parent_func
+hls_transform_unit_ex_hls_dup2,0,1488,cand_up_c,out,1,1,parent_func
+hls_transform_unit_ex_hls_dup2,0,1492,cand_left_c,out,1,1,parent_func
+hls_transform_unit_ex_hls_dup2,0,1496,cand_up_left_c,out,1,1,parent_func
+hls_transform_unit_ex_hls_dup2,0,1500,cand_up_right_sap_c,out,1,1,parent_func
+hls_transform_unit_ex_hls_dup2,0,1504,cand_up_right_c,out,1,1,parent_func
+hls_transform_unit_ex_hls_dup2,0,1508,cand_bottom_left_c_i,in,1,1,parent_func
+hls_transform_unit_ex_hls_dup2,0,1508,cand_bottom_left_c_o,out,1,1,parent_func
+hls_transform_unit_ex_hls_dup2,0,360,log2_ctb_size,in,32,1,parent_func
+hls_transform_unit_ex_hls_dup2,0,604,ctb_up_flag,in,1,1,parent_func
+hls_transform_unit_ex_hls_dup2,0,608,ctb_left_flag,in,1,1,parent_func
+hls_transform_unit_ex_hls_dup2,0,612,ctb_up_left_flag,in,1,1,parent_func
+hls_transform_unit_ex_hls_dup2,0,616,ctb_up_right_flag,in,1,1,parent_func
+hls_transform_unit_ex_hls_dup2,0,620,end_of_tiles_x,in,16,1,parent_func
+hls_transform_unit_ex_hls_dup2,0,624,end_of_tiles_y,in,16,1,parent_func
+hls_transform_unit_ex_hls_dup2,0,472,tu_is_cu_chroma_qp_offset_coded_i,in,8,1,parent_func
+hls_transform_unit_ex_hls_dup2,0,472,tu_is_cu_chroma_qp_offset_coded_o,out,8,1,parent_func
+hls_transform_unit_ex_hls_dup2,0,476,tu_is_cu_qp_delta_coded_i,in,8,1,parent_func
+hls_transform_unit_ex_hls_dup2,0,476,tu_is_cu_qp_delta_coded_o,out,8,1,parent_func
+hls_transform_unit_ex_hls_dup2,0,468,tu_cu_qp_delta,out,32,1,parent_func
+hls_transform_unit_ex_hls_dup2,0,500,tu_cross_pf,out,8,1,parent_func
+hls_transform_unit_ex_hls_dup2,0,532,first_qp_group_i,in,8,1,parent_func
+hls_transform_unit_ex_hls_dup2,0,532,first_qp_group_o,out,8,1,parent_func
+hls_transform_unit_ex_hls_dup2,0,328,chroma_format_idc,in,32,1,parent_func
+hls_transform_unit_ex_hls_dup2,0,448,cu_chroma_qp_offset_enabled_flag,in,8,1,parent_func
+hls_transform_unit_ex_hls_dup2,0,428,cu_qp_delta_enabled_flag,in,8,1,parent_func
+hls_transform_unit_ex_hls_dup2,0,540,qPy_pred,in,32,1,parent_func
+hls_transform_unit_ex_hls_dup2,0,436,diff_cu_qp_delta_depth,in,32,1,parent_func
+hls_transform_unit_ex_hls_dup2,0,368,log2_min_cb_size,in,32,1,parent_func
+hls_transform_unit_ex_hls_dup2,0,392,min_cb_width,in,32,1,parent_func
+hls_transform_unit_ex_hls_dup2,0,460,slice_qp,in,8,1,parent_func
+#hls_transform_unit_ex_hls_dup3,0,0,tid,in,32,1,apcall_arg
+#hls_transform_unit_ex_hls_dup3,0,0,x0,in,32,1,apcall_arg
+#hls_transform_unit_ex_hls_dup3,0,0,y0,in,32,1,apcall_arg
+#hls_transform_unit_ex_hls_dup3,0,0,xBase,in,32,1,apcall_arg
+#hls_transform_unit_ex_hls_dup3,0,0,yBase,in,32,1,apcall_arg
+#hls_transform_unit_ex_hls_dup3,0,0,log2_cb_size,in,32,1,apcall_arg
+#hls_transform_unit_ex_hls_dup3,0,0,log2_size,in,32,1,apcall_arg
+#hls_transform_unit_ex_hls_dup3,0,0,blk_idx,in,32,1,apcall_arg
+hls_transform_unit_ex_hls_dup3,0,20,cbf_luma,in,32,1,parent_func
+hls_transform_unit_ex_hls_dup3,0,16,cbf_data,in,8,1,parent_func
+hls_transform_unit_ex_hls_dup3,0,1260,dc_min_tb_addr_zs_p,in,32,1,xmem_dcache_pointer parent_func
+hls_transform_unit_ex_hls_dup3,0,1156,chroma_qp_offset_list_len_minus1,in,8,1,parent_func
+hls_transform_unit_ex_hls_dup3,0,1264,dc_cb_qp_offset_list_p,in,32,1,xmem_dcache_pointer parent_func
+hls_transform_unit_ex_hls_dup3,0,1268,dc_cr_qp_offset_list_p,in,32,1,xmem_dcache_pointer parent_func
+hls_transform_unit_ex_hls_dup3,0,1132,qp_bd_offset,in,32,1,parent_func
+hls_transform_unit_ex_hls_dup3,0,1272,dc_qp_y_tab_p,in,32,1,xmem_dcache_pointer parent_func
+hls_transform_unit_ex_hls_dup3,0,560,pred_mode,in,8,1,parent_func
+hls_transform_unit_ex_hls_dup3,1,336,hshift_0,in,32,3,(complete partition) parent_func
+hls_transform_unit_ex_hls_dup3,1,340,hshift_1,in,32,3,(complete partition) parent_func
+hls_transform_unit_ex_hls_dup3,1,344,hshift_2,in,32,3,(complete partition) parent_func
+hls_transform_unit_ex_hls_dup3,1,348,vshift_0,in,32,3,(complete partition) parent_func
+hls_transform_unit_ex_hls_dup3,1,352,vshift_1,in,32,3,(complete partition) parent_func
+hls_transform_unit_ex_hls_dup3,1,356,vshift_2,in,32,3,(complete partition) parent_func
+hls_transform_unit_ex_hls_dup3,0,484,tu_intra_pred_mode,in,32,1,parent_func
+hls_transform_unit_ex_hls_dup3,0,488,tu_intra_pred_mode_c,in,32,1,parent_func
+hls_transform_unit_ex_hls_dup3,0,572,cu_transquant_bypass_flag,in,8,1,parent_func
+hls_transform_unit_ex_hls_dup3,0,492,tu_cu_qp_offset_cb,out,8,1,parent_func
+hls_transform_unit_ex_hls_dup3,0,496,tu_cu_qp_offset_cr,out,8,1,parent_func
+hls_transform_unit_ex_hls_dup3,0,536,qp_y_i,in,8,1,parent_func
+hls_transform_unit_ex_hls_dup3,0,536,qp_y_o,out,8,1,parent_func
+hls_transform_unit_ex_hls_dup3,0,168,log2_trafo_size,out,32,1,parent_func
+hls_transform_unit_ex_hls_dup3,0,56,log2_trafo_size_c_i,in,8,1,parent_func
+hls_transform_unit_ex_hls_dup3,0,56,log2_trafo_size_c_o,out,8,1,parent_func
+hls_transform_unit_ex_hls_dup3,0,48,scan_idx_i,in,8,1,parent_func
+hls_transform_unit_ex_hls_dup3,0,48,scan_idx_o,out,8,1,parent_func
+hls_transform_unit_ex_hls_dup3,0,52,scan_idx_c,out,8,1,parent_func
+hls_transform_unit_ex_hls_dup3,0,1136,cmdr_run_i,in,8,1,parent_func
+hls_transform_unit_ex_hls_dup3,0,1136,cmdr_run_o,out,8,1,parent_func
+hls_transform_unit_ex_hls_dup3,1,1240,buf_data_0,in,32,3,(complete partition) parent_func
+hls_transform_unit_ex_hls_dup3,1,1244,buf_data_1,in,32,3,(complete partition) parent_func
+hls_transform_unit_ex_hls_dup3,1,1248,buf_data_2,in,32,3,(complete partition) parent_func
+hls_transform_unit_ex_hls_dup3,1,1144,xm_linesize_0,in,32,3,(complete partition) parent_func
+hls_transform_unit_ex_hls_dup3,1,1148,xm_linesize_1,in,32,3,(complete partition) parent_func
+hls_transform_unit_ex_hls_dup3,1,1152,xm_linesize_2,in,32,3,(complete partition) parent_func
+hls_transform_unit_ex_hls_dup3,0,1140,pixel_shift,in,32,1,parent_func
+hls_transform_unit_ex_hls_dup3,0,160,nPbW,out,32,1,parent_func
+hls_transform_unit_ex_hls_dup3,0,164,nPbH,out,32,1,parent_func
+hls_transform_unit_ex_hls_dup3,0,580,cand_up,out,1,1,parent_func
+hls_transform_unit_ex_hls_dup3,0,584,cand_left,out,1,1,parent_func
+hls_transform_unit_ex_hls_dup3,0,588,cand_up_left,out,1,1,parent_func
+hls_transform_unit_ex_hls_dup3,0,592,cand_up_right_sap,out,1,1,parent_func
+hls_transform_unit_ex_hls_dup3,0,596,cand_up_right,out,1,1,parent_func
+hls_transform_unit_ex_hls_dup3,0,600,cand_bottom_left_i,in,1,1,parent_func
+hls_transform_unit_ex_hls_dup3,0,600,cand_bottom_left_o,out,1,1,parent_func
+hls_transform_unit_ex_hls_dup3,0,1488,cand_up_c,out,1,1,parent_func
+hls_transform_unit_ex_hls_dup3,0,1492,cand_left_c,out,1,1,parent_func
+hls_transform_unit_ex_hls_dup3,0,1496,cand_up_left_c,out,1,1,parent_func
+hls_transform_unit_ex_hls_dup3,0,1500,cand_up_right_sap_c,out,1,1,parent_func
+hls_transform_unit_ex_hls_dup3,0,1504,cand_up_right_c,out,1,1,parent_func
+hls_transform_unit_ex_hls_dup3,0,1508,cand_bottom_left_c_i,in,1,1,parent_func
+hls_transform_unit_ex_hls_dup3,0,1508,cand_bottom_left_c_o,out,1,1,parent_func
+hls_transform_unit_ex_hls_dup3,0,360,log2_ctb_size,in,32,1,parent_func
+hls_transform_unit_ex_hls_dup3,0,604,ctb_up_flag,in,1,1,parent_func
+hls_transform_unit_ex_hls_dup3,0,608,ctb_left_flag,in,1,1,parent_func
+hls_transform_unit_ex_hls_dup3,0,612,ctb_up_left_flag,in,1,1,parent_func
+hls_transform_unit_ex_hls_dup3,0,616,ctb_up_right_flag,in,1,1,parent_func
+hls_transform_unit_ex_hls_dup3,0,620,end_of_tiles_x,in,16,1,parent_func
+hls_transform_unit_ex_hls_dup3,0,624,end_of_tiles_y,in,16,1,parent_func
+hls_transform_unit_ex_hls_dup3,0,472,tu_is_cu_chroma_qp_offset_coded_i,in,8,1,parent_func
+hls_transform_unit_ex_hls_dup3,0,472,tu_is_cu_chroma_qp_offset_coded_o,out,8,1,parent_func
+hls_transform_unit_ex_hls_dup3,0,476,tu_is_cu_qp_delta_coded_i,in,8,1,parent_func
+hls_transform_unit_ex_hls_dup3,0,476,tu_is_cu_qp_delta_coded_o,out,8,1,parent_func
+hls_transform_unit_ex_hls_dup3,0,468,tu_cu_qp_delta,out,32,1,parent_func
+hls_transform_unit_ex_hls_dup3,0,500,tu_cross_pf,out,8,1,parent_func
+hls_transform_unit_ex_hls_dup3,0,532,first_qp_group_i,in,8,1,parent_func
+hls_transform_unit_ex_hls_dup3,0,532,first_qp_group_o,out,8,1,parent_func
+hls_transform_unit_ex_hls_dup3,0,328,chroma_format_idc,in,32,1,parent_func
+hls_transform_unit_ex_hls_dup3,0,448,cu_chroma_qp_offset_enabled_flag,in,8,1,parent_func
+hls_transform_unit_ex_hls_dup3,0,428,cu_qp_delta_enabled_flag,in,8,1,parent_func
+hls_transform_unit_ex_hls_dup3,0,540,qPy_pred,in,32,1,parent_func
+hls_transform_unit_ex_hls_dup3,0,436,diff_cu_qp_delta_depth,in,32,1,parent_func
+hls_transform_unit_ex_hls_dup3,0,368,log2_min_cb_size,in,32,1,parent_func
+hls_transform_unit_ex_hls_dup3,0,392,min_cb_width,in,32,1,parent_func
+hls_transform_unit_ex_hls_dup3,0,460,slice_qp,in,8,1,parent_func
+#hls_transform_tree_hls,0,0,tid,in,32,1,apcall_arg
+#hls_transform_tree_hls,0,0,x0,in,32,1,apcall_arg
+#hls_transform_tree_hls,0,0,y0,in,32,1,apcall_arg
+hls_transform_tree_hls,0,168,log2_trafo_size,out,32,1,parent_func
+#hls_transform_tree_hls,0,0,s_log2_trafo_size,in,32,1,apcall_arg
+hls_transform_tree_hls,0,12,split_transform_flag,out,8,1,parent_func
+hls_transform_tree_hls,0,16,cbf_data,out,8,1,parent_func
+hls_transform_tree_hls,0,1160,disable_deblocking_filter_flag,in,8,1,parent_func
+hls_transform_tree_hls,0,440,transquant_bypass_enable_flag,in,8,1,parent_func
+hls_transform_tree_hls,0,572,cu_transquant_bypass_flag,in,8,1,parent_func
+hls_transform_tree_hls,0,480,tu_chroma_mode_c,out,32,1,parent_func
+hls_transform_tree_hls,0,484,tu_intra_pred_mode,out,32,1,parent_func
+hls_transform_tree_hls,0,488,tu_intra_pred_mode_c,out,32,1,parent_func
+hls_transform_tree_hls,1,508,pu_chroma_mode_c_0,in,8,4,(complete partition) parent_func
+hls_transform_tree_hls,1,509,pu_chroma_mode_c_1,in,8,4,(complete partition) parent_func
+hls_transform_tree_hls,1,510,pu_chroma_mode_c_2,in,8,4,(complete partition) parent_func
+hls_transform_tree_hls,1,511,pu_chroma_mode_c_3,in,8,4,(complete partition) parent_func
+hls_transform_tree_hls,1,512,pu_intra_pred_mode_0,in,8,4,(complete partition) parent_func
+hls_transform_tree_hls,1,513,pu_intra_pred_mode_1,in,8,4,(complete partition) parent_func
+hls_transform_tree_hls,1,514,pu_intra_pred_mode_2,in,8,4,(complete partition) parent_func
+hls_transform_tree_hls,1,515,pu_intra_pred_mode_3,in,8,4,(complete partition) parent_func
+hls_transform_tree_hls,1,516,pu_intra_pred_mode_c_0,in,8,4,(complete partition) parent_func
+hls_transform_tree_hls,1,517,pu_intra_pred_mode_c_1,in,8,4,(complete partition) parent_func
+hls_transform_tree_hls,1,518,pu_intra_pred_mode_c_2,in,8,4,(complete partition) parent_func
+hls_transform_tree_hls,1,519,pu_intra_pred_mode_c_3,in,8,4,(complete partition) parent_func
+hls_transform_tree_hls,0,568,intra_split_flag,in,8,1,parent_func
+hls_transform_tree_hls,0,364,log2_max_trafo_size,in,32,1,parent_func
+hls_transform_tree_hls,0,376,log2_min_tb_size,in,32,1,parent_func
+hls_transform_tree_hls,0,576,max_trafo_depth,in,8,1,parent_func
+hls_transform_tree_hls,0,380,max_transform_hierarchy_depth_inter,in,32,1,parent_func
+hls_transform_tree_hls,0,560,pred_mode,in,8,1,parent_func
+hls_transform_tree_hls,0,564,part_mode,in,8,1,parent_func
+hls_transform_tree_hls,0,324,chroma_array_type,in,32,1,parent_func
+hls_transform_tree_hls,0,328,chroma_format_idc,in,32,1,parent_func
+hls_transform_tree_hls,0,20,cbf_luma_i,in,32,1,parent_func
+hls_transform_tree_hls,0,20,cbf_luma_o,out,32,1,parent_func
+hls_transform_tree_hls,0,1328,rv_hls_transform_unit,in,32,1,parent_func
+hls_transform_tree_hls,0,1332,rv_ff_hevc_deblocking_boundary_strengths,in,32,1,parent_func
+hls_transform_tree_hls,0,1336,rv_set_deblocking_bypass,in,32,1,parent_func
+hls_transform_tree_hls,0,1236,rv_callback_flag,in,32,1,parent_func
+hls_transform_tree_hls,0,388,min_tb_width,in,32,1,parent_func
+hls_transform_tree_hls,0,360,log2_ctb_size,in,32,1,parent_func
+#hls_transform_tree_hls,0,0,dc_luma_p,in,32,1,apcall_arg_dcache_pointer
+#hls_transform_tree_hls_dup1,0,0,tid,in,32,1,apcall_arg
+#hls_transform_tree_hls_dup1,0,0,x0,in,32,1,apcall_arg
+#hls_transform_tree_hls_dup1,0,0,y0,in,32,1,apcall_arg
+hls_transform_tree_hls_dup1,0,168,log2_trafo_size,out,32,1,parent_func
+#hls_transform_tree_hls_dup1,0,0,s_log2_trafo_size,in,32,1,apcall_arg
+hls_transform_tree_hls_dup1,0,12,split_transform_flag,out,8,1,parent_func
+hls_transform_tree_hls_dup1,0,16,cbf_data,out,8,1,parent_func
+hls_transform_tree_hls_dup1,0,1160,disable_deblocking_filter_flag,in,8,1,parent_func
+hls_transform_tree_hls_dup1,0,440,transquant_bypass_enable_flag,in,8,1,parent_func
+hls_transform_tree_hls_dup1,0,572,cu_transquant_bypass_flag,in,8,1,parent_func
+hls_transform_tree_hls_dup1,0,480,tu_chroma_mode_c,out,32,1,parent_func
+hls_transform_tree_hls_dup1,0,484,tu_intra_pred_mode,out,32,1,parent_func
+hls_transform_tree_hls_dup1,0,488,tu_intra_pred_mode_c,out,32,1,parent_func
+hls_transform_tree_hls_dup1,1,508,pu_chroma_mode_c_0,in,8,4,(complete partition) parent_func
+hls_transform_tree_hls_dup1,1,509,pu_chroma_mode_c_1,in,8,4,(complete partition) parent_func
+hls_transform_tree_hls_dup1,1,510,pu_chroma_mode_c_2,in,8,4,(complete partition) parent_func
+hls_transform_tree_hls_dup1,1,511,pu_chroma_mode_c_3,in,8,4,(complete partition) parent_func
+hls_transform_tree_hls_dup1,1,512,pu_intra_pred_mode_0,in,8,4,(complete partition) parent_func
+hls_transform_tree_hls_dup1,1,513,pu_intra_pred_mode_1,in,8,4,(complete partition) parent_func
+hls_transform_tree_hls_dup1,1,514,pu_intra_pred_mode_2,in,8,4,(complete partition) parent_func
+hls_transform_tree_hls_dup1,1,515,pu_intra_pred_mode_3,in,8,4,(complete partition) parent_func
+hls_transform_tree_hls_dup1,1,516,pu_intra_pred_mode_c_0,in,8,4,(complete partition) parent_func
+hls_transform_tree_hls_dup1,1,517,pu_intra_pred_mode_c_1,in,8,4,(complete partition) parent_func
+hls_transform_tree_hls_dup1,1,518,pu_intra_pred_mode_c_2,in,8,4,(complete partition) parent_func
+hls_transform_tree_hls_dup1,1,519,pu_intra_pred_mode_c_3,in,8,4,(complete partition) parent_func
+hls_transform_tree_hls_dup1,0,568,intra_split_flag,in,8,1,parent_func
+hls_transform_tree_hls_dup1,0,364,log2_max_trafo_size,in,32,1,parent_func
+hls_transform_tree_hls_dup1,0,376,log2_min_tb_size,in,32,1,parent_func
+hls_transform_tree_hls_dup1,0,576,max_trafo_depth,in,8,1,parent_func
+hls_transform_tree_hls_dup1,0,380,max_transform_hierarchy_depth_inter,in,32,1,parent_func
+hls_transform_tree_hls_dup1,0,560,pred_mode,in,8,1,parent_func
+hls_transform_tree_hls_dup1,0,564,part_mode,in,8,1,parent_func
+hls_transform_tree_hls_dup1,0,324,chroma_array_type,in,32,1,parent_func
+hls_transform_tree_hls_dup1,0,328,chroma_format_idc,in,32,1,parent_func
+hls_transform_tree_hls_dup1,0,20,cbf_luma_i,in,32,1,parent_func
+hls_transform_tree_hls_dup1,0,20,cbf_luma_o,out,32,1,parent_func
+hls_transform_tree_hls_dup1,0,1328,rv_hls_transform_unit,in,32,1,parent_func
+hls_transform_tree_hls_dup1,0,1332,rv_ff_hevc_deblocking_boundary_strengths,in,32,1,parent_func
+hls_transform_tree_hls_dup1,0,1336,rv_set_deblocking_bypass,in,32,1,parent_func
+hls_transform_tree_hls_dup1,0,1236,rv_callback_flag,in,32,1,parent_func
+hls_transform_tree_hls_dup1,0,388,min_tb_width,in,32,1,parent_func
+hls_transform_tree_hls_dup1,0,360,log2_ctb_size,in,32,1,parent_func
+#hls_transform_tree_hls_dup1,0,0,dc_luma_p,in,32,1,apcall_arg_dcache_pointer
+#hls_transform_tree_hls_dup2,0,0,tid,in,32,1,apcall_arg
+#hls_transform_tree_hls_dup2,0,0,x0,in,32,1,apcall_arg
+#hls_transform_tree_hls_dup2,0,0,y0,in,32,1,apcall_arg
+hls_transform_tree_hls_dup2,0,168,log2_trafo_size,out,32,1,parent_func
+#hls_transform_tree_hls_dup2,0,0,s_log2_trafo_size,in,32,1,apcall_arg
+hls_transform_tree_hls_dup2,0,12,split_transform_flag,out,8,1,parent_func
+hls_transform_tree_hls_dup2,0,16,cbf_data,out,8,1,parent_func
+hls_transform_tree_hls_dup2,0,1160,disable_deblocking_filter_flag,in,8,1,parent_func
+hls_transform_tree_hls_dup2,0,440,transquant_bypass_enable_flag,in,8,1,parent_func
+hls_transform_tree_hls_dup2,0,572,cu_transquant_bypass_flag,in,8,1,parent_func
+hls_transform_tree_hls_dup2,0,480,tu_chroma_mode_c,out,32,1,parent_func
+hls_transform_tree_hls_dup2,0,484,tu_intra_pred_mode,out,32,1,parent_func
+hls_transform_tree_hls_dup2,0,488,tu_intra_pred_mode_c,out,32,1,parent_func
+hls_transform_tree_hls_dup2,1,508,pu_chroma_mode_c_0,in,8,4,(complete partition) parent_func
+hls_transform_tree_hls_dup2,1,509,pu_chroma_mode_c_1,in,8,4,(complete partition) parent_func
+hls_transform_tree_hls_dup2,1,510,pu_chroma_mode_c_2,in,8,4,(complete partition) parent_func
+hls_transform_tree_hls_dup2,1,511,pu_chroma_mode_c_3,in,8,4,(complete partition) parent_func
+hls_transform_tree_hls_dup2,1,512,pu_intra_pred_mode_0,in,8,4,(complete partition) parent_func
+hls_transform_tree_hls_dup2,1,513,pu_intra_pred_mode_1,in,8,4,(complete partition) parent_func
+hls_transform_tree_hls_dup2,1,514,pu_intra_pred_mode_2,in,8,4,(complete partition) parent_func
+hls_transform_tree_hls_dup2,1,515,pu_intra_pred_mode_3,in,8,4,(complete partition) parent_func
+hls_transform_tree_hls_dup2,1,516,pu_intra_pred_mode_c_0,in,8,4,(complete partition) parent_func
+hls_transform_tree_hls_dup2,1,517,pu_intra_pred_mode_c_1,in,8,4,(complete partition) parent_func
+hls_transform_tree_hls_dup2,1,518,pu_intra_pred_mode_c_2,in,8,4,(complete partition) parent_func
+hls_transform_tree_hls_dup2,1,519,pu_intra_pred_mode_c_3,in,8,4,(complete partition) parent_func
+hls_transform_tree_hls_dup2,0,568,intra_split_flag,in,8,1,parent_func
+hls_transform_tree_hls_dup2,0,364,log2_max_trafo_size,in,32,1,parent_func
+hls_transform_tree_hls_dup2,0,376,log2_min_tb_size,in,32,1,parent_func
+hls_transform_tree_hls_dup2,0,576,max_trafo_depth,in,8,1,parent_func
+hls_transform_tree_hls_dup2,0,380,max_transform_hierarchy_depth_inter,in,32,1,parent_func
+hls_transform_tree_hls_dup2,0,560,pred_mode,in,8,1,parent_func
+hls_transform_tree_hls_dup2,0,564,part_mode,in,8,1,parent_func
+hls_transform_tree_hls_dup2,0,324,chroma_array_type,in,32,1,parent_func
+hls_transform_tree_hls_dup2,0,328,chroma_format_idc,in,32,1,parent_func
+hls_transform_tree_hls_dup2,0,20,cbf_luma_i,in,32,1,parent_func
+hls_transform_tree_hls_dup2,0,20,cbf_luma_o,out,32,1,parent_func
+hls_transform_tree_hls_dup2,0,1328,rv_hls_transform_unit,in,32,1,parent_func
+hls_transform_tree_hls_dup2,0,1332,rv_ff_hevc_deblocking_boundary_strengths,in,32,1,parent_func
+hls_transform_tree_hls_dup2,0,1336,rv_set_deblocking_bypass,in,32,1,parent_func
+hls_transform_tree_hls_dup2,0,1236,rv_callback_flag,in,32,1,parent_func
+hls_transform_tree_hls_dup2,0,388,min_tb_width,in,32,1,parent_func
+hls_transform_tree_hls_dup2,0,360,log2_ctb_size,in,32,1,parent_func
+#hls_transform_tree_hls_dup2,0,0,dc_luma_p,in,32,1,apcall_arg_dcache_pointer
+#hls_transform_tree_hls_dup3,0,0,tid,in,32,1,apcall_arg
+#hls_transform_tree_hls_dup3,0,0,x0,in,32,1,apcall_arg
+#hls_transform_tree_hls_dup3,0,0,y0,in,32,1,apcall_arg
+hls_transform_tree_hls_dup3,0,168,log2_trafo_size,out,32,1,parent_func
+#hls_transform_tree_hls_dup3,0,0,s_log2_trafo_size,in,32,1,apcall_arg
+hls_transform_tree_hls_dup3,0,12,split_transform_flag,out,8,1,parent_func
+hls_transform_tree_hls_dup3,0,16,cbf_data,out,8,1,parent_func
+hls_transform_tree_hls_dup3,0,1160,disable_deblocking_filter_flag,in,8,1,parent_func
+hls_transform_tree_hls_dup3,0,440,transquant_bypass_enable_flag,in,8,1,parent_func
+hls_transform_tree_hls_dup3,0,572,cu_transquant_bypass_flag,in,8,1,parent_func
+hls_transform_tree_hls_dup3,0,480,tu_chroma_mode_c,out,32,1,parent_func
+hls_transform_tree_hls_dup3,0,484,tu_intra_pred_mode,out,32,1,parent_func
+hls_transform_tree_hls_dup3,0,488,tu_intra_pred_mode_c,out,32,1,parent_func
+hls_transform_tree_hls_dup3,1,508,pu_chroma_mode_c_0,in,8,4,(complete partition) parent_func
+hls_transform_tree_hls_dup3,1,509,pu_chroma_mode_c_1,in,8,4,(complete partition) parent_func
+hls_transform_tree_hls_dup3,1,510,pu_chroma_mode_c_2,in,8,4,(complete partition) parent_func
+hls_transform_tree_hls_dup3,1,511,pu_chroma_mode_c_3,in,8,4,(complete partition) parent_func
+hls_transform_tree_hls_dup3,1,512,pu_intra_pred_mode_0,in,8,4,(complete partition) parent_func
+hls_transform_tree_hls_dup3,1,513,pu_intra_pred_mode_1,in,8,4,(complete partition) parent_func
+hls_transform_tree_hls_dup3,1,514,pu_intra_pred_mode_2,in,8,4,(complete partition) parent_func
+hls_transform_tree_hls_dup3,1,515,pu_intra_pred_mode_3,in,8,4,(complete partition) parent_func
+hls_transform_tree_hls_dup3,1,516,pu_intra_pred_mode_c_0,in,8,4,(complete partition) parent_func
+hls_transform_tree_hls_dup3,1,517,pu_intra_pred_mode_c_1,in,8,4,(complete partition) parent_func
+hls_transform_tree_hls_dup3,1,518,pu_intra_pred_mode_c_2,in,8,4,(complete partition) parent_func
+hls_transform_tree_hls_dup3,1,519,pu_intra_pred_mode_c_3,in,8,4,(complete partition) parent_func
+hls_transform_tree_hls_dup3,0,568,intra_split_flag,in,8,1,parent_func
+hls_transform_tree_hls_dup3,0,364,log2_max_trafo_size,in,32,1,parent_func
+hls_transform_tree_hls_dup3,0,376,log2_min_tb_size,in,32,1,parent_func
+hls_transform_tree_hls_dup3,0,576,max_trafo_depth,in,8,1,parent_func
+hls_transform_tree_hls_dup3,0,380,max_transform_hierarchy_depth_inter,in,32,1,parent_func
+hls_transform_tree_hls_dup3,0,560,pred_mode,in,8,1,parent_func
+hls_transform_tree_hls_dup3,0,564,part_mode,in,8,1,parent_func
+hls_transform_tree_hls_dup3,0,324,chroma_array_type,in,32,1,parent_func
+hls_transform_tree_hls_dup3,0,328,chroma_format_idc,in,32,1,parent_func
+hls_transform_tree_hls_dup3,0,20,cbf_luma_i,in,32,1,parent_func
+hls_transform_tree_hls_dup3,0,20,cbf_luma_o,out,32,1,parent_func
+hls_transform_tree_hls_dup3,0,1328,rv_hls_transform_unit,in,32,1,parent_func
+hls_transform_tree_hls_dup3,0,1332,rv_ff_hevc_deblocking_boundary_strengths,in,32,1,parent_func
+hls_transform_tree_hls_dup3,0,1336,rv_set_deblocking_bypass,in,32,1,parent_func
+hls_transform_tree_hls_dup3,0,1236,rv_callback_flag,in,32,1,parent_func
+hls_transform_tree_hls_dup3,0,388,min_tb_width,in,32,1,parent_func
+hls_transform_tree_hls_dup3,0,360,log2_ctb_size,in,32,1,parent_func
+#hls_transform_tree_hls_dup3,0,0,dc_luma_p,in,32,1,apcall_arg_dcache_pointer
+#hls_coding_quadtree_hls,0,0,tid,in,32,1,apcall_arg
+#hls_coding_quadtree_hls,0,0,x0,in,32,1,apcall_arg
+#hls_coding_quadtree_hls,0,0,y0,in,32,1,apcall_arg
+#hls_coding_quadtree_hls,0,0,log2_cb_size,in,32,1,apcall_arg
+#hls_coding_quadtree_hls,0,0,cb_depth,in,32,1,apcall_arg
+hls_coding_quadtree_hls,0,300,x1_i,in,32,1,parent_func
+hls_coding_quadtree_hls,0,300,x1_o,out,32,1,parent_func
+hls_coding_quadtree_hls,0,304,y1_i,in,32,1,parent_func
+hls_coding_quadtree_hls,0,304,y1_o,out,32,1,parent_func
+hls_coding_quadtree_hls,0,312,log2_cb_size_minus_one_i,in,32,1,parent_func
+hls_coding_quadtree_hls,0,312,log2_cb_size_minus_one_o,out,32,1,parent_func
+hls_coding_quadtree_hls,0,316,cb_depth_plus_one_i,in,32,1,parent_func
+hls_coding_quadtree_hls,0,316,cb_depth_plus_one_o,out,32,1,parent_func
+hls_coding_quadtree_hls,0,408,width,in,32,1,parent_func
+hls_coding_quadtree_hls,0,332,height,in,32,1,parent_func
+hls_coding_quadtree_hls,0,292,split_cu_flag_i,in,32,1,parent_func
+hls_coding_quadtree_hls,0,292,split_cu_flag_o,out,32,1,parent_func
+hls_coding_quadtree_hls,0,296,more_data_i,in,32,1,parent_func
+hls_coding_quadtree_hls,0,296,more_data_o,out,32,1,parent_func
+hls_coding_quadtree_hls,0,1324,rv_hls_coding_unit,in,32,1,parent_func
+hls_coding_quadtree_hls,0,1236,rv_callback_flag,in,32,1,parent_func
+hls_coding_quadtree_hls,0,360,log2_ctb_size,in,32,1,parent_func
+hls_coding_quadtree_hls,0,540,qPy_pred,out,32,1,parent_func
+hls_coding_quadtree_hls,0,536,qp_y,in,8,1,parent_func
+hls_coding_quadtree_hls,0,40,qp_block_mask_i,in,32,1,parent_func
+hls_coding_quadtree_hls,0,40,qp_block_mask_o,out,32,1,parent_func
+hls_coding_quadtree_hls,0,308,cb_size_split_i,in,32,1,parent_func
+hls_coding_quadtree_hls,0,308,cb_size_split_o,out,32,1,parent_func
+hls_coding_quadtree_hls,0,368,log2_min_cb_size,in,32,1,parent_func
+hls_coding_quadtree_hls,0,392,min_cb_width,in,32,1,parent_func
+hls_coding_quadtree_hls,0,476,tu_is_cu_qp_delta_coded,out,8,1,parent_func
+hls_coding_quadtree_hls,0,468,tu_cu_qp_delta,out,32,1,parent_func
+hls_coding_quadtree_hls,0,472,tu_is_cu_chroma_qp_offset_coded,out,8,1,parent_func
+hls_coding_quadtree_hls,0,464,depth,out,32,1,parent_func
+hls_coding_quadtree_hls,0,608,ctb_left_flag,in,8,1,parent_func
+hls_coding_quadtree_hls,0,604,ctb_up_flag,in,8,1,parent_func
+hls_coding_quadtree_hls,0,428,cu_qp_delta_enabled_flag,in,8,1,parent_func
+hls_coding_quadtree_hls,0,436,diff_cu_qp_delta_depth,in,32,1,parent_func
+hls_coding_quadtree_hls,0,448,cu_chroma_qp_offset_enabled_flag,in,8,1,parent_func
+hls_coding_quadtree_hls,0,432,diff_cu_chroma_qp_offset_depth,in,8,1,parent_func
+hls_coding_quadtree_hls,0,1280,dc_tab_ct_depth_p,in,32,1,xmem_dcache_pointer parent_func
+#hls_coding_quadtree_hls_dup1,0,0,tid,in,32,1,apcall_arg
+#hls_coding_quadtree_hls_dup1,0,0,x0,in,32,1,apcall_arg
+#hls_coding_quadtree_hls_dup1,0,0,y0,in,32,1,apcall_arg
+#hls_coding_quadtree_hls_dup1,0,0,log2_cb_size,in,32,1,apcall_arg
+#hls_coding_quadtree_hls_dup1,0,0,cb_depth,in,32,1,apcall_arg
+hls_coding_quadtree_hls_dup1,0,300,x1_i,in,32,1,parent_func
+hls_coding_quadtree_hls_dup1,0,300,x1_o,out,32,1,parent_func
+hls_coding_quadtree_hls_dup1,0,304,y1_i,in,32,1,parent_func
+hls_coding_quadtree_hls_dup1,0,304,y1_o,out,32,1,parent_func
+hls_coding_quadtree_hls_dup1,0,312,log2_cb_size_minus_one_i,in,32,1,parent_func
+hls_coding_quadtree_hls_dup1,0,312,log2_cb_size_minus_one_o,out,32,1,parent_func
+hls_coding_quadtree_hls_dup1,0,316,cb_depth_plus_one_i,in,32,1,parent_func
+hls_coding_quadtree_hls_dup1,0,316,cb_depth_plus_one_o,out,32,1,parent_func
+hls_coding_quadtree_hls_dup1,0,408,width,in,32,1,parent_func
+hls_coding_quadtree_hls_dup1,0,332,height,in,32,1,parent_func
+hls_coding_quadtree_hls_dup1,0,292,split_cu_flag_i,in,32,1,parent_func
+hls_coding_quadtree_hls_dup1,0,292,split_cu_flag_o,out,32,1,parent_func
+hls_coding_quadtree_hls_dup1,0,296,more_data_i,in,32,1,parent_func
+hls_coding_quadtree_hls_dup1,0,296,more_data_o,out,32,1,parent_func
+hls_coding_quadtree_hls_dup1,0,1324,rv_hls_coding_unit,in,32,1,parent_func
+hls_coding_quadtree_hls_dup1,0,1236,rv_callback_flag,in,32,1,parent_func
+hls_coding_quadtree_hls_dup1,0,360,log2_ctb_size,in,32,1,parent_func
+hls_coding_quadtree_hls_dup1,0,540,qPy_pred,out,32,1,parent_func
+hls_coding_quadtree_hls_dup1,0,536,qp_y,in,8,1,parent_func
+hls_coding_quadtree_hls_dup1,0,40,qp_block_mask_i,in,32,1,parent_func
+hls_coding_quadtree_hls_dup1,0,40,qp_block_mask_o,out,32,1,parent_func
+hls_coding_quadtree_hls_dup1,0,308,cb_size_split_i,in,32,1,parent_func
+hls_coding_quadtree_hls_dup1,0,308,cb_size_split_o,out,32,1,parent_func
+hls_coding_quadtree_hls_dup1,0,368,log2_min_cb_size,in,32,1,parent_func
+hls_coding_quadtree_hls_dup1,0,392,min_cb_width,in,32,1,parent_func
+hls_coding_quadtree_hls_dup1,0,476,tu_is_cu_qp_delta_coded,out,8,1,parent_func
+hls_coding_quadtree_hls_dup1,0,468,tu_cu_qp_delta,out,32,1,parent_func
+hls_coding_quadtree_hls_dup1,0,472,tu_is_cu_chroma_qp_offset_coded,out,8,1,parent_func
+hls_coding_quadtree_hls_dup1,0,464,depth,out,32,1,parent_func
+hls_coding_quadtree_hls_dup1,0,608,ctb_left_flag,in,8,1,parent_func
+hls_coding_quadtree_hls_dup1,0,604,ctb_up_flag,in,8,1,parent_func
+hls_coding_quadtree_hls_dup1,0,428,cu_qp_delta_enabled_flag,in,8,1,parent_func
+hls_coding_quadtree_hls_dup1,0,436,diff_cu_qp_delta_depth,in,32,1,parent_func
+hls_coding_quadtree_hls_dup1,0,448,cu_chroma_qp_offset_enabled_flag,in,8,1,parent_func
+hls_coding_quadtree_hls_dup1,0,432,diff_cu_chroma_qp_offset_depth,in,8,1,parent_func
+hls_coding_quadtree_hls_dup1,0,1280,dc_tab_ct_depth_p,in,32,1,xmem_dcache_pointer parent_func
+#hls_coding_quadtree_hls_dup2,0,0,tid,in,32,1,apcall_arg
+#hls_coding_quadtree_hls_dup2,0,0,x0,in,32,1,apcall_arg
+#hls_coding_quadtree_hls_dup2,0,0,y0,in,32,1,apcall_arg
+#hls_coding_quadtree_hls_dup2,0,0,log2_cb_size,in,32,1,apcall_arg
+#hls_coding_quadtree_hls_dup2,0,0,cb_depth,in,32,1,apcall_arg
+hls_coding_quadtree_hls_dup2,0,300,x1_i,in,32,1,parent_func
+hls_coding_quadtree_hls_dup2,0,300,x1_o,out,32,1,parent_func
+hls_coding_quadtree_hls_dup2,0,304,y1_i,in,32,1,parent_func
+hls_coding_quadtree_hls_dup2,0,304,y1_o,out,32,1,parent_func
+hls_coding_quadtree_hls_dup2,0,312,log2_cb_size_minus_one_i,in,32,1,parent_func
+hls_coding_quadtree_hls_dup2,0,312,log2_cb_size_minus_one_o,out,32,1,parent_func
+hls_coding_quadtree_hls_dup2,0,316,cb_depth_plus_one_i,in,32,1,parent_func
+hls_coding_quadtree_hls_dup2,0,316,cb_depth_plus_one_o,out,32,1,parent_func
+hls_coding_quadtree_hls_dup2,0,408,width,in,32,1,parent_func
+hls_coding_quadtree_hls_dup2,0,332,height,in,32,1,parent_func
+hls_coding_quadtree_hls_dup2,0,292,split_cu_flag_i,in,32,1,parent_func
+hls_coding_quadtree_hls_dup2,0,292,split_cu_flag_o,out,32,1,parent_func
+hls_coding_quadtree_hls_dup2,0,296,more_data_i,in,32,1,parent_func
+hls_coding_quadtree_hls_dup2,0,296,more_data_o,out,32,1,parent_func
+hls_coding_quadtree_hls_dup2,0,1324,rv_hls_coding_unit,in,32,1,parent_func
+hls_coding_quadtree_hls_dup2,0,1236,rv_callback_flag,in,32,1,parent_func
+hls_coding_quadtree_hls_dup2,0,360,log2_ctb_size,in,32,1,parent_func
+hls_coding_quadtree_hls_dup2,0,540,qPy_pred,out,32,1,parent_func
+hls_coding_quadtree_hls_dup2,0,536,qp_y,in,8,1,parent_func
+hls_coding_quadtree_hls_dup2,0,40,qp_block_mask_i,in,32,1,parent_func
+hls_coding_quadtree_hls_dup2,0,40,qp_block_mask_o,out,32,1,parent_func
+hls_coding_quadtree_hls_dup2,0,308,cb_size_split_i,in,32,1,parent_func
+hls_coding_quadtree_hls_dup2,0,308,cb_size_split_o,out,32,1,parent_func
+hls_coding_quadtree_hls_dup2,0,368,log2_min_cb_size,in,32,1,parent_func
+hls_coding_quadtree_hls_dup2,0,392,min_cb_width,in,32,1,parent_func
+hls_coding_quadtree_hls_dup2,0,476,tu_is_cu_qp_delta_coded,out,8,1,parent_func
+hls_coding_quadtree_hls_dup2,0,468,tu_cu_qp_delta,out,32,1,parent_func
+hls_coding_quadtree_hls_dup2,0,472,tu_is_cu_chroma_qp_offset_coded,out,8,1,parent_func
+hls_coding_quadtree_hls_dup2,0,464,depth,out,32,1,parent_func
+hls_coding_quadtree_hls_dup2,0,608,ctb_left_flag,in,8,1,parent_func
+hls_coding_quadtree_hls_dup2,0,604,ctb_up_flag,in,8,1,parent_func
+hls_coding_quadtree_hls_dup2,0,428,cu_qp_delta_enabled_flag,in,8,1,parent_func
+hls_coding_quadtree_hls_dup2,0,436,diff_cu_qp_delta_depth,in,32,1,parent_func
+hls_coding_quadtree_hls_dup2,0,448,cu_chroma_qp_offset_enabled_flag,in,8,1,parent_func
+hls_coding_quadtree_hls_dup2,0,432,diff_cu_chroma_qp_offset_depth,in,8,1,parent_func
+hls_coding_quadtree_hls_dup2,0,1280,dc_tab_ct_depth_p,in,32,1,xmem_dcache_pointer parent_func
+#hls_coding_quadtree_hls_dup3,0,0,tid,in,32,1,apcall_arg
+#hls_coding_quadtree_hls_dup3,0,0,x0,in,32,1,apcall_arg
+#hls_coding_quadtree_hls_dup3,0,0,y0,in,32,1,apcall_arg
+#hls_coding_quadtree_hls_dup3,0,0,log2_cb_size,in,32,1,apcall_arg
+#hls_coding_quadtree_hls_dup3,0,0,cb_depth,in,32,1,apcall_arg
+hls_coding_quadtree_hls_dup3,0,300,x1_i,in,32,1,parent_func
+hls_coding_quadtree_hls_dup3,0,300,x1_o,out,32,1,parent_func
+hls_coding_quadtree_hls_dup3,0,304,y1_i,in,32,1,parent_func
+hls_coding_quadtree_hls_dup3,0,304,y1_o,out,32,1,parent_func
+hls_coding_quadtree_hls_dup3,0,312,log2_cb_size_minus_one_i,in,32,1,parent_func
+hls_coding_quadtree_hls_dup3,0,312,log2_cb_size_minus_one_o,out,32,1,parent_func
+hls_coding_quadtree_hls_dup3,0,316,cb_depth_plus_one_i,in,32,1,parent_func
+hls_coding_quadtree_hls_dup3,0,316,cb_depth_plus_one_o,out,32,1,parent_func
+hls_coding_quadtree_hls_dup3,0,408,width,in,32,1,parent_func
+hls_coding_quadtree_hls_dup3,0,332,height,in,32,1,parent_func
+hls_coding_quadtree_hls_dup3,0,292,split_cu_flag_i,in,32,1,parent_func
+hls_coding_quadtree_hls_dup3,0,292,split_cu_flag_o,out,32,1,parent_func
+hls_coding_quadtree_hls_dup3,0,296,more_data_i,in,32,1,parent_func
+hls_coding_quadtree_hls_dup3,0,296,more_data_o,out,32,1,parent_func
+hls_coding_quadtree_hls_dup3,0,1324,rv_hls_coding_unit,in,32,1,parent_func
+hls_coding_quadtree_hls_dup3,0,1236,rv_callback_flag,in,32,1,parent_func
+hls_coding_quadtree_hls_dup3,0,360,log2_ctb_size,in,32,1,parent_func
+hls_coding_quadtree_hls_dup3,0,540,qPy_pred,out,32,1,parent_func
+hls_coding_quadtree_hls_dup3,0,536,qp_y,in,8,1,parent_func
+hls_coding_quadtree_hls_dup3,0,40,qp_block_mask_i,in,32,1,parent_func
+hls_coding_quadtree_hls_dup3,0,40,qp_block_mask_o,out,32,1,parent_func
+hls_coding_quadtree_hls_dup3,0,308,cb_size_split_i,in,32,1,parent_func
+hls_coding_quadtree_hls_dup3,0,308,cb_size_split_o,out,32,1,parent_func
+hls_coding_quadtree_hls_dup3,0,368,log2_min_cb_size,in,32,1,parent_func
+hls_coding_quadtree_hls_dup3,0,392,min_cb_width,in,32,1,parent_func
+hls_coding_quadtree_hls_dup3,0,476,tu_is_cu_qp_delta_coded,out,8,1,parent_func
+hls_coding_quadtree_hls_dup3,0,468,tu_cu_qp_delta,out,32,1,parent_func
+hls_coding_quadtree_hls_dup3,0,472,tu_is_cu_chroma_qp_offset_coded,out,8,1,parent_func
+hls_coding_quadtree_hls_dup3,0,464,depth,out,32,1,parent_func
+hls_coding_quadtree_hls_dup3,0,608,ctb_left_flag,in,8,1,parent_func
+hls_coding_quadtree_hls_dup3,0,604,ctb_up_flag,in,8,1,parent_func
+hls_coding_quadtree_hls_dup3,0,428,cu_qp_delta_enabled_flag,in,8,1,parent_func
+hls_coding_quadtree_hls_dup3,0,436,diff_cu_qp_delta_depth,in,32,1,parent_func
+hls_coding_quadtree_hls_dup3,0,448,cu_chroma_qp_offset_enabled_flag,in,8,1,parent_func
+hls_coding_quadtree_hls_dup3,0,432,diff_cu_chroma_qp_offset_depth,in,8,1,parent_func
+hls_coding_quadtree_hls_dup3,0,1280,dc_tab_ct_depth_p,in,32,1,xmem_dcache_pointer parent_func
+#hls_coding_unit_hls,0,0,tid,in,32,1,apcall_arg
+#hls_coding_unit_hls,0,0,x0,in,32,1,apcall_arg
+#hls_coding_unit_hls,0,0,y0,in,32,1,apcall_arg
+#hls_coding_unit_hls,0,0,log2_cb_size,in,32,1,apcall_arg
+hls_coding_unit_hls,0,420,loop_filter_disable_flag,in,8,1,parent_func
+hls_coding_unit_hls,0,380,max_transform_hierarchy_depth_inter,in,32,1,parent_func
+hls_coding_unit_hls,0,1160,disable_deblocking_filter_flag,in,8,1,parent_func
+hls_coding_unit_hls,0,428,cu_qp_delta_enabled_flag,in,8,1,parent_func
+hls_coding_unit_hls,0,476,tu_is_cu_qp_delta_coded,in,8,1,parent_func
+hls_coding_unit_hls,0,572,cu_transquant_bypass_flag_i,in,8,1,parent_func
+hls_coding_unit_hls,0,572,cu_transquant_bypass_flag_o,out,8,1,parent_func
+hls_coding_unit_hls,0,28,pcm_flag_i,in,1,1,parent_func
+hls_coding_unit_hls,0,28,pcm_flag_o,out,1,1,parent_func
+hls_coding_unit_hls,0,504,merge_flag,in,8,1,parent_func
+hls_coding_unit_hls,0,560,pred_mode_i,in,8,1,parent_func
+hls_coding_unit_hls,0,560,pred_mode_o,out,8,1,parent_func
+hls_coding_unit_hls,0,564,part_mode_i,in,8,1,parent_func
+hls_coding_unit_hls,0,564,part_mode_o,out,8,1,parent_func
+hls_coding_unit_hls,0,576,max_trafo_depth,out,8,1,parent_func
+hls_coding_unit_hls,0,32,cb_size_i,in,32,1,parent_func
+hls_coding_unit_hls,0,32,cb_size_o,out,32,1,parent_func
+hls_coding_unit_hls,0,44,idx_i,in,32,1,parent_func
+hls_coding_unit_hls,0,44,idx_o,out,32,1,parent_func
+hls_coding_unit_hls,0,1164,xm_xBase,out,32,1,parent_func
+hls_coding_unit_hls,0,1168,xm_yBase,out,32,1,parent_func
+hls_coding_unit_hls,0,1172,xm_cb_xBase,out,32,1,parent_func
+hls_coding_unit_hls,0,1176,xm_cb_yBase,out,32,1,parent_func
+hls_coding_unit_hls,0,1180,xm_log2_cb_size,out,32,1,parent_func
+hls_coding_unit_hls,0,1336,rv_set_deblocking_bypass,in,32,1,parent_func
+hls_coding_unit_hls,0,1332,rv_ff_hevc_deblocking_boundary_strengths,in,32,1,parent_func
+hls_coding_unit_hls,0,1340,rv_hls_pcm_sample,in,32,1,parent_func
+hls_coding_unit_hls,0,1344,rv_hls_prediction_unit,in,32,1,parent_func
+hls_coding_unit_hls,0,1348,rv_hls_intra_prediction_unit,in,32,1,parent_func
+hls_coding_unit_hls,0,1352,rv_hls_transform_tree,in,32,1,parent_func
+hls_coding_unit_hls,0,1236,rv_callback_flag,in,32,1,parent_func
+hls_coding_unit_hls,0,36,length_r,out,32,1,parent_func
+hls_coding_unit_hls,0,544,xm_x,out,32,1,parent_func
+hls_coding_unit_hls,0,548,xm_y,out,32,1,parent_func
+hls_coding_unit_hls,1,512,pu_intra_pred_mode_0,out,8,4,(complete partition) parent_func
+hls_coding_unit_hls,1,513,pu_intra_pred_mode_1,out,8,4,(complete partition) parent_func
+hls_coding_unit_hls,1,514,pu_intra_pred_mode_2,out,8,4,(complete partition) parent_func
+hls_coding_unit_hls,1,515,pu_intra_pred_mode_3,out,8,4,(complete partition) parent_func
+hls_coding_unit_hls,0,540,qPy_pred,out,32,1,parent_func
+hls_coding_unit_hls,0,24,skip_flag_start,out,32,1,parent_func
+hls_coding_unit_hls,0,368,log2_min_cb_size,in,32,1,parent_func
+hls_coding_unit_hls,0,360,log2_ctb_size,in,32,1,parent_func
+hls_coding_unit_hls,0,436,diff_cu_qp_delta_depth,in,32,1,parent_func
+hls_coding_unit_hls,0,536,qp_y,in,8,1,parent_func
+hls_coding_unit_hls,0,440,transquant_bypass_enable_flag,in,8,1,parent_func
+hls_coding_unit_hls,0,392,min_cb_width,in,32,1,parent_func
+hls_coding_unit_hls,0,568,intra_split_flag,out,8,1,parent_func
+hls_coding_unit_hls,0,452,slice_type,in,8,1,parent_func
+hls_coding_unit_hls,0,608,ctb_left_flag,in,8,1,parent_func
+hls_coding_unit_hls,0,604,ctb_up_flag,in,8,1,parent_func
+hls_coding_unit_hls,0,320,amp_enabled_flag,in,8,1,parent_func
+hls_coding_unit_hls,0,400,pcm_enabled_flag,in,32,1,parent_func
+hls_coding_unit_hls,0,412,log2_min_pcm_cb_size,in,32,1,parent_func
+hls_coding_unit_hls,0,416,log2_max_pcm_cb_size,in,32,1,parent_func
+hls_coding_unit_hls,0,464,depth,in,32,1,parent_func
+hls_coding_unit_hls,0,1288,dc_skip_flag_p,in,32,1,xmem_dcache_pointer parent_func
+hls_coding_unit_hls,0,1272,dc_qp_y_tab_p,in,32,1,xmem_dcache_pointer parent_func
+hls_coding_unit_hls,0,1280,dc_tab_ct_depth_p,in,32,1,xmem_dcache_pointer parent_func
+#hls_coding_unit_hls_dup1,0,0,tid,in,32,1,apcall_arg
+#hls_coding_unit_hls_dup1,0,0,x0,in,32,1,apcall_arg
+#hls_coding_unit_hls_dup1,0,0,y0,in,32,1,apcall_arg
+#hls_coding_unit_hls_dup1,0,0,log2_cb_size,in,32,1,apcall_arg
+hls_coding_unit_hls_dup1,0,420,loop_filter_disable_flag,in,8,1,parent_func
+hls_coding_unit_hls_dup1,0,380,max_transform_hierarchy_depth_inter,in,32,1,parent_func
+hls_coding_unit_hls_dup1,0,1160,disable_deblocking_filter_flag,in,8,1,parent_func
+hls_coding_unit_hls_dup1,0,428,cu_qp_delta_enabled_flag,in,8,1,parent_func
+hls_coding_unit_hls_dup1,0,476,tu_is_cu_qp_delta_coded,in,8,1,parent_func
+hls_coding_unit_hls_dup1,0,572,cu_transquant_bypass_flag_i,in,8,1,parent_func
+hls_coding_unit_hls_dup1,0,572,cu_transquant_bypass_flag_o,out,8,1,parent_func
+hls_coding_unit_hls_dup1,0,28,pcm_flag_i,in,1,1,parent_func
+hls_coding_unit_hls_dup1,0,28,pcm_flag_o,out,1,1,parent_func
+hls_coding_unit_hls_dup1,0,504,merge_flag,in,8,1,parent_func
+hls_coding_unit_hls_dup1,0,560,pred_mode_i,in,8,1,parent_func
+hls_coding_unit_hls_dup1,0,560,pred_mode_o,out,8,1,parent_func
+hls_coding_unit_hls_dup1,0,564,part_mode_i,in,8,1,parent_func
+hls_coding_unit_hls_dup1,0,564,part_mode_o,out,8,1,parent_func
+hls_coding_unit_hls_dup1,0,576,max_trafo_depth,out,8,1,parent_func
+hls_coding_unit_hls_dup1,0,32,cb_size_i,in,32,1,parent_func
+hls_coding_unit_hls_dup1,0,32,cb_size_o,out,32,1,parent_func
+hls_coding_unit_hls_dup1,0,44,idx_i,in,32,1,parent_func
+hls_coding_unit_hls_dup1,0,44,idx_o,out,32,1,parent_func
+hls_coding_unit_hls_dup1,0,1164,xm_xBase,out,32,1,parent_func
+hls_coding_unit_hls_dup1,0,1168,xm_yBase,out,32,1,parent_func
+hls_coding_unit_hls_dup1,0,1172,xm_cb_xBase,out,32,1,parent_func
+hls_coding_unit_hls_dup1,0,1176,xm_cb_yBase,out,32,1,parent_func
+hls_coding_unit_hls_dup1,0,1180,xm_log2_cb_size,out,32,1,parent_func
+hls_coding_unit_hls_dup1,0,1336,rv_set_deblocking_bypass,in,32,1,parent_func
+hls_coding_unit_hls_dup1,0,1332,rv_ff_hevc_deblocking_boundary_strengths,in,32,1,parent_func
+hls_coding_unit_hls_dup1,0,1340,rv_hls_pcm_sample,in,32,1,parent_func
+hls_coding_unit_hls_dup1,0,1344,rv_hls_prediction_unit,in,32,1,parent_func
+hls_coding_unit_hls_dup1,0,1348,rv_hls_intra_prediction_unit,in,32,1,parent_func
+hls_coding_unit_hls_dup1,0,1352,rv_hls_transform_tree,in,32,1,parent_func
+hls_coding_unit_hls_dup1,0,1236,rv_callback_flag,in,32,1,parent_func
+hls_coding_unit_hls_dup1,0,36,length_r,out,32,1,parent_func
+hls_coding_unit_hls_dup1,0,544,xm_x,out,32,1,parent_func
+hls_coding_unit_hls_dup1,0,548,xm_y,out,32,1,parent_func
+hls_coding_unit_hls_dup1,1,512,pu_intra_pred_mode_0,out,8,4,(complete partition) parent_func
+hls_coding_unit_hls_dup1,1,513,pu_intra_pred_mode_1,out,8,4,(complete partition) parent_func
+hls_coding_unit_hls_dup1,1,514,pu_intra_pred_mode_2,out,8,4,(complete partition) parent_func
+hls_coding_unit_hls_dup1,1,515,pu_intra_pred_mode_3,out,8,4,(complete partition) parent_func
+hls_coding_unit_hls_dup1,0,540,qPy_pred,out,32,1,parent_func
+hls_coding_unit_hls_dup1,0,24,skip_flag_start,out,32,1,parent_func
+hls_coding_unit_hls_dup1,0,368,log2_min_cb_size,in,32,1,parent_func
+hls_coding_unit_hls_dup1,0,360,log2_ctb_size,in,32,1,parent_func
+hls_coding_unit_hls_dup1,0,436,diff_cu_qp_delta_depth,in,32,1,parent_func
+hls_coding_unit_hls_dup1,0,536,qp_y,in,8,1,parent_func
+hls_coding_unit_hls_dup1,0,440,transquant_bypass_enable_flag,in,8,1,parent_func
+hls_coding_unit_hls_dup1,0,392,min_cb_width,in,32,1,parent_func
+hls_coding_unit_hls_dup1,0,568,intra_split_flag,out,8,1,parent_func
+hls_coding_unit_hls_dup1,0,452,slice_type,in,8,1,parent_func
+hls_coding_unit_hls_dup1,0,608,ctb_left_flag,in,8,1,parent_func
+hls_coding_unit_hls_dup1,0,604,ctb_up_flag,in,8,1,parent_func
+hls_coding_unit_hls_dup1,0,320,amp_enabled_flag,in,8,1,parent_func
+hls_coding_unit_hls_dup1,0,400,pcm_enabled_flag,in,32,1,parent_func
+hls_coding_unit_hls_dup1,0,412,log2_min_pcm_cb_size,in,32,1,parent_func
+hls_coding_unit_hls_dup1,0,416,log2_max_pcm_cb_size,in,32,1,parent_func
+hls_coding_unit_hls_dup1,0,464,depth,in,32,1,parent_func
+hls_coding_unit_hls_dup1,0,1288,dc_skip_flag_p,in,32,1,xmem_dcache_pointer parent_func
+hls_coding_unit_hls_dup1,0,1272,dc_qp_y_tab_p,in,32,1,xmem_dcache_pointer parent_func
+hls_coding_unit_hls_dup1,0,1280,dc_tab_ct_depth_p,in,32,1,xmem_dcache_pointer parent_func
+#hls_coding_unit_hls_dup2,0,0,tid,in,32,1,apcall_arg
+#hls_coding_unit_hls_dup2,0,0,x0,in,32,1,apcall_arg
+#hls_coding_unit_hls_dup2,0,0,y0,in,32,1,apcall_arg
+#hls_coding_unit_hls_dup2,0,0,log2_cb_size,in,32,1,apcall_arg
+hls_coding_unit_hls_dup2,0,420,loop_filter_disable_flag,in,8,1,parent_func
+hls_coding_unit_hls_dup2,0,380,max_transform_hierarchy_depth_inter,in,32,1,parent_func
+hls_coding_unit_hls_dup2,0,1160,disable_deblocking_filter_flag,in,8,1,parent_func
+hls_coding_unit_hls_dup2,0,428,cu_qp_delta_enabled_flag,in,8,1,parent_func
+hls_coding_unit_hls_dup2,0,476,tu_is_cu_qp_delta_coded,in,8,1,parent_func
+hls_coding_unit_hls_dup2,0,572,cu_transquant_bypass_flag_i,in,8,1,parent_func
+hls_coding_unit_hls_dup2,0,572,cu_transquant_bypass_flag_o,out,8,1,parent_func
+hls_coding_unit_hls_dup2,0,28,pcm_flag_i,in,1,1,parent_func
+hls_coding_unit_hls_dup2,0,28,pcm_flag_o,out,1,1,parent_func
+hls_coding_unit_hls_dup2,0,504,merge_flag,in,8,1,parent_func
+hls_coding_unit_hls_dup2,0,560,pred_mode_i,in,8,1,parent_func
+hls_coding_unit_hls_dup2,0,560,pred_mode_o,out,8,1,parent_func
+hls_coding_unit_hls_dup2,0,564,part_mode_i,in,8,1,parent_func
+hls_coding_unit_hls_dup2,0,564,part_mode_o,out,8,1,parent_func
+hls_coding_unit_hls_dup2,0,576,max_trafo_depth,out,8,1,parent_func
+hls_coding_unit_hls_dup2,0,32,cb_size_i,in,32,1,parent_func
+hls_coding_unit_hls_dup2,0,32,cb_size_o,out,32,1,parent_func
+hls_coding_unit_hls_dup2,0,44,idx_i,in,32,1,parent_func
+hls_coding_unit_hls_dup2,0,44,idx_o,out,32,1,parent_func
+hls_coding_unit_hls_dup2,0,1164,xm_xBase,out,32,1,parent_func
+hls_coding_unit_hls_dup2,0,1168,xm_yBase,out,32,1,parent_func
+hls_coding_unit_hls_dup2,0,1172,xm_cb_xBase,out,32,1,parent_func
+hls_coding_unit_hls_dup2,0,1176,xm_cb_yBase,out,32,1,parent_func
+hls_coding_unit_hls_dup2,0,1180,xm_log2_cb_size,out,32,1,parent_func
+hls_coding_unit_hls_dup2,0,1336,rv_set_deblocking_bypass,in,32,1,parent_func
+hls_coding_unit_hls_dup2,0,1332,rv_ff_hevc_deblocking_boundary_strengths,in,32,1,parent_func
+hls_coding_unit_hls_dup2,0,1340,rv_hls_pcm_sample,in,32,1,parent_func
+hls_coding_unit_hls_dup2,0,1344,rv_hls_prediction_unit,in,32,1,parent_func
+hls_coding_unit_hls_dup2,0,1348,rv_hls_intra_prediction_unit,in,32,1,parent_func
+hls_coding_unit_hls_dup2,0,1352,rv_hls_transform_tree,in,32,1,parent_func
+hls_coding_unit_hls_dup2,0,1236,rv_callback_flag,in,32,1,parent_func
+hls_coding_unit_hls_dup2,0,36,length_r,out,32,1,parent_func
+hls_coding_unit_hls_dup2,0,544,xm_x,out,32,1,parent_func
+hls_coding_unit_hls_dup2,0,548,xm_y,out,32,1,parent_func
+hls_coding_unit_hls_dup2,1,512,pu_intra_pred_mode_0,out,8,4,(complete partition) parent_func
+hls_coding_unit_hls_dup2,1,513,pu_intra_pred_mode_1,out,8,4,(complete partition) parent_func
+hls_coding_unit_hls_dup2,1,514,pu_intra_pred_mode_2,out,8,4,(complete partition) parent_func
+hls_coding_unit_hls_dup2,1,515,pu_intra_pred_mode_3,out,8,4,(complete partition) parent_func
+hls_coding_unit_hls_dup2,0,540,qPy_pred,out,32,1,parent_func
+hls_coding_unit_hls_dup2,0,24,skip_flag_start,out,32,1,parent_func
+hls_coding_unit_hls_dup2,0,368,log2_min_cb_size,in,32,1,parent_func
+hls_coding_unit_hls_dup2,0,360,log2_ctb_size,in,32,1,parent_func
+hls_coding_unit_hls_dup2,0,436,diff_cu_qp_delta_depth,in,32,1,parent_func
+hls_coding_unit_hls_dup2,0,536,qp_y,in,8,1,parent_func
+hls_coding_unit_hls_dup2,0,440,transquant_bypass_enable_flag,in,8,1,parent_func
+hls_coding_unit_hls_dup2,0,392,min_cb_width,in,32,1,parent_func
+hls_coding_unit_hls_dup2,0,568,intra_split_flag,out,8,1,parent_func
+hls_coding_unit_hls_dup2,0,452,slice_type,in,8,1,parent_func
+hls_coding_unit_hls_dup2,0,608,ctb_left_flag,in,8,1,parent_func
+hls_coding_unit_hls_dup2,0,604,ctb_up_flag,in,8,1,parent_func
+hls_coding_unit_hls_dup2,0,320,amp_enabled_flag,in,8,1,parent_func
+hls_coding_unit_hls_dup2,0,400,pcm_enabled_flag,in,32,1,parent_func
+hls_coding_unit_hls_dup2,0,412,log2_min_pcm_cb_size,in,32,1,parent_func
+hls_coding_unit_hls_dup2,0,416,log2_max_pcm_cb_size,in,32,1,parent_func
+hls_coding_unit_hls_dup2,0,464,depth,in,32,1,parent_func
+hls_coding_unit_hls_dup2,0,1288,dc_skip_flag_p,in,32,1,xmem_dcache_pointer parent_func
+hls_coding_unit_hls_dup2,0,1272,dc_qp_y_tab_p,in,32,1,xmem_dcache_pointer parent_func
+hls_coding_unit_hls_dup2,0,1280,dc_tab_ct_depth_p,in,32,1,xmem_dcache_pointer parent_func
+#hls_coding_unit_hls_dup3,0,0,tid,in,32,1,apcall_arg
+#hls_coding_unit_hls_dup3,0,0,x0,in,32,1,apcall_arg
+#hls_coding_unit_hls_dup3,0,0,y0,in,32,1,apcall_arg
+#hls_coding_unit_hls_dup3,0,0,log2_cb_size,in,32,1,apcall_arg
+hls_coding_unit_hls_dup3,0,420,loop_filter_disable_flag,in,8,1,parent_func
+hls_coding_unit_hls_dup3,0,380,max_transform_hierarchy_depth_inter,in,32,1,parent_func
+hls_coding_unit_hls_dup3,0,1160,disable_deblocking_filter_flag,in,8,1,parent_func
+hls_coding_unit_hls_dup3,0,428,cu_qp_delta_enabled_flag,in,8,1,parent_func
+hls_coding_unit_hls_dup3,0,476,tu_is_cu_qp_delta_coded,in,8,1,parent_func
+hls_coding_unit_hls_dup3,0,572,cu_transquant_bypass_flag_i,in,8,1,parent_func
+hls_coding_unit_hls_dup3,0,572,cu_transquant_bypass_flag_o,out,8,1,parent_func
+hls_coding_unit_hls_dup3,0,28,pcm_flag_i,in,1,1,parent_func
+hls_coding_unit_hls_dup3,0,28,pcm_flag_o,out,1,1,parent_func
+hls_coding_unit_hls_dup3,0,504,merge_flag,in,8,1,parent_func
+hls_coding_unit_hls_dup3,0,560,pred_mode_i,in,8,1,parent_func
+hls_coding_unit_hls_dup3,0,560,pred_mode_o,out,8,1,parent_func
+hls_coding_unit_hls_dup3,0,564,part_mode_i,in,8,1,parent_func
+hls_coding_unit_hls_dup3,0,564,part_mode_o,out,8,1,parent_func
+hls_coding_unit_hls_dup3,0,576,max_trafo_depth,out,8,1,parent_func
+hls_coding_unit_hls_dup3,0,32,cb_size_i,in,32,1,parent_func
+hls_coding_unit_hls_dup3,0,32,cb_size_o,out,32,1,parent_func
+hls_coding_unit_hls_dup3,0,44,idx_i,in,32,1,parent_func
+hls_coding_unit_hls_dup3,0,44,idx_o,out,32,1,parent_func
+hls_coding_unit_hls_dup3,0,1164,xm_xBase,out,32,1,parent_func
+hls_coding_unit_hls_dup3,0,1168,xm_yBase,out,32,1,parent_func
+hls_coding_unit_hls_dup3,0,1172,xm_cb_xBase,out,32,1,parent_func
+hls_coding_unit_hls_dup3,0,1176,xm_cb_yBase,out,32,1,parent_func
+hls_coding_unit_hls_dup3,0,1180,xm_log2_cb_size,out,32,1,parent_func
+hls_coding_unit_hls_dup3,0,1336,rv_set_deblocking_bypass,in,32,1,parent_func
+hls_coding_unit_hls_dup3,0,1332,rv_ff_hevc_deblocking_boundary_strengths,in,32,1,parent_func
+hls_coding_unit_hls_dup3,0,1340,rv_hls_pcm_sample,in,32,1,parent_func
+hls_coding_unit_hls_dup3,0,1344,rv_hls_prediction_unit,in,32,1,parent_func
+hls_coding_unit_hls_dup3,0,1348,rv_hls_intra_prediction_unit,in,32,1,parent_func
+hls_coding_unit_hls_dup3,0,1352,rv_hls_transform_tree,in,32,1,parent_func
+hls_coding_unit_hls_dup3,0,1236,rv_callback_flag,in,32,1,parent_func
+hls_coding_unit_hls_dup3,0,36,length_r,out,32,1,parent_func
+hls_coding_unit_hls_dup3,0,544,xm_x,out,32,1,parent_func
+hls_coding_unit_hls_dup3,0,548,xm_y,out,32,1,parent_func
+hls_coding_unit_hls_dup3,1,512,pu_intra_pred_mode_0,out,8,4,(complete partition) parent_func
+hls_coding_unit_hls_dup3,1,513,pu_intra_pred_mode_1,out,8,4,(complete partition) parent_func
+hls_coding_unit_hls_dup3,1,514,pu_intra_pred_mode_2,out,8,4,(complete partition) parent_func
+hls_coding_unit_hls_dup3,1,515,pu_intra_pred_mode_3,out,8,4,(complete partition) parent_func
+hls_coding_unit_hls_dup3,0,540,qPy_pred,out,32,1,parent_func
+hls_coding_unit_hls_dup3,0,24,skip_flag_start,out,32,1,parent_func
+hls_coding_unit_hls_dup3,0,368,log2_min_cb_size,in,32,1,parent_func
+hls_coding_unit_hls_dup3,0,360,log2_ctb_size,in,32,1,parent_func
+hls_coding_unit_hls_dup3,0,436,diff_cu_qp_delta_depth,in,32,1,parent_func
+hls_coding_unit_hls_dup3,0,536,qp_y,in,8,1,parent_func
+hls_coding_unit_hls_dup3,0,440,transquant_bypass_enable_flag,in,8,1,parent_func
+hls_coding_unit_hls_dup3,0,392,min_cb_width,in,32,1,parent_func
+hls_coding_unit_hls_dup3,0,568,intra_split_flag,out,8,1,parent_func
+hls_coding_unit_hls_dup3,0,452,slice_type,in,8,1,parent_func
+hls_coding_unit_hls_dup3,0,608,ctb_left_flag,in,8,1,parent_func
+hls_coding_unit_hls_dup3,0,604,ctb_up_flag,in,8,1,parent_func
+hls_coding_unit_hls_dup3,0,320,amp_enabled_flag,in,8,1,parent_func
+hls_coding_unit_hls_dup3,0,400,pcm_enabled_flag,in,32,1,parent_func
+hls_coding_unit_hls_dup3,0,412,log2_min_pcm_cb_size,in,32,1,parent_func
+hls_coding_unit_hls_dup3,0,416,log2_max_pcm_cb_size,in,32,1,parent_func
+hls_coding_unit_hls_dup3,0,464,depth,in,32,1,parent_func
+hls_coding_unit_hls_dup3,0,1288,dc_skip_flag_p,in,32,1,xmem_dcache_pointer parent_func
+hls_coding_unit_hls_dup3,0,1272,dc_qp_y_tab_p,in,32,1,xmem_dcache_pointer parent_func
+hls_coding_unit_hls_dup3,0,1280,dc_tab_ct_depth_p,in,32,1,xmem_dcache_pointer parent_func
+#copy_top_left_pixel_hls,0,0,tid,in,32,1,apcall_arg
+#copy_top_left_pixel_hls,0,0,x0,in,32,1,apcall_arg
+#copy_top_left_pixel_hls,0,0,y0,in,32,1,apcall_arg
+#copy_top_left_pixel_hls,0,0,xBase,in,32,1,apcall_arg
+#copy_top_left_pixel_hls,0,0,yBase,in,32,1,apcall_arg
+copy_top_left_pixel_hls,0,168,log2_trafo_size,in,32,1,parent_func
+#copy_top_left_pixel_hls,0,0,blk_id,in,32,1,apcall_arg
+copy_top_left_pixel_hls,0,360,log2_ctb_size,in,32,1,parent_func
+copy_top_left_pixel_hls,0,376,log2_min_tb_size,in,32,1,parent_func
+copy_top_left_pixel_hls,0,560,pred_mode,in,8,1,parent_func
+copy_top_left_pixel_hls,1,336,hshift_0,in,32,3,(complete partition) parent_func
+copy_top_left_pixel_hls,1,340,hshift_1,in,32,3,(complete partition) parent_func
+copy_top_left_pixel_hls,1,344,hshift_2,in,32,3,(complete partition) parent_func
+copy_top_left_pixel_hls,1,348,vshift_0,in,32,3,(complete partition) parent_func
+copy_top_left_pixel_hls,1,352,vshift_1,in,32,3,(complete partition) parent_func
+copy_top_left_pixel_hls,1,356,vshift_2,in,32,3,(complete partition) parent_func
+copy_top_left_pixel_hls,1,1240,buf_data_0,in,32,3,(complete partition) parent_func
+copy_top_left_pixel_hls,1,1244,buf_data_1,in,32,3,(complete partition) parent_func
+copy_top_left_pixel_hls,1,1248,buf_data_2,in,32,3,(complete partition) parent_func
+copy_top_left_pixel_hls,1,1144,xm_linesize_0,in,32,3,(complete partition) parent_func
+copy_top_left_pixel_hls,1,1148,xm_linesize_1,in,32,3,(complete partition) parent_func
+copy_top_left_pixel_hls,1,1152,xm_linesize_2,in,32,3,(complete partition) parent_func
+copy_top_left_pixel_hls,0,1136,cmdr_run_i,in,8,1,parent_func
+copy_top_left_pixel_hls,0,1136,cmdr_run_o,out,8,1,parent_func
+genPredCol_hls,1,180,predColBuf_0,out,32,17,(complete partition)
+genPredCol_hls,1,184,predColBuf_1,out,32,17,(complete partition)
+genPredCol_hls,1,188,predColBuf_2,out,32,17,(complete partition)
+genPredCol_hls,1,192,predColBuf_3,out,32,17,(complete partition)
+genPredCol_hls,1,196,predColBuf_4,out,32,17,(complete partition)
+genPredCol_hls,1,200,predColBuf_5,out,32,17,(complete partition)
+genPredCol_hls,1,204,predColBuf_6,out,32,17,(complete partition)
+genPredCol_hls,1,208,predColBuf_7,out,32,17,(complete partition)
+genPredCol_hls,1,212,predColBuf_8,out,32,17,(complete partition)
+genPredCol_hls,1,216,predColBuf_9,out,32,17,(complete partition)
+genPredCol_hls,1,220,predColBuf_10,out,32,17,(complete partition)
+genPredCol_hls,1,224,predColBuf_11,out,32,17,(complete partition)
+genPredCol_hls,1,228,predColBuf_12,out,32,17,(complete partition)
+genPredCol_hls,1,232,predColBuf_13,out,32,17,(complete partition)
+genPredCol_hls,1,236,predColBuf_14,out,32,17,(complete partition)
+genPredCol_hls,1,240,predColBuf_15,out,32,17,(complete partition)
+genPredCol_hls,1,244,predColBuf_16_i,in,32,17,(complete partition)
+genPredCol_hls,1,244,predColBuf_16_o,out,32,17,(complete partition)
+genPredCol_hls,0,172,log2_width,in,8,1,
+genPredCol_hls,0,1276,dc_tab_mvf_pred_flag_row_p,in,32,1,xmem_dcache_pointer
+#genPredCol_hls,0,0,x0,in,32,1,apcall_arg
+#genPredCol_hls,0,0,y0,in,32,1,apcall_arg
+genPredCol_hls,0,1284,dc_cbf_luma_p,in,32,1,xmem_dcache_pointer
+genPredCol_hls,0,376,log2_min_tb_size,in,32,1,
+genPredCol_hls,0,388,min_tb_width,in,32,1,
+#genPredCol_hls,0,0,min_tb_height,in,32,1,apcall_arg
+ff_hevc_get_sub_cu_zscan_id_hls,0,360,log2_ctb_size,in,32,1,
+#ff_hevc_get_sub_cu_zscan_id_hls,0,0,x0,in,32,1,apcall_arg
+#ff_hevc_get_sub_cu_zscan_id_hls,0,0,y0,in,32,1,apcall_arg
+ff_hevc_get_sub_cu_zscan_id_hls,0,248,zscan_id,out,32,1,
+#ff_hevc_skip_flag_decode_hls,0,0,left_skip_flag,in,8,1,apcall_arg
+#ff_hevc_skip_flag_decode_hls,0,0,up_skip_flag,in,8,1,apcall_arg
+ff_hevc_skip_flag_decode_hls,0,360,log2_ctb_size,in,32,1,
+ff_hevc_skip_flag_decode_hls,0,608,ctb_left_flag,in,8,1,
+ff_hevc_skip_flag_decode_hls,0,604,ctb_up_flag,in,8,1,
+#ff_hevc_skip_flag_decode_hls,0,0,x0,in,32,1,apcall_arg
+#ff_hevc_skip_flag_decode_hls,0,0,y0,in,32,1,apcall_arg
+ff_hevc_set_qPy_hls,0,536,qp_y,out,8,1,
+ff_hevc_set_qPy_hls,0,532,first_qp_group_i,in,8,1,
+ff_hevc_set_qPy_hls,0,532,first_qp_group_o,out,8,1,
+#ff_hevc_set_qPy_hls,0,0,is_cu_qp_delta_coded,in,8,1,apcall_arg
+ff_hevc_set_qPy_hls,0,540,qPy_pred,in,32,1,
+ff_hevc_set_qPy_hls,0,360,log2_ctb_size,in,32,1,
+ff_hevc_set_qPy_hls,0,436,diff_cu_qp_delta_depth,in,32,1,
+ff_hevc_set_qPy_hls,0,368,log2_min_cb_size,in,32,1,
+ff_hevc_set_qPy_hls,0,392,min_cb_width,in,32,1,
+ff_hevc_set_qPy_hls,0,460,slice_qp,in,8,1,
+#ff_hevc_set_qPy_hls,0,0,xBase,in,32,1,apcall_arg
+#ff_hevc_set_qPy_hls,0,0,yBase,in,32,1,apcall_arg
+#ff_hevc_set_qPy_hls,0,0,log2_cb_size,in,32,1,apcall_arg
+ff_hevc_set_qPy_hls,0,1272,dc_qp_y_tab_p,in,32,1,xmem_dcache_pointer
+ff_hevc_set_qPy_hls,0,468,tu_cu_qp_delta,in,32,1,
+ff_hevc_set_qPy_hls,0,1132,qp_bd_offset,in,32,1,
+#hls_decode_neighbour_hls,0,0,dc_ctb_addr_rs_to_ts_p,in,32,1,apcall_arg_dcache_pointer
+#hls_decode_neighbour_hls,0,0,dc_tile_id_p,in,32,1,apcall_arg_dcache_pointer
+hls_decode_neighbour_hls,0,532,first_qp_group,out,8,1,
+hls_decode_neighbour_hls,0,620,end_of_tiles_x,out,16,1,
+hls_decode_neighbour_hls,0,624,end_of_tiles_y,out,16,1,
+hls_decode_neighbour_hls,0,260,slice_or_tiles_left_boundary,out,8,1,
+hls_decode_neighbour_hls,0,264,slice_or_tiles_up_boundary,out,8,1,
+hls_decode_neighbour_hls,0,608,ctb_left_flag,out,1,1,
+hls_decode_neighbour_hls,0,604,ctb_up_flag,out,1,1,
+hls_decode_neighbour_hls,0,616,ctb_up_right_flag,out,1,1,
+hls_decode_neighbour_hls,0,612,ctb_up_left_flag,out,1,1,
+hls_decode_neighbour_hls,0,272,x_ctb,in,32,1,
+hls_decode_neighbour_hls,0,276,y_ctb,in,32,1,
+hls_decode_neighbour_hls,0,280,ctb_addr_ts,in,32,1,
+hls_decode_neighbour_hls,0,360,log2_ctb_size,in,32,1,
+hls_decode_neighbour_hls,0,284,ctb_width,in,32,1,
+hls_decode_neighbour_hls,0,288,slice_addr,in,32,1,
+hls_decode_neighbour_hls,0,252,entropy_coding_sync_enabled_flag,in,8,1,
+hls_decode_neighbour_hls,0,256,tiles_enabled_flag,in,8,1,
+hls_decode_neighbour_hls,0,444,num_tile_columns,in,32,1,
+hls_decode_neighbour_hls,1,8192,column_width_q0,in,16,20,addr_width=5
+hls_decode_neighbour_hls,0,408,width,in,32,1,
+hls_decode_neighbour_hls,0,332,height,in,32,1,
+#set_tab_mvf_pred_flag_hls,0,0,x0,in,32,1,apcall_arg
+#set_tab_mvf_pred_flag_hls,0,0,y0,in,32,1,apcall_arg
+#set_tab_mvf_pred_flag_hls,0,0,log2_cb_size,in,32,1,apcall_arg
+set_tab_mvf_pred_flag_hls,0,372,log2_min_pu_size,in,32,1,
+set_tab_mvf_pred_flag_hls,0,396,min_pu_width,in,32,1,
+set_tab_mvf_pred_flag_hls,0,172,log2_width,in,8,1,
+set_tab_mvf_pred_flag_hls,0,1276,dc_tab_mvf_pred_flag_row_p,in,32,1,xmem_dcache_pointer
+set_tab_mvf_pred_flag_hls,1,180,predColBuf_0_i,in,32,17,(complete partition)
+set_tab_mvf_pred_flag_hls,1,180,predColBuf_0_o,out,32,17,(complete partition)
+set_tab_mvf_pred_flag_hls,1,184,predColBuf_1_i,in,32,17,(complete partition)
+set_tab_mvf_pred_flag_hls,1,184,predColBuf_1_o,out,32,17,(complete partition)
+set_tab_mvf_pred_flag_hls,1,188,predColBuf_2_i,in,32,17,(complete partition)
+set_tab_mvf_pred_flag_hls,1,188,predColBuf_2_o,out,32,17,(complete partition)
+set_tab_mvf_pred_flag_hls,1,192,predColBuf_3_i,in,32,17,(complete partition)
+set_tab_mvf_pred_flag_hls,1,192,predColBuf_3_o,out,32,17,(complete partition)
+set_tab_mvf_pred_flag_hls,1,196,predColBuf_4_i,in,32,17,(complete partition)
+set_tab_mvf_pred_flag_hls,1,196,predColBuf_4_o,out,32,17,(complete partition)
+set_tab_mvf_pred_flag_hls,1,200,predColBuf_5_i,in,32,17,(complete partition)
+set_tab_mvf_pred_flag_hls,1,200,predColBuf_5_o,out,32,17,(complete partition)
+set_tab_mvf_pred_flag_hls,1,204,predColBuf_6_i,in,32,17,(complete partition)
+set_tab_mvf_pred_flag_hls,1,204,predColBuf_6_o,out,32,17,(complete partition)
+set_tab_mvf_pred_flag_hls,1,208,predColBuf_7_i,in,32,17,(complete partition)
+set_tab_mvf_pred_flag_hls,1,208,predColBuf_7_o,out,32,17,(complete partition)
+set_tab_mvf_pred_flag_hls,1,212,predColBuf_8_i,in,32,17,(complete partition)
+set_tab_mvf_pred_flag_hls,1,212,predColBuf_8_o,out,32,17,(complete partition)
+set_tab_mvf_pred_flag_hls,1,216,predColBuf_9_i,in,32,17,(complete partition)
+set_tab_mvf_pred_flag_hls,1,216,predColBuf_9_o,out,32,17,(complete partition)
+set_tab_mvf_pred_flag_hls,1,220,predColBuf_10_i,in,32,17,(complete partition)
+set_tab_mvf_pred_flag_hls,1,220,predColBuf_10_o,out,32,17,(complete partition)
+set_tab_mvf_pred_flag_hls,1,224,predColBuf_11_i,in,32,17,(complete partition)
+set_tab_mvf_pred_flag_hls,1,224,predColBuf_11_o,out,32,17,(complete partition)
+set_tab_mvf_pred_flag_hls,1,228,predColBuf_12_i,in,32,17,(complete partition)
+set_tab_mvf_pred_flag_hls,1,228,predColBuf_12_o,out,32,17,(complete partition)
+set_tab_mvf_pred_flag_hls,1,232,predColBuf_13_i,in,32,17,(complete partition)
+set_tab_mvf_pred_flag_hls,1,232,predColBuf_13_o,out,32,17,(complete partition)
+set_tab_mvf_pred_flag_hls,1,236,predColBuf_14_i,in,32,17,(complete partition)
+set_tab_mvf_pred_flag_hls,1,236,predColBuf_14_o,out,32,17,(complete partition)
+set_tab_mvf_pred_flag_hls,1,240,predColBuf_15_i,in,32,17,(complete partition)
+set_tab_mvf_pred_flag_hls,1,240,predColBuf_15_o,out,32,17,(complete partition)
+set_tab_mvf_pred_flag_hls,1,244,predColBuf_16_i,in,32,17,(complete partition)
+set_tab_mvf_pred_flag_hls,1,244,predColBuf_16_o,out,32,17,(complete partition)
+init_intra_neighbors_hls,1,336,hshift_0,in,32,3,(complete partition)
+init_intra_neighbors_hls,1,340,hshift_1,in,32,3,(complete partition)
+init_intra_neighbors_hls,1,344,hshift_2,in,32,3,(complete partition)
+init_intra_neighbors_hls,1,348,vshift_0,in,32,3,(complete partition)
+init_intra_neighbors_hls,1,352,vshift_1,in,32,3,(complete partition)
+init_intra_neighbors_hls,1,356,vshift_2,in,32,3,(complete partition)
+init_intra_neighbors_hls,0,372,log2_min_pu_size,in,32,1,
+init_intra_neighbors_hls,0,376,log2_min_tb_size,in,32,1,
+init_intra_neighbors_hls,0,360,log2_ctb_size,in,32,1,
+init_intra_neighbors_hls,0,404,tb_mask,in,8,1,
+init_intra_neighbors_hls,0,408,width,in,32,1,
+init_intra_neighbors_hls,0,332,height,in,32,1,
+init_intra_neighbors_hls,0,172,log2_width,in,8,1,
+init_intra_neighbors_hls,0,176,log2_height,in,8,1,
+init_intra_neighbors_hls,0,424,constrained_intra_pred_flag,in,8,1,
+init_intra_neighbors_hls,0,1260,dc_min_tb_addr_zs_p,in,32,1,xmem_dcache_pointer
+#init_intra_neighbors_hls,0,0,x0,in,32,1,apcall_arg
+#init_intra_neighbors_hls,0,0,y0,in,32,1,apcall_arg
+#init_intra_neighbors_hls,0,0,log2_size,in,32,1,apcall_arg
+#init_intra_neighbors_hls,0,0,c_idx,in,32,1,apcall_arg
+init_intra_neighbors_hls,0,600,cand_bottom_left,in,8,1,
+init_intra_neighbors_hls,0,584,cand_left,in,8,1,
+init_intra_neighbors_hls,0,588,cand_up_left,in,8,1,
+init_intra_neighbors_hls,0,580,cand_up,in,8,1,
+init_intra_neighbors_hls,0,596,cand_up_right,in,8,1,
+init_intra_neighbors_hls,0,644,numIntraNeighbor,out,32,1,
+init_intra_neighbors_hls,0,648,totalUnits,out,32,1,
+init_intra_neighbors_hls,0,652,aboveUnits,out,32,1,
+init_intra_neighbors_hls,0,656,leftUnits,out,32,1,
+init_intra_neighbors_hls,0,660,unitWidth,out,32,1,
+init_intra_neighbors_hls,0,664,unitHeight,out,32,1,
+init_intra_neighbors_hls,0,668,log2TrSize,out,32,1,
+init_intra_neighbors_hls,0,672,bNeighborFlags_i,in,65,1,
+init_intra_neighbors_hls,0,672,bNeighborFlags_o,out,65,1,
+init_intra_neighbors_hls,0,396,min_pu_width,in,32,1,
+init_intra_neighbors_hls,0,1276,dc_tab_mvf_pred_flag_row_p,in,32,1,xmem_dcache_pointer
+init_intra_neighbors_hls,1,180,predColBuf_0,in,32,17,(complete partition)
+init_intra_neighbors_hls,1,184,predColBuf_1,in,32,17,(complete partition)
+init_intra_neighbors_hls,1,188,predColBuf_2,in,32,17,(complete partition)
+init_intra_neighbors_hls,1,192,predColBuf_3,in,32,17,(complete partition)
+init_intra_neighbors_hls,1,196,predColBuf_4,in,32,17,(complete partition)
+init_intra_neighbors_hls,1,200,predColBuf_5,in,32,17,(complete partition)
+init_intra_neighbors_hls,1,204,predColBuf_6,in,32,17,(complete partition)
+init_intra_neighbors_hls,1,208,predColBuf_7,in,32,17,(complete partition)
+init_intra_neighbors_hls,1,212,predColBuf_8,in,32,17,(complete partition)
+init_intra_neighbors_hls,1,216,predColBuf_9,in,32,17,(complete partition)
+init_intra_neighbors_hls,1,220,predColBuf_10,in,32,17,(complete partition)
+init_intra_neighbors_hls,1,224,predColBuf_11,in,32,17,(complete partition)
+init_intra_neighbors_hls,1,228,predColBuf_12,in,32,17,(complete partition)
+init_intra_neighbors_hls,1,232,predColBuf_13,in,32,17,(complete partition)
+init_intra_neighbors_hls,1,236,predColBuf_14,in,32,17,(complete partition)
+init_intra_neighbors_hls,1,240,predColBuf_15,in,32,17,(complete partition)
+init_intra_neighbors_hls,1,244,predColBuf_16,in,32,17,(complete partition)
+init_intra_neighbors_hls,0,452,slice_type,in,8,1,
+init_intra_neighbors_chroma_hls,1,336,hshift_0,in,32,3,(complete partition)
+init_intra_neighbors_chroma_hls,1,340,hshift_1,in,32,3,(complete partition)
+init_intra_neighbors_chroma_hls,1,344,hshift_2,in,32,3,(complete partition)
+init_intra_neighbors_chroma_hls,1,348,vshift_0,in,32,3,(complete partition)
+init_intra_neighbors_chroma_hls,1,352,vshift_1,in,32,3,(complete partition)
+init_intra_neighbors_chroma_hls,1,356,vshift_2,in,32,3,(complete partition)
+init_intra_neighbors_chroma_hls,0,372,log2_min_pu_size,in,32,1,
+init_intra_neighbors_chroma_hls,0,376,log2_min_tb_size,in,32,1,
+init_intra_neighbors_chroma_hls,0,360,log2_ctb_size,in,32,1,
+init_intra_neighbors_chroma_hls,0,404,tb_mask,in,8,1,
+init_intra_neighbors_chroma_hls,0,408,width,in,32,1,
+init_intra_neighbors_chroma_hls,0,332,height,in,32,1,
+init_intra_neighbors_chroma_hls,0,172,log2_width,in,8,1,
+init_intra_neighbors_chroma_hls,0,176,log2_height,in,8,1,
+init_intra_neighbors_chroma_hls,0,424,constrained_intra_pred_flag,in,8,1,
+init_intra_neighbors_chroma_hls,0,1260,dc_min_tb_addr_zs_p,in,32,1,xmem_dcache_pointer
+#init_intra_neighbors_chroma_hls,0,0,x0,in,32,1,apcall_arg
+#init_intra_neighbors_chroma_hls,0,0,y0,in,32,1,apcall_arg
+#init_intra_neighbors_chroma_hls,0,0,log2_size,in,32,1,apcall_arg
+#init_intra_neighbors_chroma_hls,0,0,c_idx,in,32,1,apcall_arg
+init_intra_neighbors_chroma_hls,0,1508,cand_bottom_left_c,in,8,1,
+init_intra_neighbors_chroma_hls,0,1492,cand_left_c,in,8,1,
+init_intra_neighbors_chroma_hls,0,1496,cand_up_left_c,in,8,1,
+init_intra_neighbors_chroma_hls,0,1488,cand_up_c,in,8,1,
+init_intra_neighbors_chroma_hls,0,1504,cand_up_right_c,in,8,1,
+init_intra_neighbors_chroma_hls,0,684,numIntraNeighbor_c,out,32,1,
+init_intra_neighbors_chroma_hls,0,688,totalUnits_c,out,32,1,
+init_intra_neighbors_chroma_hls,0,692,aboveUnits_c,out,32,1,
+init_intra_neighbors_chroma_hls,0,696,leftUnits_c,out,32,1,
+init_intra_neighbors_chroma_hls,0,700,unitWidth_c,out,32,1,
+init_intra_neighbors_chroma_hls,0,704,unitHeight_c,out,32,1,
+init_intra_neighbors_chroma_hls,0,708,log2TrSize_c,out,32,1,
+init_intra_neighbors_chroma_hls,0,712,bNeighborFlags_c_i,in,65,1,
+init_intra_neighbors_chroma_hls,0,712,bNeighborFlags_c_o,out,65,1,
+init_intra_neighbors_chroma_hls,0,396,min_pu_width,in,32,1,
+init_intra_neighbors_chroma_hls,0,1276,dc_tab_mvf_pred_flag_row_p,in,32,1,xmem_dcache_pointer
+init_intra_neighbors_chroma_hls,1,180,predColBuf_0,in,32,17,(complete partition)
+init_intra_neighbors_chroma_hls,1,184,predColBuf_1,in,32,17,(complete partition)
+init_intra_neighbors_chroma_hls,1,188,predColBuf_2,in,32,17,(complete partition)
+init_intra_neighbors_chroma_hls,1,192,predColBuf_3,in,32,17,(complete partition)
+init_intra_neighbors_chroma_hls,1,196,predColBuf_4,in,32,17,(complete partition)
+init_intra_neighbors_chroma_hls,1,200,predColBuf_5,in,32,17,(complete partition)
+init_intra_neighbors_chroma_hls,1,204,predColBuf_6,in,32,17,(complete partition)
+init_intra_neighbors_chroma_hls,1,208,predColBuf_7,in,32,17,(complete partition)
+init_intra_neighbors_chroma_hls,1,212,predColBuf_8,in,32,17,(complete partition)
+init_intra_neighbors_chroma_hls,1,216,predColBuf_9,in,32,17,(complete partition)
+init_intra_neighbors_chroma_hls,1,220,predColBuf_10,in,32,17,(complete partition)
+init_intra_neighbors_chroma_hls,1,224,predColBuf_11,in,32,17,(complete partition)
+init_intra_neighbors_chroma_hls,1,228,predColBuf_12,in,32,17,(complete partition)
+init_intra_neighbors_chroma_hls,1,232,predColBuf_13,in,32,17,(complete partition)
+init_intra_neighbors_chroma_hls,1,236,predColBuf_14,in,32,17,(complete partition)
+init_intra_neighbors_chroma_hls,1,240,predColBuf_15,in,32,17,(complete partition)
+init_intra_neighbors_chroma_hls,1,244,predColBuf_16,in,32,17,(complete partition)
+init_intra_neighbors_chroma_hls,0,452,slice_type,in,8,1,
+ff_hevc_set_neighbour_available_hls,0,580,cand_up,out,1,1,
+ff_hevc_set_neighbour_available_hls,0,584,cand_left,out,1,1,
+ff_hevc_set_neighbour_available_hls,0,588,cand_up_left,out,1,1,
+ff_hevc_set_neighbour_available_hls,0,592,cand_up_right_sap,out,1,1,
+ff_hevc_set_neighbour_available_hls,0,596,cand_up_right,out,1,1,
+ff_hevc_set_neighbour_available_hls,0,600,cand_bottom_left,out,1,1,
+ff_hevc_set_neighbour_available_hls,0,360,log2_ctb_size,in,32,1,
+ff_hevc_set_neighbour_available_hls,0,604,ctb_up_flag,in,8,1,
+ff_hevc_set_neighbour_available_hls,0,608,ctb_left_flag,in,8,1,
+ff_hevc_set_neighbour_available_hls,0,612,ctb_up_left_flag,in,8,1,
+ff_hevc_set_neighbour_available_hls,0,616,ctb_up_right_flag,in,8,1,
+ff_hevc_set_neighbour_available_hls,0,620,end_of_tiles_x,in,16,1,
+ff_hevc_set_neighbour_available_hls,0,624,end_of_tiles_y,in,16,1,
+#ff_hevc_set_neighbour_available_hls,0,0,x0,in,32,1,apcall_arg
+#ff_hevc_set_neighbour_available_hls,0,0,y0,in,32,1,apcall_arg
+ff_hevc_set_neighbour_available_hls,0,160,nPbW,out,32,1,
+ff_hevc_set_neighbour_available_hls,0,164,nPbH,out,32,1,
+#ff_hevc_set_neighbour_available_hls,0,0,arg_nPbW,in,32,1,apcall_arg
+#ff_hevc_set_neighbour_available_hls,0,0,arg_nPbH,in,32,1,apcall_arg

@@ -1,0 +1,9 @@
+scalar_bank:32
+array_bank:4
+cyclic_bank:4
+scalar_subbank_depth:16
+array_subbank_depth:1048576
+cyclic_subbank_depth:16777216
+scalar_byte_size:2048
+array_byte_size:16777216
+cyclic_byte_size:268435456
