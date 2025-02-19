@@ -58,8 +58,18 @@ while {[gets $file_handle line] != -1} {
         puts "create directory: $dest"
         file mkdir ${dest}
     }
-    
-  	exec cp prj/${func_name}_sol/syn/verilog/* ${dest}/
+
+    set current_dir [pwd]
+    puts "current_dir: $current_dir"
+
+    #Copy file to dest
+  	#exec cp $current_dir/prj/${func_name}_sol/syn/verilog/* ${dest}/
+  	set files [glob -nocomplain ${current_dir}/prj/${func_name}_sol/syn/verilog/*]
+  	foreach file $files {
+  	   set baseName [file tail $file]
+  	   set destPath "$dest/$baseName"
+  	   file copy -force $file $destPath
+  	}
   }
 }
 

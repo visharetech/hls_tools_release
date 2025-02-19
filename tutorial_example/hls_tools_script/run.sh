@@ -665,6 +665,7 @@ check_and_reorder_xmem(){
 run_xmem_model(){
     echo -e "${GREEN}Step 1. Run xmem model${NONE}"
     local current_dir=$(pwd)
+    chmod +x ${hls_tools_dir}/xgen/xmem_model
     ${hls_tools_dir}/xgen/xmem_model  ${export_rtl_conn_dir}/xmem_func.csv               \
                                       ${export_rtl_conn_dir}/custom_connection_tbl.txt   \
                                       ${export_rtl_conn_dir}/xadr.txt                    \
