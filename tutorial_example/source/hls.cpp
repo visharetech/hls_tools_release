@@ -43,7 +43,7 @@ void IMPL(vector_add)(HLS_COMMON_ARG vector_2d *vec_d1, const vector_2d *vec_s1,
 //Below function demonstrate it can support access from bigarray
 void IMPL(fill_value)(HLS_COMMON_ARG int value, int fillsize, int big_array[10000]){
     for (int i = 0; i < fillsize; ++i) {
-#pragma HLS PIPELINE
+#pragma HLS PIPELINE OFF
         big_array[i] = value;
     }
 }
@@ -115,6 +115,8 @@ void IMPL(hevc_loop_filter_chroma_8bit_hls)(HLS_COMMON_ARG uint8_t pix_base[1920
 #undef Q3
 
 void IMPL(cnn_hls)(HLS_COMMON_ARG int width, int height, int filter, char pixel[(MAX_WIDTH_SIZE + MAX_FILTER_SIZE -1 ) * (MAX_HEIGHT_SIZE + MAX_FILTER_SIZE - 1)], char filter_map[MAX_FILTER_SIZE * MAX_FILTER_SIZE], int sum[MAX_WIDTH_SIZE * MAX_HEIGHT_SIZE]) {
+#pragma HLS INTERFACE ap_memory port=pixel storage_type=RAM_2P
+
     /*
     - vdir is set a DOWN
     - for each column c0 of the filter
@@ -142,15 +144,13 @@ void IMPL(cnn_hls)(HLS_COMMON_ARG int width, int height, int filter, char pixel[
         if (r0 == target) {
             c0++;
             target = (target == 0) ? (filter - 1) : 0;
-            core.shift(LEFT);
+            core.shiftLeft();
+        } else if (target == 0) {
+            core.shiftUp();
+            r0--;
         } else {
-            if (target == 0) {
-                core.shift(UP);
-                r0--;
-            } else {
-                core.shift(DOWN);
-                r0++;
-            }
+            core.shiftDown();
+            r0++;
         }
     }   
     //core.output(sum);

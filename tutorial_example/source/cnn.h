@@ -95,51 +95,67 @@ public:
 		//	sum = NULL;
 		//}
 	}
-	
-	void shift(int dir) 
-	{
+
+	void shiftUp(){
+#pragma HLS INLINE
 		char tmp_pixel;
 		int x, y;
-		
+		for (x = 0; x < rwidth; x++) {
+			tmp_pixel = pixel[(rheight - 1) * rwidth + x];
+			for (y = rheight - 2; y >= 0; y--){
+				pixel[(y + 1) * rwidth + x] = pixel[y * rwidth + x];
+			}
+			pixel[x] = tmp_pixel;
+		}
+	}
+
+	void shiftLeft() 
+	{
+#pragma HLS INLINE
+		char tmp_pixel;
+		int x, y;
+
 //		printf("original: ");
 //		for (int i = 0; i < rwidth * rheight; i++)
 //			printf("%d ", pixel[i]);
 //		printf("\n");
-		
-        switch (dir) {
-            case UP:
-				for (x = 0; x < rwidth; x++) {
-					tmp_pixel = pixel[(rheight - 1) * rwidth + x];
-					for (y = rheight - 2; y >= 0; y--) 
-						pixel[(y + 1) * rwidth + x] = pixel[y * rwidth + x];
-					pixel[x] = tmp_pixel;
-				}
-                break;
-            case LEFT:
-				for (y = 0; y < rheight; y++) {
-					tmp_pixel = pixel[y * rwidth];
-					for (x = 1; x < rwidth; x++) 
-						pixel[y * rwidth + x - 1] = pixel[y * rwidth + x];
-					pixel[y * rwidth + rwidth - 1] = tmp_pixel;
-				}
-                break;
-			default: // case DOWN: 
-				for (x = 0; x < rwidth; x++) {
-					tmp_pixel = pixel[x];
-					for (y = 1; y < rheight; y++) 
-						pixel[(y - 1) * rwidth + x] = pixel[y * rwidth + x];
-					pixel[(rheight - 1) * rwidth + x] = tmp_pixel;
-				}
-                break;
-        }
+
+		for (y = 0; y < rheight; y++) {
+			tmp_pixel = pixel[y * rwidth];
+			for (x = 1; x < rwidth; x++) {
+				pixel[y * rwidth + x - 1] = pixel[y * rwidth + x];
+			}
+			pixel[y * rwidth + rwidth - 1] = tmp_pixel;
+		}
 		
 //		printf("new %d: ", dir);
 //		for (int i = 0; i < rwidth * rheight; i++)
 //			printf("%d ", pixel[i]);
 //		printf("\n");
-		
     }
 
+	void shiftDown(){
+#pragma HLS INLINE
+
+		/*
+		org code not HLS favour which contains timing error, rewrite the code as below
+		for (x = 0; x < rwidth; x++) {
+			tmp_pixel = pixel[x];
+			for (y = 1; y < rheight; y++) 
+				pixel[(y - 1) * rwidth + x] = pixel[y * rwidth + x];
+			pixel[(rheight - 1) * rwidth + x] = tmp_pixel;
+		}*/
+
+		char tmp_pixel;
+		int x, y;
+		for (x = 0; x < rwidth; x++) {
+			tmp_pixel = pixel[x];
+			for (y = 0; y < rheight-1; y++) {
+				pixel[y * rwidth + x] = pixel[(y+1) * rwidth + x];
+			}
+			pixel[(rheight - 1) * rwidth + x] = tmp_pixel;
+		}
+	}
 
     // implement scalar multiply operation
 	void scalar_matrix_multAdd(bool clear, char filter) 
