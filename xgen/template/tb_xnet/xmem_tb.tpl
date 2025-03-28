@@ -23,6 +23,21 @@ ${run_statement}
     end 
 endtask
 
+always @ (posedge clk) begin
+    if (~rstn) begin
+        rand_ap_ce <= '{default: '0};
+    end
+    else begin
+        for (int i=0; i<HLS_NUM; i++) begin
+            rand_ap_ce[i] <= $$urandom_range(0, 1);
+        end
+    end
+end
+
+always_comb begin 
+${comb_statement}
+end
+
 task automatic xnet_sig_init; 
     begin
 ${init_statement}

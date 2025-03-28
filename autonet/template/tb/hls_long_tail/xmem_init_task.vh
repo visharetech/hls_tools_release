@@ -13,7 +13,8 @@ enum {SCALAR, ARRAY, CYCLIC, RANGE_ALL} range_t;
 //include xmem parameter 
 //----------------------------------------------------------
 `include "xmem_param.vh"
-
+`include "xmember_enum.vh"
+`include "xmember_grp.vh"
 
 
 //----------------------------------------------------------
@@ -23,6 +24,9 @@ logic xmem_init_param_done = 0;
 
 int   subBankDepth[PARTITION][RANGE_ALL];
 
+int xcache_malloc_base = 64 * 1024;
+int xcache_malloc_ptr = 0;
+int xcache_malloc_bank = 0;
 
 //----------------------------------------------------------
 //task
@@ -154,8 +158,73 @@ task automatic risc_cmd_write;
     end
 endtask
 
+task automatic set_xmember_base;
+	input int enum_xmember;
+	input int base;
+	begin 
+        int elem_no, idx;
+    
+		$display ("enum_xmember: %d\n", enum_xmember);
+	
+		elem_no = grp_xmember[enum_xmember][0]; //the number of elements in the each grp	
+		for (int n=0; n<elem_no; n++) begin
+			idx = grp_xmember[enum_xmember][n+1];
+			load_reqMux_cmd(base+diff_offset[idx], typeId[idx], bits[idx], muxNum[idx], s[idx], ba[idx], d[idx], ap[idx]);
+			offset[idx] =base+diff_offset[idx];
+			//$display ("offset: %d", offset[idx]);
+		end
+	end 
+endtask
 
+task automatic set_xmember_base_by_name;
+	input string name;
+	input int base;
+	begin     
+        int enum_xmember, elem_no, idx;
+        for (int i = 0; i < total_max_xmember; i++) begin
+            if (name == xmember_name[i]) begin
+                enum_xmember = i;
+                break;
+            end
+        end    
+    
+		$display ("enum_xmember: %d\n", enum_xmember);
+		elem_no = grp_xmember[enum_xmember][0]; //the number of elements in the each grp	
+		//$display ("elem_no: %d\n", elem_no);
+		for (int n=0; n<elem_no; n++) begin 
+			idx = grp_xmember[enum_xmember][n+1];
+			//$display ("elem_idx: %d", idx);
+			load_reqMux_cmd(base+diff_offset[idx], typeId[idx], bits[idx], muxNum[idx], s[idx], ba[idx], d[idx], ap[idx]);
+			offset[idx] =base+diff_offset[idx];
+			//$display ("offset: %d", offset[idx]);
+		end 
+	end 
+endtask
 
+task automatic xcache_malloc;
+	input string name;
+    input int size;
+    output int offset;
+    begin
+        if (xcache_malloc_ptr == 0) begin
+            xcache_malloc_ptr = subRangeStart[0][ARRAY-1] + xcache_malloc_base;
+        end        
+        offset = xcache_malloc_ptr;
+        
+        $display("xcache malloc: name=%s size=%0d ptr=%0d", name, size, offset);
+        set_xmember_base_by_name(name, offset);                
+        
+        xcache_malloc_ptr += ((size + 3) & (~3));
+        if (xcache_malloc_ptr >= ((xcache_malloc_bank + 1) * subBankSize[0][ARRAY])) begin
+            xcache_malloc_bank++;
+            if (xcache_malloc_bank == bankNum[ARRAY]) begin
+                $error("Cannot allocate xcache pointer: name=%s size=%0d ptr=%0d", name, size, offset);
+                $stop;
+            end
+            xcache_malloc_ptr = subRangeStart[0][ARRAY-1] + (xcache_malloc_bank * subBankSize[0][ARRAY]) + xcache_malloc_base;            
+        end
+    end
+endtask
 
 
 

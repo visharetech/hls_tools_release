@@ -32,17 +32,24 @@ localparam AP_CTRL_START_NB  = 1;    //Same as SET_AP_START_NB.
 localparam AP_CTRL_ARGUMENT  = 2;    //Same as SET_AP_ARGUMENT.
 localparam AP_CTRL_DONE      = 3;    //Same as WAIT_AP_DONE.
 
+//Return mdoe
+localparam LIFO_MODE = 0;
+localparam FIFO_MODE = 1;
+
+
 //----------------------------
 // Function arbiter interface
 //----------------------------
-task automatic call_child(input int core, input int child, input [255:0] args, output [31:0] ret);
+task automatic call_child(input int core, input int thread, input int child, input int retMode, input [255:0] args, output [31:0] ret);
     logic [31:0] timeout;
+    //Lock for ap_interface
+    core_key[core].get(1);
     //Function call
     rv_prnt_reqVld_i   [core] = 1;
     rv_prnt_reqChild_i [core] = child;
-    rv_prnt_reqPc_i    [core] = {core[7:0], core[7:0]};
+    rv_prnt_reqPc_i    [core] = {thread[15:0], core[7:0], core[7:0]};
     rv_prnt_reqArgs_i  [core] = args;
-    rv_prnt_reqReturn_i[core] = 1;
+    rv_prnt_reqReturn_i[core] = {retMode[0],1'b1};
     while(1) begin
         @(negedge clk);
         if (rv_prnt_reqRdy_o[core]) begin
@@ -59,12 +66,22 @@ task automatic call_child(input int core, input int child, input [255:0] args, o
     rv_prnt_reqPc_i    [core] = 0;
     rv_prnt_reqArgs_i  [core] = 0;
     rv_prnt_reqReturn_i[core] = 0;
+    //Unlock for ap_interface
+    core_key[core].put(1);
     //Wait return
-    rv_prnt_retRdy_i   [core] = 1;
     while(1) begin
         @(negedge clk);
-        if (rv_prnt_retVld_o[core]) begin
+        if (rv_prnt_retVld_o[core] && (rv_prnt_retChild_o[core][15:0] == child)) begin
             ret = rv_prnt_retDat_o[core];
+            //Lock for ap_interface
+            core_key[core].get(1);
+            @(posedge clk);
+            rv_prnt_retRdy_i[core] = 1;
+            @(posedge clk);
+            rv_prnt_retRdy_i[core] = 0;
+            @(posedge clk);
+            //Unlock for ap_interface
+            core_key[core].put(1);
             break;
         end
         timeout++;
@@ -73,8 +90,6 @@ task automatic call_child(input int core, input int child, input [255:0] args, o
         end
     end
     @(posedge clk);
-    rv_prnt_retRdy_i[core] = 0;
-    @(posedge clk);     
 endtask
 
 
@@ -210,6 +225,8 @@ endtask
 //---------------------
 task automatic riscv_xcache_wr(int core, input [31:0] addr, input [31:0] din, input [3:0] strb);
     logic [31:0] timeout;
+    //Lock for xcache
+    core_key[core].get(1);
     rv_xcache_part [core] = core;
     rv_xcache_we   [core] = strb;
     rv_xcache_addr [core] = addr;
@@ -231,6 +248,8 @@ task automatic riscv_xcache_wr(int core, input [31:0] addr, input [31:0] din, in
     rv_xcache_we   [core] = 0;
     rv_xcache_addr [core] = 0;
     rv_xcache_wdata[core] = 0;
+    //Unlock for xcache
+    core_key[core].put(1);
 endtask
 
 
@@ -239,7 +258,8 @@ endtask
 //---------------------
 task automatic riscv_xcache_rd(input int core, input [31:0] addr, output [31:0] dout);
     logic [31:0] timeout;
-
+    //Lock for xcache
+    core_key[core].get(1);
     rv_xcache_part [core] = core;
     rv_xcache_re   [core] = 1;
     rv_xcache_addr [core] = addr;
@@ -273,6 +293,8 @@ task automatic riscv_xcache_rd(input int core, input [31:0] addr, output [31:0] 
         end
     end
     @(posedge clk);
+    //Unlock for xcache
+    core_key[core].put(1);
 endtask
 
 
@@ -351,9 +373,9 @@ endtask
 //-------------
 // ap control
 //-------------
-task automatic ap_call_0(input int core, input int hls_id, output [31:0] ret);    
+task automatic ap_call_0(input int core, input int thread_id, input int hls_id, output [31:0] ret);    
     `ifdef FUNCTION_ARBITER
-        call_child(core, hls_id, 256'd0, ret);
+        call_child(core, thread_id, hls_id, LIFO_MODE, 256'd0, ret);
 	`else `ifdef NEW_AP_CTRL_CMD
 		riscv_wr2(0, AP_CTRL_START, (0 << 4) + (hls_id << 7), 0, 4'b1111);
 		riscv_rd2(0, AP_CTRL_DONE, (hls_id << 7), ret);
@@ -367,9 +389,9 @@ endtask
 
 
 //1 argument
-task automatic ap_call_1(input int core, input int hls_id, input [31:0] arg0, output [31:0] ret);    
+task automatic ap_call_1(input int core, input int thread_id, input int hls_id, input [31:0] arg0, output [31:0] ret);    
     `ifdef FUNCTION_ARBITER
-        call_child(core, hls_id, arg0, ret);
+        call_child(core, thread_id, hls_id, LIFO_MODE, arg0, ret);
 	`else `ifdef NEW_AP_CTRL_CMD
 		riscv_wr2(0, AP_CTRL_START, (0 << 4) + (hls_id << 7), arg0, 4'b1111);  
 		riscv_rd2(0, AP_CTRL_DONE, (hls_id << 7), ret);
@@ -386,9 +408,9 @@ endtask
 
 
 //2 arguments
-task automatic ap_call_2(input int core, input int hls_id, input [31:0] arg0, input [31:0] arg1, output [31:0] ret);    
+task automatic ap_call_2(input int core, input int thread_id, input int hls_id, input [31:0] arg0, input [31:0] arg1, output [31:0] ret);    
     `ifdef FUNCTION_ARBITER
-        call_child(core, hls_id, {arg1,arg0}, ret);
+        call_child(core, thread_id, hls_id, LIFO_MODE, {arg1,arg0}, ret);
 	`else `ifdef NEW_AP_CTRL_CMD
 		riscv_wr2(0, AP_CTRL_ARGUMENT, (1 << 4) + (hls_id << 7), arg1, 4'b1111);
 		riscv_wr2(0, AP_CTRL_START, 	 (0 << 4) + (hls_id << 7), arg0, 4'b1111);
@@ -404,9 +426,9 @@ endtask
 
 
 //3 arguments
-task automatic ap_call_3(input int core, input int hls_id, input [31:0] arg0, input [31:0] arg1, input [31:0] arg2, output [31:0] ret);    
+task automatic ap_call_3(input int core, input int thread_id, input int hls_id, input [31:0] arg0, input [31:0] arg1, input [31:0] arg2, output [31:0] ret);    
     `ifdef FUNCTION_ARBITER
-        call_child(core, hls_id, {arg2,arg1,arg0}, ret);
+        call_child(core, thread_id, hls_id, LIFO_MODE, {arg2,arg1,arg0}, ret);
 	`else `ifdef NEW_AP_CTRL_CMD
 		riscv_wr2(0, AP_CTRL_ARGUMENT, (1 << 4) + (hls_id << 7), arg1, 4'b1111);
 		riscv_wr2(0, AP_CTRL_ARGUMENT, (2 << 4) + (hls_id << 7), arg2, 4'b1111);
@@ -422,9 +444,9 @@ task automatic ap_call_3(input int core, input int hls_id, input [31:0] arg0, in
     if (ENABLE_LOG) $display("ap control: hls=%0d ret=%0d", hls_id, ret);
 endtask
 //4 arguments
-task automatic ap_call_4(input int core, input int hls_id, input [31:0] arg0, input [31:0] arg1, input [31:0] arg2, input [31:0] arg3, output [31:0] ret);    
+task automatic ap_call_4(input int core, input int thread_id, input int hls_id, input [31:0] arg0, input [31:0] arg1, input [31:0] arg2, input [31:0] arg3, output [31:0] ret);    
     `ifdef FUNCTION_ARBITER
-        call_child(core, hls_id, {arg3,arg2,arg1,arg0}, ret);
+        call_child(core, thread_id, hls_id, LIFO_MODE, {arg3,arg2,arg1,arg0}, ret);
 	`else `ifdef NEW_AP_CTRL_CMD
 		riscv_wr2(0, AP_CTRL_ARGUMENT, (1 << 4) + (hls_id << 7), arg1, 4'b1111);
 		riscv_wr2(0, AP_CTRL_ARGUMENT, (2 << 4) + (hls_id << 7), arg2, 4'b1111);
@@ -449,10 +471,10 @@ endtask
 
 
 //5 arguments
-task automatic ap_call_5(input int core, input int hls_id, input [31:0] arg0, input [31:0] arg1, input [31:0] arg2, input [31:0] arg3, 
+task automatic ap_call_5(input int core, input int thread_id, input int hls_id, input [31:0] arg0, input [31:0] arg1, input [31:0] arg2, input [31:0] arg3, 
                          input [31:0] arg4, output [31:0] ret);    
     `ifdef FUNCTION_ARBITER
-        call_child(core, hls_id, {arg4,arg3,arg2,arg1,arg0}, ret);		 
+        call_child(core, thread_id, hls_id, LIFO_MODE, {arg4,arg3,arg2,arg1,arg0}, ret);		 
 	`else `ifdef NEW_AP_CTRL_CMD
 		riscv_wr2(0, AP_CTRL_ARGUMENT, (1 << 4) + (hls_id << 7), arg1, 4'b1111);
 		riscv_wr2(0, AP_CTRL_ARGUMENT, (2 << 4) + (hls_id << 7), arg2, 4'b1111);
@@ -476,10 +498,10 @@ endtask
 
 
 //6 arguments
-task automatic ap_call_6(input int core, input int hls_id, input [31:0] arg0, input [31:0] arg1, input [31:0] arg2, input [31:0] arg3, 
+task automatic ap_call_6(input int core, input int thread_id, input int hls_id, input [31:0] arg0, input [31:0] arg1, input [31:0] arg2, input [31:0] arg3, 
                         input [31:0] arg4, input [31:0] arg5, output [31:0] ret);    
     `ifdef FUNCTION_ARBITER
-        call_child(core, hls_id, {arg5,arg4,arg3,arg2,arg1,arg0}, ret);		 
+        call_child(core, thread_id, hls_id, LIFO_MODE, {arg5,arg4,arg3,arg2,arg1,arg0}, ret);		 
 	`else `ifdef NEW_AP_CTRL_CMD
 		riscv_wr2(0, AP_CTRL_ARGUMENT, (1 << 4) + (hls_id << 7), arg1, 4'b1111);
 		riscv_wr2(0, AP_CTRL_ARGUMENT, (2 << 4) + (hls_id << 7), arg2, 4'b1111);
@@ -506,10 +528,10 @@ endtask
 
 
 //7 arguments
-task automatic ap_call_7(input int core, input int hls_id, input [31:0] arg0, input [31:0] arg1, input [31:0] arg2, input [31:0] arg3, 
+task automatic ap_call_7(input int core, input int thread_id, input int hls_id, input [31:0] arg0, input [31:0] arg1, input [31:0] arg2, input [31:0] arg3, 
                         input [31:0] arg4, input [31:0] arg5, input [31:0] arg6, output [31:0] ret);    
     `ifdef FUNCTION_ARBITER
-        call_child(core, hls_id, {arg6,arg5,arg4,arg3,arg2,arg1,arg0}, ret);		 	
+        call_child(core, thread_id, hls_id, LIFO_MODE, {arg6,arg5,arg4,arg3,arg2,arg1,arg0}, ret);		 	
 	`else `ifdef NEW_AP_CTRL_CMD
 		riscv_wr2(0, AP_CTRL_ARGUMENT, (1 << 4) + (hls_id << 7), arg1, 4'b1111);
 		riscv_wr2(0, AP_CTRL_ARGUMENT, (2 << 4) + (hls_id << 7), arg2, 4'b1111);
@@ -538,10 +560,10 @@ endtask
 
 
 
-task automatic ap_call_8(input int core, input int hls_id, input [31:0] arg0, input [31:0] arg1, input [31:0] arg2, input [31:0] arg3, 
+task automatic ap_call_8(input int core, input int thread_id, input int hls_id, input [31:0] arg0, input [31:0] arg1, input [31:0] arg2, input [31:0] arg3, 
                         input [31:0] arg4, input [31:0] arg5, input [31:0] arg6, input [31:0] arg7, output [31:0] ret);    
     `ifdef FUNCTION_ARBITER
-        call_child(core, hls_id, {arg7,arg6,arg5,arg4,arg3,arg2,arg1,arg0}, ret);		 	
+        call_child(core, thread_id, hls_id, LIFO_MODE, {arg7,arg6,arg5,arg4,arg3,arg2,arg1,arg0}, ret);		 	
 	`else `ifdef NEW_AP_CTRL_CMD
 		riscv_wr2(0, AP_CTRL_ARGUMENT, (1 << 4) + (hls_id << 7), arg1, 4'b1111);
 		riscv_wr2(0, AP_CTRL_ARGUMENT, (2 << 4) + (hls_id << 7), arg2, 4'b1111);
@@ -567,14 +589,14 @@ task automatic ap_call_8(input int core, input int hls_id, input [31:0] arg0, in
 endtask
 
 
-task automatic ap_call_9(input int core, input int hls_id, input [31:0] arg0, input [31:0] arg1, input [31:0] arg2, input [31:0] arg3, 
+task automatic ap_call_9(input int core, input int thread_id, input int hls_id, input [31:0] arg0, input [31:0] arg1, input [31:0] arg2, input [31:0] arg3, 
                         input [31:0] arg4, input [31:0] arg5, input [31:0] arg6, input [31:0] arg7, input [31:0] arg8, output [31:0] ret);    
     $display("ap_call_9() is not supported: hls=%0d", hls_id);
     $stop;
 endtask
 
 
-task automatic ap_call_10(input int core, input int hls_id, input [31:0] arg0, input [31:0] arg1, input [31:0] arg2, input [31:0] arg3, 
+task automatic ap_call_10(input int core, input int thread_id, input int hls_id, input [31:0] arg0, input [31:0] arg1, input [31:0] arg2, input [31:0] arg3, 
                         input [31:0] arg4, input [31:0] arg5, input [31:0] arg6, input [31:0] arg7, input [31:0] arg8, 
                         input [31:0] arg9, output [31:0] ret);    
     $display("ap_call_10() is not supported: hls=%0d", hls_id);
@@ -582,7 +604,7 @@ task automatic ap_call_10(input int core, input int hls_id, input [31:0] arg0, i
 endtask
 
 
-task automatic ap_call_11(input int core, input int hls_id, input [31:0] arg0, input [31:0] arg1, input [31:0] arg2, input [31:0] arg3, 
+task automatic ap_call_11(input int core, input int thread_id, input int hls_id, input [31:0] arg0, input [31:0] arg1, input [31:0] arg2, input [31:0] arg3, 
                         input [31:0] arg4, input [31:0] arg5, input [31:0] arg6, input [31:0] arg7, input [31:0] arg8, 
                         input [31:0] arg9, input [31:0] arg10, output [31:0] ret);    
     $display("ap_call_11() is not supported: hls=%0d", hls_id);
@@ -590,7 +612,7 @@ task automatic ap_call_11(input int core, input int hls_id, input [31:0] arg0, i
 endtask
 
 
-task automatic ap_call_12(input int core, input int hls_id, input [31:0] arg0, input [31:0] arg1, input [31:0] arg2, input [31:0] arg3, 
+task automatic ap_call_12(input int core, input int thread_id, input int hls_id, input [31:0] arg0, input [31:0] arg1, input [31:0] arg2, input [31:0] arg3, 
                         input [31:0] arg4, input [31:0] arg5, input [31:0] arg6, input [31:0] arg7, input [31:0] arg8, 
                         input [31:0] arg9, input [31:0] arg10, input [31:0] arg12, output [31:0] ret);    
     $display("ap_call_12() is not supported: hls=%0d", hls_id);

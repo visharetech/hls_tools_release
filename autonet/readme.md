@@ -44,7 +44,7 @@ Please check example/create_conn2/rtl/ff_hevc_extract_rbsp_1_hls.innerloop.sv fo
 
 - Load C file, load_hls_intf module will parse [filepath], extract the C function declaration in the file. 
 ```
-#pragma AUTONET LOAD_C load_hls_intf [filepath]
+#pragma AUTONET LOAD_JSON load_hls_intf [filepath]
 ```
 
 - Gen C file, gen_hls_ap_call module will generate C ap_call function to [filepath]
@@ -61,7 +61,7 @@ In example/create_conn2/hls_long_tail_instantiate.vh
 #pragma AUTONET INST        ff_hevc_get_sub_cu_zscan_id_hls     inst_ff_hevc_get_sub_cu_zscan_id_hls
 #pragma AUTONET INST        ff_hevc_set_neighbour_available_hls inst_ff_hevc_set_neighbour_available_hls
 #pragma AUTONET GEN_TB      gen_hls_long_tail_tb
-#pragma AUTONET LOAD_C      load_hls_intf                       c/hls.h
+#pragma AUTONET LOAD_JSON   load_hls_intf                       c/hls.json
 #pragma AUTONET GEN_C       gen_hls_ap_call                     c/hls_apcall.h
 ```
 
@@ -69,7 +69,7 @@ In example/create_conn2/hls_long_tail_instantiate.vh
 python3 autonet.py example/create_conn2 export
 ```
 It will search all verilog files in example/create_conn2, lookup the #pragma autonet keyword, generate verilog and related ModelSim testbench in export folder.
-The #pragma LOAD_C and GEN_C statement will extract the function declaration in c/hls.h and generate relative C ap_call(...) in hls_apcall.cpp.
+The #pragma LOAD_JSON and GEN_C statement will extract the function declaration in c/hls.h and generate relative C ap_call(...) in hls_apcall.cpp.
 
 _________________
 
@@ -107,6 +107,7 @@ xmem_out                                | var declared in xmem and output mode
 xmem_out_vld                            | var declared in xmem, ends with _vld and output port
 xmem_in                                 | var declared in xmem and input mode
 ap_memory_xmem                          | var declared in xmem ends with _addressX, weX, ceX, _dX, _qX
+bram_xmem                               | var declared in xmem ends with _Addr_A, _EN_A, _WEN_A, _Din_A, _Dout_A, _Clk_A, _Rst_A
 axi_stream_in / axi_stream_out          | var ends with _TDATA, _TVALID, _TREADY, _TUSER, _TKEEP..etc
 in (ap_call input argument, maximum 8)  | var does not declare in xmem, input port 
 ap_call return                          | var name is equals to ap_return

@@ -36,14 +36,15 @@ def main():
 
         parent_func_list = [func_name for func_name, func_info in func_list.items() if 'FUNC_ARBITER_ARG' in func_info['func_impl'] and func_info['visible']]
         parent_func_list_len = len(parent_func_list)
-        if parent_func_list_len > 1:
-            colorlog.warning('Only support capture data from single parent function')
-            for func_name in parent_func_list:
-                colorlog.info(func_name)
-            #sys.exit(-1)
-            config.parent_func = parent_func_list[0]
-        elif parent_func_list_len == 1:
-            config.parent_func = parent_func_list[0]
+        #if parent_func_list_len > 1:
+        #    colorlog.warning('Only support capture data from single parent function')
+        #    for func_name in parent_func_list:
+        #        colorlog.info(func_name)
+        #    #sys.exit(-1)
+        #    config.parent_func = parent_func_list[0]
+        #elif parent_func_list_len == 1:
+        config.parent_func_list = parent_func_list
+        config.func_list = [func_name for func_name, func_info in func_list.items() if func_info['visible']]
 
         for func_name, func_info in func_list.items():
             is_remark, func_name, capture_code_string, tb_code_string = process_function_head(func_name, func_info)

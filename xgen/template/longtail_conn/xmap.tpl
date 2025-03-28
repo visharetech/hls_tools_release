@@ -14,6 +14,7 @@ module custom_connection import hls_long_tail_pkg::*, xcache_param_pkg::*;
     input                               ap_ready            [HLS_NUM],
     input                               ap_idle             [HLS_NUM],
     input                               ap_done             [HLS_NUM],
+    input                               ap_ce               [HLS_NUM],
     input [7:0]                         ap_part             [HLS_NUM],
 
     //dual port bank in scalar range
@@ -27,6 +28,7 @@ module custom_connection import hls_long_tail_pkg::*, xcache_param_pkg::*;
     //single port bank in array range
     input                               array_argRdy        [BANK_NUM[MEM_TYPE_ARRAY]][ARRAY_MAX_MUX_NUM],
     output logic                        array_ap_ce         [BANK_NUM[MEM_TYPE_ARRAY]][ARRAY_MAX_MUX_NUM],
+    output logic                        array_argWe         [BANK_NUM[MEM_TYPE_ARRAY]][ARRAY_MAX_MUX_NUM],
     output logic                        array_argVld        [BANK_NUM[MEM_TYPE_ARRAY]][ARRAY_MAX_MUX_NUM],
     input                               array_argAck        [BANK_NUM[MEM_TYPE_ARRAY]][ARRAY_MAX_MUX_NUM],
     output logic [XMEM_AW-1:0]          array_adr           [BANK_NUM[MEM_TYPE_ARRAY]][ARRAY_MAX_MUX_NUM],
@@ -205,6 +207,7 @@ always_comb begin
     //array_adr             = '{default: '0};
     array_adr               = array_adr_r;
     array_wdat              = '{default: '0};
+    array_argWe             = '{default: '0};
     cyclic_adr              = '{default: '0};
     cyclic_wdat             = '{default: '0};
 

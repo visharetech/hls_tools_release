@@ -16,6 +16,7 @@ void IMPL(xor_diff_type)(HLS_COMMON_ARG uint32_t *xor_val32, uint16_t xor_val16,
 void IMPL(assign_array_complete)(HLS_COMMON_ARG int arr_complete[5], int base){
 #pragma HLS array_partition variable=arr_complete type=complete
     for (int i=0; i<5; i++){
+#pragma HLS PIPELINE OFF
         arr_complete[i] = base + i;
     }
 }
@@ -23,6 +24,10 @@ void IMPL(assign_array_complete)(HLS_COMMON_ARG int arr_complete[5], int base){
 //Below function demonstrate it can support array in xmem
 // but the count is not declared in xmem, it will be passed by APCALL argument
 void IMPL(array_xor)(HLS_COMMON_ARG int arr_d1[10], int arr_s1[10], int arr_s2[10], int count){
+#pragma HLS interface mode=bram port=arr_d1 storage_type=RAM_1P latency=3
+#pragma HLS interface mode=bram port=arr_s1 storage_type=RAM_1P latency=3
+#pragma HLS interface mode=bram port=arr_s2 storage_type=RAM_1P latency=3
+
     constexpr size_t MAX_ARR_SIZE = 10;
 
     for (int i=0; i<MAX_ARR_SIZE && i < count; i++){
@@ -42,6 +47,8 @@ void IMPL(vector_add)(HLS_COMMON_ARG vector_2d *vec_d1, const vector_2d *vec_s1,
 
 //Below function demonstrate it can support access from bigarray
 void IMPL(fill_value)(HLS_COMMON_ARG int value, int fillsize, int big_array[10000]){
+#pragma HLS interface mode=bram port=big_array storage_type=RAM_1P latency=3
+
     for (int i = 0; i < fillsize; ++i) {
 #pragma HLS PIPELINE OFF
         big_array[i] = value;
@@ -63,6 +70,7 @@ void IMPL(hevc_loop_filter_chroma_8bit_hls)(HLS_COMMON_ARG uint8_t pix_base[1920
     int ystride, int tc_arr[2],
     uint8_t no_p_arr[2], uint8_t no_q_arr[2])
 {
+#pragma HLS interface mode=bram port=pix_base storage_type=RAM_1P latency=3
 #pragma HLS ARRAY_PARTITION variable=tc_arr type=complete
 #pragma HLS ARRAY_PARTITION variable=no_p_arr type=complete
 #pragma HLS ARRAY_PARTITION variable=no_q_arr type=complete
@@ -115,7 +123,9 @@ void IMPL(hevc_loop_filter_chroma_8bit_hls)(HLS_COMMON_ARG uint8_t pix_base[1920
 #undef Q3
 
 void IMPL(cnn_hls)(HLS_COMMON_ARG int width, int height, int filter, char pixel[(MAX_WIDTH_SIZE + MAX_FILTER_SIZE -1 ) * (MAX_HEIGHT_SIZE + MAX_FILTER_SIZE - 1)], char filter_map[MAX_FILTER_SIZE * MAX_FILTER_SIZE], int sum[MAX_WIDTH_SIZE * MAX_HEIGHT_SIZE]) {
-#pragma HLS INTERFACE ap_memory port=pixel storage_type=RAM_2P
+#pragma HLS interface mode=bram port=pixel storage_type=RAM_1P latency=3
+#pragma HLS interface mode=bram port=filter_map storage_type=RAM_1P latency=3
+#pragma HLS interface mode=bram port=sum storage_type=RAM_1P latency=3
 
     /*
     - vdir is set a DOWN

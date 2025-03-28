@@ -29,8 +29,9 @@ import hls_long_tail_pkg::*;
 //include parameter files
 //-----------------------------------------------------------------------
 
-
 `include "xmem_param.vh"
+`include "xmember_enum.vh"
+`include "xmember_grp.vh"
 
 
 
@@ -64,122 +65,153 @@ logic 								clk;
 logic 								rstn;
 
 //HLS ap_ctrl
-logic                               ap_ce       [HLS_NUM] = '{default: '0};
-logic                               ap_arb_start[HLS_NUM] = '{default: '0};
-logic                               ap_arb_ret	[HLS_NUM] = '{default: '0};
+logic                           	    ap_ce       		[HLS_NUM] = '{default: '0};
+logic                 		            ap_arb_start		[HLS_NUM] = '{default: '0};
+logic                 	      	        ap_arb_ret			[HLS_NUM];
+enum logic [0:0] {IDLE=1'd0, RUN=1'd1}	ap_arb_ret_state	[HLS_NUM];
+logic [31:0]  							ap_arb_ret_dlyCnt	[HLS_NUM];
+logic [31:0]  							ap_arb_ret_dlyMax	[HLS_NUM];
 
-logic                               ap_start    [HLS_NUM];
-logic [HLS_ARG_WIDTH - 1 : 0]       ap_arg      [HLS_NUM][HLS_ARG_VECTOR];
-logic                               ap_ready    [HLS_NUM] = '{default: '0};
-logic                               ap_idle     [HLS_NUM] = '{default: '0};
-logic                               ap_done     [HLS_NUM] = '{default: '0};
-logic [HLS_RET_WIDTH - 1 : 0]       ap_return   [HLS_NUM][HLS_RET_VECTOR] = '{default: '0};
-logic [7 : 0]    					ap_part     [HLS_NUM] = '{default: '0};
+logic                               	ap_start    [HLS_NUM];
+logic [HLS_ARG_WIDTH - 1 : 0]       	ap_arg      [HLS_NUM][HLS_ARG_VECTOR];
+logic                               	ap_ready    [HLS_NUM] = '{default: '0};
+logic                               	ap_idle     [HLS_NUM] = '{default: '0};
+logic                               	ap_done     [HLS_NUM] = '{default: '0};
+logic [HLS_RET_WIDTH - 1 : 0]       	ap_return   [HLS_NUM][HLS_RET_VECTOR] = '{default: '0};
+logic [7 : 0]    						ap_part     [HLS_NUM] = '{default: '0};
 
 //Configure
-logic                               cfg_we = 0;
-logic [31 : 0]     					cfg_ad = 0;
-logic [31 : 0]     					cfg_di = 0;
-
-//XMEM (v2) bus
-logic                               risc_rdy;
-logic                               risc_re = 0;
-logic [3  : 0]                      risc_we = 0;
-logic [31 : 0]     					risc_ad = 0;
-logic [31 : 0]     					risc_di = 0;
-logic [31 : 0]     					risc_do;
-logic 								risc_do_vld;
-
-logic 								all_argRdy = 0;
+logic                               	cfg_we = 0;
+logic [31 : 0]     						cfg_ad = 0;
+logic [31 : 0]     						cfg_di = 0;
+	
+//XMEM (v2) bus	
+logic                               	risc_rdy;
+logic                               	risc_re = 0;
+logic [3  : 0]                      	risc_we = 0;
+logic [31 : 0]     						risc_ad = 0;
+logic [31 : 0]     						risc_di = 0;
+logic [31 : 0]     						risc_do;
+logic 									risc_do_vld;
+	
+logic 									all_argRdy = 0;
 
 //For dualport bank in scalar range
-logic								scalar_argVld	[BANK_NUM[MEM_TYPE_SCALAR]][DUAL_PORT][SCALAR_MAX_MUX_NUM];
-logic								scalar_argAck 	[BANK_NUM[MEM_TYPE_SCALAR]][DUAL_PORT][SCALAR_MAX_MUX_NUM];
-logic [XMEM_AW-1:0]	        		scalar_adr		[BANK_NUM[MEM_TYPE_SCALAR]][DUAL_PORT][SCALAR_MAX_MUX_NUM];
-logic [SCALAR_BANK_DW-1:0]			scalar_wdat		[BANK_NUM[MEM_TYPE_SCALAR]][DUAL_PORT][SCALAR_MAX_MUX_NUM];
-logic [SCALAR_BANK_DW-1:0]			scalar_rdat		[BANK_NUM[MEM_TYPE_SCALAR]][DUAL_PORT][SCALAR_MAX_MUX_NUM];
-logic                       		scalar_rdat_vld	[BANK_NUM[MEM_TYPE_SCALAR]][DUAL_PORT][SCALAR_MAX_MUX_NUM];
-logic                       		scalar_rdat_vld_r[BANK_NUM[MEM_TYPE_SCALAR]][DUAL_PORT][SCALAR_MAX_MUX_NUM];
+logic									scalar_argVld	[BANK_NUM[MEM_TYPE_SCALAR]][DUAL_PORT][SCALAR_MAX_MUX_NUM];
+logic									scalar_argAck 	[BANK_NUM[MEM_TYPE_SCALAR]][DUAL_PORT][SCALAR_MAX_MUX_NUM];
+logic [XMEM_AW-1:0]	        			scalar_adr		[BANK_NUM[MEM_TYPE_SCALAR]][DUAL_PORT][SCALAR_MAX_MUX_NUM];
+logic [SCALAR_BANK_DW-1:0]				scalar_wdat		[BANK_NUM[MEM_TYPE_SCALAR]][DUAL_PORT][SCALAR_MAX_MUX_NUM];
+logic [SCALAR_BANK_DW-1:0]				scalar_rdat		[BANK_NUM[MEM_TYPE_SCALAR]][DUAL_PORT][SCALAR_MAX_MUX_NUM];
+logic                       			scalar_rdat_vld	[BANK_NUM[MEM_TYPE_SCALAR]][DUAL_PORT][SCALAR_MAX_MUX_NUM];
+logic                       			scalar_rdat_vld_r[BANK_NUM[MEM_TYPE_SCALAR]][DUAL_PORT][SCALAR_MAX_MUX_NUM];
 
 //For single port bank in array range
-logic 								array_argRdy	[BANK_NUM[MEM_TYPE_ARRAY]][ARRAY_MAX_MUX_NUM];
-logic 								array_ap_ce		[BANK_NUM[MEM_TYPE_ARRAY]][ARRAY_MAX_MUX_NUM];
-logic 								array_argVld	[BANK_NUM[MEM_TYPE_ARRAY]][ARRAY_MAX_MUX_NUM];
-logic 								array_argAck 	[BANK_NUM[MEM_TYPE_ARRAY]][ARRAY_MAX_MUX_NUM];
-logic [XMEM_AW-1:0]	        		array_adr		[BANK_NUM[MEM_TYPE_ARRAY]][ARRAY_MAX_MUX_NUM];
-logic [ARRAY_BANK_DW-1:0]			array_wdat		[BANK_NUM[MEM_TYPE_ARRAY]][ARRAY_MAX_MUX_NUM];
-logic [ARRAY_BANK_DW-1:0]			array_rdat		[BANK_NUM[MEM_TYPE_ARRAY]][ARRAY_MAX_MUX_NUM];
-logic                       		array_rdat_vld	[BANK_NUM[MEM_TYPE_ARRAY]][ARRAY_MAX_MUX_NUM];
+logic 									array_argRdy	[BANK_NUM[MEM_TYPE_ARRAY]][ARRAY_MAX_MUX_NUM];
+logic 									array_ap_ce		[BANK_NUM[MEM_TYPE_ARRAY]][ARRAY_MAX_MUX_NUM];
+logic 									array_argWe		[BANK_NUM[MEM_TYPE_ARRAY]][ARRAY_MAX_MUX_NUM];
+logic 									array_argVld	[BANK_NUM[MEM_TYPE_ARRAY]][ARRAY_MAX_MUX_NUM];
+logic 									array_argAck 	[BANK_NUM[MEM_TYPE_ARRAY]][ARRAY_MAX_MUX_NUM];
+logic [XMEM_AW-1:0]	        			array_adr		[BANK_NUM[MEM_TYPE_ARRAY]][ARRAY_MAX_MUX_NUM];
+logic [ARRAY_BANK_DW-1:0]				array_wdat		[BANK_NUM[MEM_TYPE_ARRAY]][ARRAY_MAX_MUX_NUM];
+logic [ARRAY_BANK_DW-1:0]				array_rdat		[BANK_NUM[MEM_TYPE_ARRAY]][ARRAY_MAX_MUX_NUM];
+logic                       			array_rdat_vld	[BANK_NUM[MEM_TYPE_ARRAY]][ARRAY_MAX_MUX_NUM];
 
 
 //For wide port bank in cyclic range
-logic 								cyclic_argRdy	[BANK_NUM[MEM_TYPE_CYCLIC]][CYCLIC_MAX_MUX_NUM];
-logic 								cyclic_ap_ce	[BANK_NUM[MEM_TYPE_CYCLIC]][CYCLIC_MAX_MUX_NUM];
-logic					    		cyclic_argVld	[BANK_NUM[MEM_TYPE_CYCLIC]][CYCLIC_MAX_MUX_NUM];
-logic								cyclic_argAck 	[BANK_NUM[MEM_TYPE_CYCLIC]][CYCLIC_MAX_MUX_NUM];
-logic [XMEM_AW-1:0]	        		cyclic_adr		[BANK_NUM[MEM_TYPE_CYCLIC]][CYCLIC_MAX_MUX_NUM];
-logic [CYCLIC_BANK_DW-1:0]			cyclic_wdat		[BANK_NUM[MEM_TYPE_CYCLIC]][CYCLIC_MAX_MUX_NUM];
-logic [CYCLIC_BANK_DW-1:0]			cyclic_rdat		[BANK_NUM[MEM_TYPE_CYCLIC]][CYCLIC_MAX_MUX_NUM];
-logic                   			cyclic_rdat_vld	[BANK_NUM[MEM_TYPE_CYCLIC]][CYCLIC_MAX_MUX_NUM];
+logic 									cyclic_argRdy	[BANK_NUM[MEM_TYPE_CYCLIC]][CYCLIC_MAX_MUX_NUM];
+logic 									cyclic_ap_ce	[BANK_NUM[MEM_TYPE_CYCLIC]][CYCLIC_MAX_MUX_NUM];
+logic					    			cyclic_argVld	[BANK_NUM[MEM_TYPE_CYCLIC]][CYCLIC_MAX_MUX_NUM];
+logic									cyclic_argAck 	[BANK_NUM[MEM_TYPE_CYCLIC]][CYCLIC_MAX_MUX_NUM];
+logic [XMEM_AW-1:0]	        			cyclic_adr		[BANK_NUM[MEM_TYPE_CYCLIC]][CYCLIC_MAX_MUX_NUM];
+logic [CYCLIC_BANK_DW-1:0]				cyclic_wdat		[BANK_NUM[MEM_TYPE_CYCLIC]][CYCLIC_MAX_MUX_NUM];
+logic [CYCLIC_BANK_DW-1:0]				cyclic_rdat		[BANK_NUM[MEM_TYPE_CYCLIC]][CYCLIC_MAX_MUX_NUM];
+logic                   				cyclic_rdat_vld	[BANK_NUM[MEM_TYPE_CYCLIC]][CYCLIC_MAX_MUX_NUM];
 
 
-logic [31:0] 						debug[16] = '{default: '0};
+logic [31:0] 							debug[16] = '{default: '0};
 
-logic 								dram_init_done	[AXI_PORT_NUM];
+logic 									dram_init_done	[AXI_PORT_NUM];
 
 //AXI4 for cyclic bank
-logic                               axi_awready		[AXI_PORT_NUM];
-logic                          		axi_awvalid		[AXI_PORT_NUM];
-logic [AXI_ADDR_WIDTH - 1 : 0] 		axi_awaddr		[AXI_PORT_NUM];
-logic [AXI_LEN_WIDTH  - 1 : 0] 		axi_awlen		[AXI_PORT_NUM];
-logic [AXI_ID_WIDTH   - 1 : 0] 		axi_awid		[AXI_PORT_NUM];
-logic [                 2 : 0] 		axi_awsize		[AXI_PORT_NUM];
-logic [                 1 : 0] 		axi_awburst		[AXI_PORT_NUM];
-logic                          		axi_awlock		[AXI_PORT_NUM];
-logic [                 3 : 0] 		axi_awcache		[AXI_PORT_NUM];
-logic [                 2 : 0] 		axi_awprot		[AXI_PORT_NUM];
-logic [                 3 : 0] 		axi_awqos		[AXI_PORT_NUM];
-logic [                 3 : 0] 		axi_awregion	[AXI_PORT_NUM];
-logic                          		axi_awuser		[AXI_PORT_NUM];
-logic                               axi_wready		[AXI_PORT_NUM];
-logic                          		axi_wvalid		[AXI_PORT_NUM];
-logic [AXI_DATA_WIDTH - 1 : 0] 		axi_wdata		[AXI_PORT_NUM];
-logic [AXI_DATA_WIDTH/8-1 : 0] 		axi_wstrb		[AXI_PORT_NUM];
-logic                          		axi_wlast		[AXI_PORT_NUM];
-logic [AXI_ID_WIDTH   - 1 : 0] 		axi_wid			[AXI_PORT_NUM];
-logic                          		axi_wuser		[AXI_PORT_NUM];
-logic                          		axi_bready		[AXI_PORT_NUM];
-logic                               axi_bvalid		[AXI_PORT_NUM];
-logic [                 1 : 0] 		axi_bresp		[AXI_PORT_NUM];
-logic [AXI_ID_WIDTH   - 1 : 0] 		axi_bid			[AXI_PORT_NUM];
-logic                               axi_buser		[AXI_PORT_NUM];
-logic                               axi_arready		[AXI_PORT_NUM];
-logic                          		axi_arvalid		[AXI_PORT_NUM];
-logic [AXI_ADDR_WIDTH - 1 : 0] 		axi_araddr		[AXI_PORT_NUM];
-logic [AXI_LEN_WIDTH  - 1 : 0] 		axi_arlen		[AXI_PORT_NUM];
-logic [AXI_ID_WIDTH   - 1 : 0] 		axi_arid		[AXI_PORT_NUM];
-logic [                 2 : 0] 		axi_arsize		[AXI_PORT_NUM];
-logic [                 1 : 0] 		axi_arburst		[AXI_PORT_NUM];
-logic                          		axi_arlock		[AXI_PORT_NUM];
-logic [                 3 : 0] 		axi_arcache		[AXI_PORT_NUM];
-logic [                 2 : 0] 		axi_arprot		[AXI_PORT_NUM];
-logic [                 3 : 0] 		axi_arqos		[AXI_PORT_NUM];
-logic [                 3 : 0] 		axi_arregion	[AXI_PORT_NUM];
-logic                          		axi_aruser		[AXI_PORT_NUM];
-logic                          		axi_rready		[AXI_PORT_NUM];
-logic                          		axi_rvalid		[AXI_PORT_NUM];
-logic [AXI_DATA_WIDTH - 1 : 0] 		axi_rdata		[AXI_PORT_NUM];
-logic                          		axi_rlast		[AXI_PORT_NUM];
-logic [                 1 : 0] 		axi_rresp		[AXI_PORT_NUM];
-logic [AXI_ID_WIDTH   - 1 : 0] 		axi_rid			[AXI_PORT_NUM];
-logic                          		axi_ruser		[AXI_PORT_NUM] = '{default: '0};
+logic                               	axi_awready		[AXI_PORT_NUM];
+logic                          			axi_awvalid		[AXI_PORT_NUM];
+logic [AXI_ADDR_WIDTH - 1 : 0] 			axi_awaddr		[AXI_PORT_NUM];
+logic [AXI_LEN_WIDTH  - 1 : 0] 			axi_awlen		[AXI_PORT_NUM];
+logic [AXI_ID_WIDTH   - 1 : 0] 			axi_awid		[AXI_PORT_NUM];
+logic [                 2 : 0] 			axi_awsize		[AXI_PORT_NUM];
+logic [                 1 : 0] 			axi_awburst		[AXI_PORT_NUM];
+logic                          			axi_awlock		[AXI_PORT_NUM];
+logic [                 3 : 0] 			axi_awcache		[AXI_PORT_NUM];
+logic [                 2 : 0] 			axi_awprot		[AXI_PORT_NUM];
+logic [                 3 : 0] 			axi_awqos		[AXI_PORT_NUM];
+logic [                 3 : 0] 			axi_awregion	[AXI_PORT_NUM];
+logic                          			axi_awuser		[AXI_PORT_NUM];
+logic                               	axi_wready		[AXI_PORT_NUM];
+logic                          			axi_wvalid		[AXI_PORT_NUM];
+logic [AXI_DATA_WIDTH - 1 : 0] 			axi_wdata		[AXI_PORT_NUM];
+logic [AXI_DATA_WIDTH/8-1 : 0] 			axi_wstrb		[AXI_PORT_NUM];
+logic                          			axi_wlast		[AXI_PORT_NUM];
+logic [AXI_ID_WIDTH   - 1 : 0] 			axi_wid			[AXI_PORT_NUM];
+logic                          			axi_wuser		[AXI_PORT_NUM];
+logic                          			axi_bready		[AXI_PORT_NUM];
+logic                               	axi_bvalid		[AXI_PORT_NUM];
+logic [                 1 : 0] 			axi_bresp		[AXI_PORT_NUM];
+logic [AXI_ID_WIDTH   - 1 : 0] 			axi_bid			[AXI_PORT_NUM];
+logic                               	axi_buser		[AXI_PORT_NUM];
+logic                               	axi_arready		[AXI_PORT_NUM];
+logic                          			axi_arvalid		[AXI_PORT_NUM];
+logic [AXI_ADDR_WIDTH - 1 : 0] 			axi_araddr		[AXI_PORT_NUM];
+logic [AXI_LEN_WIDTH  - 1 : 0] 			axi_arlen		[AXI_PORT_NUM];
+logic [AXI_ID_WIDTH   - 1 : 0] 			axi_arid		[AXI_PORT_NUM];
+logic [                 2 : 0] 			axi_arsize		[AXI_PORT_NUM];
+logic [                 1 : 0] 			axi_arburst		[AXI_PORT_NUM];
+logic                          			axi_arlock		[AXI_PORT_NUM];
+logic [                 3 : 0] 			axi_arcache		[AXI_PORT_NUM];
+logic [                 2 : 0] 			axi_arprot		[AXI_PORT_NUM];
+logic [                 3 : 0] 			axi_arqos		[AXI_PORT_NUM];
+logic [                 3 : 0] 			axi_arregion	[AXI_PORT_NUM];
+logic                          			axi_aruser		[AXI_PORT_NUM];
+logic                          			axi_rready		[AXI_PORT_NUM];
+logic                          			axi_rvalid		[AXI_PORT_NUM];
+logic [AXI_DATA_WIDTH - 1 : 0] 			axi_rdata		[AXI_PORT_NUM];
+logic                          			axi_rlast		[AXI_PORT_NUM];
+logic [                 1 : 0] 			axi_rresp		[AXI_PORT_NUM];
+logic [AXI_ID_WIDTH   - 1 : 0] 			axi_rid			[AXI_PORT_NUM];
+logic                          			axi_ruser		[AXI_PORT_NUM] = '{default: '0};
 
 always @ (posedge clk or negedge rstn) begin
     if (~rstn) begin
-        scalar_rdat_vld_r <= '{default:'0};
+        scalar_rdat_vld_r	<= '{default:'0};
+		for (int i=0; i<HLS_NUM; i++) begin 
+			ap_arb_ret 			[i]	<= 0;
+			ap_arb_ret_state	[i]	<= IDLE;
+			ap_arb_ret_dlyCnt	[i] <= 0;
+			ap_arb_ret_dlyMax	[i] <= 0;
+		end 
     end
     else begin
         scalar_rdat_vld_r <= scalar_rdat_vld;
+			
+		for (int i=0; i<HLS_NUM; i++) begin 	
+			ap_arb_ret[i] <= 0;
+			case(ap_arb_ret_state[i]) 
+			IDLE: begin 
+				if (ap_arb_start[i]) begin 
+					ap_arb_ret_state[i] <= RUN;
+					ap_arb_ret_dlyMax[i] <= $urandom_range(5, 10);
+				end 	
+			end 
+			RUN: begin
+				ap_arb_ret_dlyCnt[i] <= ap_arb_ret_dlyCnt[i] + 1;
+				if (ap_arb_ret_dlyCnt[i] == ap_arb_ret_dlyMax[i]) begin 	
+					ap_arb_ret 		[i] <= 1;
+					ap_arb_ret_state[i] <= IDLE;
+				end 
+			end 
+			endcase
+			
+			
+		end 	
     end
 end
 
@@ -218,6 +250,7 @@ xcache inst_xmem(
 	//--
 	.array_argRdy		( array_argRdy		),	//o
 	.array_ap_ce		( array_ap_ce 		),	//i
+	.array_argWe		( array_argWe		),  //i
     .array_argVld	  	( array_argVld		),	//i
     .array_argAck 	  	( array_argAck		),	//o
     .array_adr		  	( array_adr			),	//i

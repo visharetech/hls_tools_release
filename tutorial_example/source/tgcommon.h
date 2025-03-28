@@ -35,5 +35,24 @@ static datatype_t get_datatype(const T& data) {
     return datatype;
 }
 
+#define CRC32_POLYNOMIAL 0xEDB88320
+
+// Function to calculate CRC-32
+static uint32_t crc32(const uint8_t *data, size_t length) {
+    uint32_t crc = 0xFFFFFFFF; // Initial value
+    for (size_t i = 0; i < length; i++) {
+        crc ^= data[i]; // XOR byte into least significant byte of crc
+        for (int j = 0; j < 8; j++) { // Process each bit
+            if (crc & 1) {
+                crc = (crc >> 1) ^ CRC32_POLYNOMIAL;
+            } else {
+                crc >>= 1;
+            }
+        }
+    }
+    return ~crc; // Final XOR value
+}
+
+
 
 #endif

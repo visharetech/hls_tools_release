@@ -9,6 +9,7 @@ custom_connection inst_custom_connection (
     .ap_idle            ( ap_idle           ),
     .ap_done            ( ap_done           ),
     .ap_part            ( ap_part           ),
+	.ap_ce				( ap_ce				),
     //dual port bank in scalar range
     .scalar_argVld      ( scalar_argVld     ),
     .scalar_argAck      ( scalar_argAck     ),
@@ -19,6 +20,7 @@ custom_connection inst_custom_connection (
     //single port bank in array range
     .array_argRdy       ( array_argRdy      ),
     .array_ap_ce        ( array_ap_ce       ),
+    .array_argWe        ( array_argWe       ),
     .array_argVld       ( array_argVld      ),
     .array_argAck       ( array_argAck      ),
     .array_adr          ( array_adr         ),

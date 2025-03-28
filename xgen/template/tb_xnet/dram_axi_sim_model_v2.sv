@@ -201,7 +201,7 @@ endtask
 task dram_write_response();
     @(posedge clk);
     #1;
-    wait(wr_done.triggered);
+    //wait(wr_done.triggered);
     if (q_ddr_bid.size() != 0) begin
         ddr_bvalid = 1;
         ddr_bid = q_ddr_bid.pop_front();
@@ -258,7 +258,7 @@ task dram_write_run();
         end        
         //if (i_ddr_awid != 0) $display("push awid @%h %h t=%0t", i_ddr_awaddr - (1 << i_ddr_awsize), i_ddr_awid, $time());
         q_ddr_bid.push_back(i_ddr_awid);
-        -> wr_done;
+        //-> wr_done;
     end
 endtask
 

@@ -29,7 +29,6 @@ void /*__attribute__ ((interrupt ("supervisor")))*/ asim_hls_handler(){
 
     int __return_status__ = 0;
 
-    //xmem_t *xmem = (xmem_t*)asim_xmem_at();
     xmem_t *xmem = (xmem_t*)get_riscv_xmem_base();
 
     hls_enum_t hls_id = (hls_enum_t)asim_get_apcall_hls_id();
@@ -107,7 +106,7 @@ void /*__attribute__ ((interrupt ("supervisor")))*/ asim_hls_handler(){
     }
 
         default:
-            printf("Undefined HLS func ID\n");
+            printf("Undefined HLS func ID %d\n", hls_id);
     }
 
     asim_set_apreturn(__return_status__);

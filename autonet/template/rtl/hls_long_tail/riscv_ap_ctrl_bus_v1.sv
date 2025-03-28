@@ -13,8 +13,9 @@
 //                    : v1.7 - Each HLS has its own profiling counters.
 //                           - Clear profiling counter by RISCV.
 //                           - Call count added.
+//                      v1.8 - Optimized LUT of profilier.
+//                           - AP_PROFILE_ALL always defined.
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-`define AP_PROFILE_ALL
 //edward 2024-12-04: If AP_PROFILE_ALL (RV_NUM=4, HLS_PARENT=9, HLS_NUM=32), LUT=24974, Freq=300MHz(slack=0.206)
 module riscv_ap_ctrl_bus_v1 import xcache_param_pkg::*; import hls_long_tail_pkg::*;
 #(
@@ -28,10 +29,10 @@ module riscv_ap_ctrl_bus_v1 import xcache_param_pkg::*; import hls_long_tail_pkg
     parameter HLS_RET_WIDTH    = 32,
     parameter HLS_RET_VECTOR   = 1,
     parameter XMEM_ADDR_WIDTH  = 16,
-    parameter XMEM_DATA_WIDTH  = 32, 
+    parameter XMEM_DATA_WIDTH  = 32,
     parameter DMA_ADDR_WIDTH   = 20,
     parameter DMA_DATA_WIDTH   = 32,
-    parameter XMEM_TOTAL_DEPTH = -1, 
+    parameter XMEM_TOTAL_DEPTH = -1,
     parameter ENABLE_XMEM1_RW  = 0,
 	parameter RV_IDX_BITS      = (RV_NUM == 1)? 1 : $clog2(RV_NUM)
 )
@@ -48,7 +49,7 @@ module riscv_ap_ctrl_bus_v1 import xcache_param_pkg::*; import hls_long_tail_pkg
     output logic [31 : 0]                   rv_rdata [RV_NUM],
     //HLS ap_ctrl (for porfiling)
     input                                   ap_rv_req     [RV_NUM],
-    input        [31:0]                     ap_rv_id      [RV_NUM],    
+    input        [31:0]                     ap_rv_id      [RV_NUM],
     input                                   ap_hls_req    [HLS_PARENT],
     input        [31:0]                     ap_hls_id     [HLS_PARENT],
     input                                   ap_hls_retReq [HLS_PARENT],
@@ -61,7 +62,7 @@ module riscv_ap_ctrl_bus_v1 import xcache_param_pkg::*; import hls_long_tail_pkg
     input                                   ap_dc_ready   [HLS_NUM],
     input                                   ap_xmem_ready [HLS_NUM],
     input                                   ap_ret_ready  [HLS_NUM],
-   
+
     //XMEM (v2)
     input                                   xmem2_rdy,
     output logic                            xmem2_re,
@@ -75,14 +76,14 @@ module riscv_ap_ctrl_bus_v1 import xcache_param_pkg::*; import hls_long_tail_pkg
     output logic [3 : 0]                    xmem1_we,
     output logic [XMEM_ADDR_WIDTH - 1 : 0]  xmem1_ad,
     output logic [XMEM_DATA_WIDTH - 1 : 0]  xmem1_di,
-    input        [XMEM_DATA_WIDTH - 1 : 0]  xmem1_do,    
+    input        [XMEM_DATA_WIDTH - 1 : 0]  xmem1_do,
     //DMA
     input                                   dma_rdy,
     output logic                            dma_re,
     output logic                            dma_we,
     output logic [DMA_ADDR_WIDTH - 1 : 0]   dma_ad,
     output logic [DMA_DATA_WIDTH - 1 : 0]   dma_di,
-    input        [DMA_DATA_WIDTH - 1 : 0]   dma_do    
+    input        [DMA_DATA_WIDTH - 1 : 0]   dma_do
 );
 
 //RISCV command
@@ -95,6 +96,7 @@ localparam [3:0] GET_HLS_XMEM_BUSY = 5;    //Read profiling cycle (xmem2 not rea
 localparam [3:0] GET_HLS_FARB_BUSY = 6;    //Read profiling cycle (func_arbiter not ready)
 localparam [3:0] CLR_HLS_PROF      = 7;    //Clear profiling counter
 localparam [3:0] GET_HLS_CALL_CNT  = 8;    //Read profiling call count
+localparam [3:0] GET_HLS_RET_BUSY  = 9;    //Read profiling cycle (func_arbiter return not ready)
 
 //Others
 localparam CMD_IDX_BITS          = 4;
@@ -165,38 +167,32 @@ logic                           dma_rdy_r;
 //AP profiling
 //cycle1: between ap_start and ap_done
 //cycle2: between ap_start and ap_done but not include cache miss
-`ifdef AP_PROFILE_ALL
-logic                           hls_start      [RV_NUM][HLS_NUM];
-logic [31 : 0]                  hls_cycle      [RV_NUM][HLS_NUM];
-logic [31 : 0]                  hls_dc_busy    [RV_NUM][HLS_NUM];
-logic [31 : 0]                  hls_xmem_busy  [RV_NUM][HLS_NUM];
-logic [31 : 0]                  hls_farb_busy  [RV_NUM][HLS_NUM];
-logic [31 : 0]                  hls_call_cnt   [RV_NUM][HLS_NUM];
-`else
-logic                           hls_start      [RV_NUM];
-logic [31 : 0]                  hls_cycle      [RV_NUM];
-logic [31 : 0]                  hls_dc_busy    [RV_NUM];
-logic [31 : 0]                  hls_xmem_busy  [RV_NUM];
-logic [31 : 0]                  hls_farb_busy  [RV_NUM];
-logic [31 : 0]                  hls_call_cnt   [RV_NUM];
-`endif
-logic                           hls_call       [RV_NUM][HLS_NUM];
-logic [HLS_IDX_BITS-1:0]        hls_id         [RV_NUM];
+logic [RV_NUM - 1 : 0]          hls_start      [HLS_NUM];
+logic                           hls_call       [HLS_PARENT];
+logic [31 : 0]                  hls_cycle      [HLS_NUM];
+logic [31 : 0]                  hls_dc_busy    [HLS_NUM];
+logic [31 : 0]                  hls_xmem_busy  [HLS_NUM];
+logic [31 : 0]                  hls_farb_busy  [HLS_NUM];
+logic [31 : 0]                  hls_ret_busy   [HLS_NUM];
+logic [31 : 0]                  hls_call_cnt   [HLS_NUM];
 logic                           ap_rv_req_r    [RV_NUM];
-logic [31 : 0]                  ap_rv_id_r     [RV_NUM];
+logic [HLS_IDX_BITS - 1 : 0]    ap_rv_id_r     [RV_NUM];
 logic                           ap_hls_req_r   [HLS_PARENT];
-logic [31 : 0]                  ap_hls_id_r    [HLS_PARENT];
+logic [HLS_IDX_BITS - 1 : 0]    ap_hls_id_r    [HLS_PARENT];
 logic                           ap_hls_retReq_r[HLS_PARENT];
 logic                           ap_hls_retPop_r[HLS_PARENT];
 logic                           ap_arb_start_r [HLS_NUM];
 logic                           ap_start_r     [HLS_NUM];
 logic                           ap_done_r      [HLS_NUM];
 logic                           ap_busy_r      [HLS_NUM];
-logic [7 : 0]                   ap_core_r      [HLS_NUM];
+logic [RV_IDX_BITS - 1 : 0]     ap_core_r      [HLS_NUM];
 logic                           ap_dc_ready_r  [HLS_NUM];
 logic                           ap_xmem_ready_r[HLS_NUM];
 logic                           ap_ret_ready_r [HLS_NUM];
 
+function [RV_IDX_BITS - 1 : 0] parent_core(int hls_parent);
+    return ap_core_r[HLS_PARENT_IDX[hls_parent]];
+endfunction
 
 //-----------------
 // Address mapping
@@ -205,8 +201,8 @@ always_comb begin
     for (int i = 0; i < RV_NUM; i = i + 1) begin
         rv_cmd       [i] = rv_addr[i][20 +: CMD_IDX_BITS];
         rv_offset    [i] = rv_addr[i][0  +: XMEM_ADDR_WIDTH];
-        rv_dma_offset[i] = rv_addr[i][0  +: DMA_ADDR_WIDTH]; 
-        rv_hls_id    [i] = rv_addr[i][2  +: HLS_IDX_BITS]; 
+        rv_dma_offset[i] = rv_addr[i][0  +: DMA_ADDR_WIDTH];
+        rv_hls_id    [i] = rv_addr[i][2  +: HLS_IDX_BITS];
     end
 end
 
@@ -239,71 +235,54 @@ always @ (posedge clk or negedge rstn) begin
         for (int i = 0; i < RV_NUM; i = i + 1) begin
             rv_valid[i] <= 0;
             rv_rdata[i] <= 0;
-        end 
-    end 
-    else begin 
+        end
+    end
+    else begin
         for (int i = 0; i < RV_NUM; i = i + 1) begin
-            if (xmem2_re_3r == 1 && xmem2_rv_idx_3r == i[RV_IDX_BITS - 1 : 0]) begin 
+            if (xmem2_re_3r == 1 && xmem2_rv_idx_3r == i[RV_IDX_BITS - 1 : 0]) begin
                 rv_valid[i] <= 1;
                 rv_rdata[i] <= xmem2_do;
             end
-			else if (ENABLE_XMEM1_RW && xmem1_re_r == 1 && xmem1_rv_idx_r == i[RV_IDX_BITS - 1 : 0]) begin 
+			else if (ENABLE_XMEM1_RW && xmem1_re_r == 1 && xmem1_rv_idx_r == i[RV_IDX_BITS - 1 : 0]) begin
 				rv_valid[i] <= 1;
 				rv_rdata[i] <= xmem1_do;
-			end 
-            else if (dma_re_r == 1 && dma_rv_idx_r == i[RV_IDX_BITS - 1 : 0]) begin 
+			end
+            else if (dma_re_r == 1 && dma_rv_idx_r == i[RV_IDX_BITS - 1 : 0]) begin
                 rv_valid[i] <= 1;
                 rv_rdata[i] <= dma_do;
             end
-`ifdef AP_PROFILE_ALL
             else if (rv_re[i] == 1 && rv_cmd[i] == GET_HLS_CYCLE) begin
                 rv_valid[i] <= 1;
-                rv_rdata[i] <= hls_cycle[i][rv_hls_id[i]];
+                rv_rdata[i] <= hls_cycle[rv_hls_id[i]];
             end
+            `ifdef HLS_LOCAL_DCACHE
             else if (rv_re[i] == 1 && rv_cmd[i] == GET_HLS_DC_BUSY) begin
                 rv_valid[i] <= 1;
-                rv_rdata[i] <= hls_dc_busy[i][rv_hls_id[i]];
+                rv_rdata[i] <= hls_dc_busy[rv_hls_id[i]];
             end
+            `endif
             else if (rv_re[i] == 1 && rv_cmd[i] == GET_HLS_XMEM_BUSY) begin
                 rv_valid[i] <= 1;
-                rv_rdata[i] <= hls_xmem_busy[i][rv_hls_id[i]];
+                rv_rdata[i] <= hls_xmem_busy[rv_hls_id[i]];
             end
             else if (rv_re[i] == 1 && rv_cmd[i] == GET_HLS_FARB_BUSY) begin
                 rv_valid[i] <= 1;
-                rv_rdata[i] <= hls_farb_busy[i][rv_hls_id[i]];
+                rv_rdata[i] <= hls_farb_busy[rv_hls_id[i]];
             end
             else if (rv_re[i] == 1 && rv_cmd[i] == GET_HLS_CALL_CNT) begin
                 rv_valid[i] <= 1;
-                rv_rdata[i] <= hls_call_cnt[i][rv_hls_id[i]];
-            end            
-`else
-            else if (rv_re[i] == 1 && rv_cmd[i] == GET_HLS_CYCLE) begin
-                rv_valid[i] <= 1;
-                rv_rdata[i] <= hls_cycle[i];
+                rv_rdata[i] <= hls_call_cnt[rv_hls_id[i]];
             end
-            else if (rv_re[i] == 1 && rv_cmd[i] == GET_HLS_DC_BUSY) begin
+            else if (rv_re[i] == 1 && rv_cmd[i] == GET_HLS_RET_BUSY) begin
                 rv_valid[i] <= 1;
-                rv_rdata[i] <= hls_dc_busy[i];
+                rv_rdata[i] <= hls_ret_busy[rv_hls_id[i]];
             end
-            else if (rv_re[i] == 1 && rv_cmd[i] == GET_HLS_XMEM_BUSY) begin
-                rv_valid[i] <= 1;
-                rv_rdata[i] <= hls_xmem_busy[i];
-            end
-            else if (rv_re[i] == 1 && rv_cmd[i] == GET_HLS_FARB_BUSY) begin
-                rv_valid[i] <= 1;
-                rv_rdata[i] <= hls_farb_busy[i];
-            end
-            else if (rv_re[i] == 1 && rv_cmd[i] == GET_HLS_CALL_CNT) begin
-                rv_valid[i] <= 1;
-                rv_rdata[i] <= hls_call_cnt[i];
-            end
-`endif
             else begin
                 rv_valid[i] <= 0;
             end
-        end 
-    end 
-end 
+        end
+    end
+end
 
 //---------------------------------------
 // HLS profiling cycle
@@ -312,11 +291,11 @@ always @ (posedge clk or negedge rstn) begin
     if (~rstn) begin
         hls_start       <= '{default:'0};
         hls_call        <= '{default:'0};
-        hls_id          <= '{default:'0};
         hls_cycle       <= '{default:'0};
         hls_dc_busy     <= '{default:'0};
         hls_xmem_busy   <= '{default:'0};
-        hls_farb_busy   <= '{default:'0};        
+        hls_farb_busy   <= '{default:'0};
+        hls_ret_busy    <= '{default:'0};
         hls_call_cnt    <= '{default:'0};
         ap_rv_req_r     <= '{default:'0};
         ap_rv_id_r      <= '{default:'0};
@@ -336,139 +315,101 @@ always @ (posedge clk or negedge rstn) begin
     else begin
         if (ENABLE_PROFILE == 1) begin
             ap_rv_req_r     <= ap_rv_req;
-            ap_rv_id_r      <= ap_rv_id;
             ap_hls_req_r    <= ap_hls_req;
-            ap_hls_id_r     <= ap_hls_id;
             ap_hls_retReq_r <= ap_hls_retReq;
             ap_hls_retPop_r <= ap_hls_retPop;
             ap_arb_start_r  <= ap_arb_start;
             ap_start_r      <= ap_start;
             ap_done_r       <= ap_done;
             ap_busy_r       <= ap_busy;
-            ap_core_r       <= ap_core;
             ap_dc_ready_r   <= ap_dc_ready;
             ap_xmem_ready_r <= ap_xmem_ready;
             ap_ret_ready_r  <= ap_ret_ready;
-`ifdef AP_PROFILE_ALL
+            for (int i = 0; i < HLS_NUM; i = i + 1) begin
+                ap_core_r[i] <= ap_core[i];
+                ap_rv_id_r[i]  <= ap_rv_id[i];
+                ap_hls_id_r[i] <= ap_hls_id[i];
+            end
             //Clear counter
             for (int c = 0; c < RV_NUM; c = c + 1) begin
                 if (rv_we[c] && rv_ready[c] && rv_cmd[c] == CLR_HLS_PROF) begin
-                    hls_cycle    [c][rv_hls_id[c][HLS_IDX_BITS-1:0]] <= 0;
-                    hls_dc_busy  [c][rv_hls_id[c][HLS_IDX_BITS-1:0]] <= 0;
-                    hls_xmem_busy[c][rv_hls_id[c][HLS_IDX_BITS-1:0]] <= 0;
-                    hls_farb_busy[c][rv_hls_id[c][HLS_IDX_BITS-1:0]] <= 0;
-                    hls_call_cnt [c][rv_hls_id[c][HLS_IDX_BITS-1:0]] <= 0; 
+                    hls_cycle    [rv_hls_id[c]] <= 0;
+                    `ifdef HLS_LOCAL_DCACHE
+                    hls_dc_busy  [rv_hls_id[c]] <= 0;
+                    `endif
+                    hls_xmem_busy[rv_hls_id[c]] <= 0;
+                    hls_farb_busy[rv_hls_id[c]] <= 0;
+                    hls_ret_busy [rv_hls_id[c]] <= 0;
+                    hls_call_cnt [rv_hls_id[c]] <= 0;
                 end
             end
             //Start by RISCV
             for (int c = 0; c < RV_NUM; c = c + 1) begin
                 if (ap_rv_req_r[c] == 1 && ap_rv_id_r[c] < HLS_NUM) begin
-                    hls_start    [c][ap_rv_id_r[c][HLS_IDX_BITS-1:0]] <= 1;
-                    //hls_cycle    [c][ap_rv_id_r[c][HLS_IDX_BITS-1:0]] <= 0;
-                    //hls_dc_busy  [c][ap_rv_id_r[c][HLS_IDX_BITS-1:0]] <= 0;
-                    //hls_xmem_busy[c][ap_rv_id_r[c][HLS_IDX_BITS-1:0]] <= 0;
-                    //hls_farb_busy[c][ap_rv_id_r[c][HLS_IDX_BITS-1:0]] <= 0;
+                    hls_start[ap_rv_id_r[c]][c] <= 1;
                 end
             end
-            //Start by HLS parent    
+            //Start by HLS parent
             for (int h = 0; h < HLS_PARENT; h = h + 1) begin
                 if (ap_hls_req_r[h] == 1) begin
                     if (ap_hls_id_r[h] < HLS_NUM) begin
-                        hls_start     [ap_core_r[HLS_PARENT_IDX[h]][RV_IDX_BITS-1:0]][ap_hls_id_r[h][HLS_IDX_BITS-1:0]] <= 1;                    
-                        //hls_cycle     [ap_core_r[HLS_PARENT_IDX[h]][RV_IDX_BITS-1:0]][ap_hls_id_r[h][HLS_IDX_BITS-1:0]] <= 0;
-                        //hls_dc_busy   [ap_core_r[HLS_PARENT_IDX[h]][RV_IDX_BITS-1:0]][ap_hls_id_r[h][HLS_IDX_BITS-1:0]] <= 0;
-                        //hls_xmem_busy [ap_core_r[HLS_PARENT_IDX[h]][RV_IDX_BITS-1:0]][ap_hls_id_r[h][HLS_IDX_BITS-1:0]] <= 0;
-                        //hls_farb_busy [ap_core_r[HLS_PARENT_IDX[h]][RV_IDX_BITS-1:0]][ap_hls_id_r[h][HLS_IDX_BITS-1:0]] <= 0;
+                        hls_start[ap_hls_id_r[h]][parent_core(h)] <= 1;
                     end
                     //Pause during calling child (blocking)
-                    if (ap_hls_retReq_r[h]) begin                        
-                        hls_start[ap_core_r[HLS_PARENT_IDX[h]][RV_IDX_BITS-1:0]][HLS_PARENT_IDX[h]] <= 0;                                                
-                        hls_call [ap_core_r[HLS_PARENT_IDX[h]][RV_IDX_BITS-1:0]][HLS_PARENT_IDX[h]] <= 1;
+                    if (ap_hls_retReq_r[h]) begin
+                        hls_start[HLS_PARENT_IDX[h]][parent_core(h)] <= 0;
+                        hls_call[h] <= 1;
                     end
                 end
                 //Resmume from child call
-                if (ap_hls_retPop_r[h] && hls_call[ap_core_r[HLS_PARENT_IDX[h]][RV_IDX_BITS-1:0]][HLS_PARENT_IDX[h]]) begin
-                    hls_start[ap_core_r[HLS_PARENT_IDX[h]][RV_IDX_BITS-1:0]][HLS_PARENT_IDX[h]] <= ~(ap_done_r[HLS_PARENT_IDX[h]] & ap_ret_ready_r[HLS_PARENT_IDX[h]]);
-                    hls_call [ap_core_r[HLS_PARENT_IDX[h]][RV_IDX_BITS-1:0]][HLS_PARENT_IDX[h]] <= 0;                  
+                if (ap_hls_retPop_r[h] && hls_call[h]) begin
+                    hls_start[HLS_PARENT_IDX[h]][parent_core(h)] <= ~(ap_done_r[HLS_PARENT_IDX[h]] & ap_ret_ready_r[HLS_PARENT_IDX[h]]);
+                    hls_call[h] <= 0;
                 end
-            end            
-            //Profiling
-            for (int c = 0; c < RV_NUM; c = c + 1) begin        
-                for (int i = 0; i < HLS_NUM; i = i + 1) begin                    
-                    if (hls_start[c][i]) begin
-                        //Total cycle
-                        hls_cycle[c][i] <= hls_cycle[c][i] + 1;
-                        //Not selected by function arbiter
-                        if (ap_core_r[i][RV_IDX_BITS-1:0] != c || ap_busy_r[i] == 0) begin
-                            hls_farb_busy[c][i] <= hls_farb_busy[c][i] + 1;
+            end
+            //Cycle Profiling
+            for (int i = 0; i < HLS_NUM; i = i + 1) begin
+                if (hls_start[i] != 0) begin
+                    //Total cycle
+                    hls_cycle[i] <= hls_cycle[i] + 1;
+                    if (ap_busy_r[i] == 1) begin
+                        //Cache miss
+                        `ifdef HLS_LOCAL_DCACHE
+                        if (~ap_dc_ready_r[i]) begin
+                            hls_dc_busy[i] <= hls_dc_busy[i] + 1;
                         end
-                        else if (ap_core_r[i][RV_IDX_BITS-1:0] == c && ap_busy_r[i] == 1) begin
-                            //Cache miss
-                            if (~ap_dc_ready_r[i]) begin
-                                hls_dc_busy[c][i] <= hls_dc_busy[c][i] + 1;
-                            end
-                            //XMEM busy
-                            if ((ap_arb_start_r[i] & ~ap_start_r[i]) | ~ap_xmem_ready_r[i]) begin
-                                hls_xmem_busy[c][i] <= hls_xmem_busy[c][i] + 1;
-                            end
-                            //Function arbiter (return) busy
-                            if (ap_done_r[i] & ~ap_ret_ready_r[i]) begin
-                                hls_farb_busy[c][i] <= hls_farb_busy[c][i] + 1;
-                            end
-                            //Done
-                            if (ap_done_r[i] & ap_ret_ready_r[i]) begin
-                                hls_start[c][i] <= 0;
-                            end
+                        `endif
+                        //XMEM busy
+                        if ((ap_arb_start_r[i] & ~ap_start_r[i]) | ~ap_xmem_ready_r[i]) begin
+                            hls_xmem_busy[i] <= hls_xmem_busy[i] + 1;
+                        end
+                        //Function arbiter (return) busy
+                        if (ap_done_r[i] & ~ap_ret_ready_r[i]) begin
+                            hls_ret_busy[i] <= hls_ret_busy[i] + 1;
+                        end
+                        //Done
+                        if (ap_done_r[i] & ap_ret_ready_r[i]) begin
+                            hls_start[i] <= 0;
+                        end
+                    end
+                end                
+            end
+            //Busy due to not selected by function arbiter
+            for (int i = 0; i < HLS_NUM; i = i + 1) begin
+                for (int j = 0; j < RV_NUM; j = j + 1) begin
+                    if (hls_start[i][j] != 0) begin
+                        if (ap_busy_r[i] == 0 || ap_core_r[i] != j) begin
+                            hls_farb_busy[i] <= hls_farb_busy[i] + 1;
                         end
                     end
                 end
             end            
             //Call count
-            for (int i = 0; i < HLS_NUM; i = i + 1) begin           
-                if (ap_done_r[i] & ap_ret_ready_r[i]) begin            
-                    hls_call_cnt[ap_core_r[i]][i] <= hls_call_cnt[ap_core_r[i]][i] + 1; 
+            for (int i = 0; i < HLS_NUM; i = i + 1) begin
+                if (ap_done_r[i] & ap_ret_ready_r[i]) begin
+                    hls_call_cnt[i] <= hls_call_cnt[i] + 1;
                 end
             end
-`else
-            for (int c = 0; c < RV_NUM; c = c + 1) begin
-                //edward 2024-11-28: if hls start profiling, no accept another hls profile.
-                if (ap_rv_req_r[c] & ~hls_start[c]) begin
-                    hls_start    [c] <= (ap_rv_id_r[c] < HLS_NUM)? 1 : 0;
-                    hls_id       [c] <= ap_rv_id_r[c];
-                    hls_cycle    [c] <= 0;
-                    hls_dc_busy  [c] <= 0;
-                    hls_xmem_busy[c] <= 0;
-                    hls_farb_busy[c] <= 0;
-                end          
-                else if (hls_start[c]) begin
-                    //Total cycle
-                    hls_cycle[c] <= hls_cycle[c] + 1;
-                    //Not selected by function arbiter
-                    if (ap_core_r[hls_id[c]][RV_IDX_BITS-1:0] != c || ap_busy_r[hls_id[c]] == 0) begin
-                        hls_farb_busy[c] <= hls_farb_busy[c] + 1;
-                    end
-                    else begin
-                        //Cache miss
-                        if (~ap_dc_ready_r[hls_id[c]]) begin
-                            hls_dc_busy[c] <= hls_dc_busy[c] + 1;
-                        end
-                        //XMEM busy
-                        if ((ap_arb_start_r[hls_id[c]] & ~ap_start_r[hls_id[c]]) | ~ap_xmem_ready_r[hls_id[c]]) begin
-                            hls_xmem_busy[c] <= hls_xmem_busy[c] + 1;
-                        end
-                        //Function arbiter (return) busy
-                        if (ap_done_r[hls_id[c]] & ~ap_ret_ready_r[hls_id[c]]) begin
-                            hls_farb_busy[c] <= hls_farb_busy[c] + 1;
-                        end
-                        //Done
-                        if (ap_done_r[hls_id[c]] & ap_ret_ready_r[hls_id[c]]) begin
-                            hls_start[c] <= 0;
-                            hls_call_cnt[c] <= hls_call_cnt[c] + 1; 
-                        end
-                    end
-                end
-            end
-`endif
         end
     end
 end
@@ -476,7 +417,7 @@ end
 //--------------------------------------------------------------
 // RISCV xmem (v2) request
 //--------------------------------------------------------------
-always_comb begin        
+always_comb begin
     xmem2_req_re  = xmem2_req_re_r;
     xmem2_req_we  = xmem2_req_we_r;
     xmem2_req_adr = xmem2_req_adr_r;
@@ -485,7 +426,7 @@ always_comb begin
         if (~xmem2_not_rdy_r & ~xmem2_req_not_rdy_r[i]) begin
             if (rv_cmd[i] == XMEM2_ACCESS) begin
                 xmem2_req_re [i] = rv_re[i];
-                xmem2_req_we [i] = rv_we[i];            
+                xmem2_req_we [i] = rv_we[i];
             end
             else begin
                 xmem2_req_re [i] = 0;
@@ -497,7 +438,7 @@ always_comb begin
     end
 end
 always @ (posedge clk or negedge rstn) begin
-    if (~rstn) begin       
+    if (~rstn) begin
         xmem2_req_re_r      <= '{default:'0};
         xmem2_req_we_r      <= '{default:'0};
         xmem2_req_adr_r     <= '{default:'0};
@@ -505,7 +446,7 @@ always @ (posedge clk or negedge rstn) begin
         xmem2_req_not_rdy_r <= '{default:'0};
     end
     else begin
-        for (int i = 0; i < RV_NUM; i = i + 1) begin            
+        for (int i = 0; i < RV_NUM; i = i + 1) begin
             xmem2_req_re_r [i]     <= xmem2_req_re [i];
             xmem2_req_we_r [i]     <= xmem2_req_we [i];
             xmem2_req_adr_r[i]     <= xmem2_req_adr[i];
@@ -551,7 +492,7 @@ always @ (posedge clk or negedge rstn) begin
         xmem2_not_rdy_r <= xmem2_rv_req & ~xmem2_rdy;
         xmem2_re_r      <= xmem2_re;
         xmem2_re_2r     <= xmem2_re_r;
-        xmem2_re_3r     <= xmem2_re_2r;       
+        xmem2_re_3r     <= xmem2_re_2r;
         xmem2_rv_idx_r  <= xmem2_rv_idx;
         xmem2_rv_idx_2r <= xmem2_rv_idx_r;
         xmem2_rv_idx_3r <= xmem2_rv_idx_2r;
@@ -564,17 +505,17 @@ end
 //--------------------------------------------------------------
 // RISCV xmem (v1) request
 //--------------------------------------------------------------
-always_comb begin        
+always_comb begin
     if (ENABLE_XMEM1_RW) begin
         xmem1_req_re  = xmem1_req_re_r;
         xmem1_req_we  = xmem1_req_we_r;
         xmem1_req_adr = xmem1_req_adr_r;
-        xmem1_req_din = xmem1_req_din_r;    
+        xmem1_req_din = xmem1_req_din_r;
         for (int i = 0; i < RV_NUM; i = i + 1) begin
             if (~xmem1_not_rdy_r & ~xmem1_req_not_rdy_r[i]) begin
                 if (rv_cmd[i] == XMEM1_ACCESS) begin
                     xmem1_req_re [i] = rv_re[i];
-                    xmem1_req_we [i] = rv_we[i];            
+                    xmem1_req_we [i] = rv_we[i];
                 end
                 else begin
                     xmem1_req_re [i] = 0;
@@ -589,11 +530,11 @@ always_comb begin
         xmem1_req_re  = '{default:'0};
         xmem1_req_we  = '{default:'0};
         xmem1_req_adr = '{default:'0};
-        xmem1_req_din = '{default:'0};    
+        xmem1_req_din = '{default:'0};
     end
 end
 always @ (posedge clk or negedge rstn) begin
-    if (~rstn) begin       
+    if (~rstn) begin
         xmem1_req_re_r      <= '{default:'0};
         xmem1_req_we_r      <= '{default:'0};
         xmem1_req_adr_r     <= '{default:'0};
@@ -602,7 +543,7 @@ always @ (posedge clk or negedge rstn) begin
     end
     else begin
         if (ENABLE_XMEM1_RW) begin
-            for (int i = 0; i < RV_NUM; i = i + 1) begin            
+            for (int i = 0; i < RV_NUM; i = i + 1) begin
                 xmem1_req_re_r [i]     <= xmem1_req_re [i];
                 xmem1_req_we_r [i]     <= xmem1_req_we [i];
                 xmem1_req_adr_r[i]     <= xmem1_req_adr[i];
@@ -612,7 +553,7 @@ always @ (posedge clk or negedge rstn) begin
         end
     end
 end
-    
+
 //--------------------------------------------------------------
 //Priority arbiter (RISCV0 is the lowest priority)
 //--------------------------------------------------------------
@@ -705,7 +646,7 @@ end
 //----------------------------------------------------
 always_comb begin
     dma_arb_sel = 0;
-    dma_arb_vld = 0;    
+    dma_arb_vld = 0;
     for (int i = 0; i < RV_NUM; i = i + 1) begin
         tmp2 = dma_arb_rrpt + i[RV_IDX_BITS - 1 : 0];
         if (tmp2 >= RV_NUM) tmp2 = tmp2 - RV_NUM;
@@ -773,11 +714,6 @@ end
 (* mark_debug = "true" *) logic [HLS_NUM-1:0]        db_ap_dc_ready;
 (* mark_debug = "true" *) logic [HLS_NUM-1:0]        db_ap_xmem_ready;
 (* mark_debug = "true" *) logic [HLS_NUM-1:0]        db_ap_ret_ready;
-//(* mark_debug = "true" *) logic [HLS_PARENT-1:0]     db_ap_hls_req;
-//(* mark_debug = "true" *) logic [HLS_PARENT-1:0]     db_ap_hls_retReq;
-//(* mark_debug = "true" *) logic [HLS_PARENT-1:0]     db_ap_hls_retPop;
-//(* mark_debug = "true" *) logic [RV_NUM*HLS_NUM-1:0] db_hls_start;
-//(* mark_debug = "true" *) logic [RV_NUM*HLS_NUM-1:0] db_hls_call;
 always @ (posedge clk) begin
     for (int i = 0; i < HLS_NUM; i = i + 1) begin
         db_ap_arb_start [i] <= ap_arb_start [i];
@@ -786,19 +722,8 @@ always @ (posedge clk) begin
         db_ap_busy      [i] <= ap_busy      [i];
         db_ap_dc_ready  [i] <= ap_dc_ready  [i];
         db_ap_xmem_ready[i] <= ap_xmem_ready[i];
-        db_ap_ret_ready [i] <= ap_ret_ready [i];               
+        db_ap_ret_ready [i] <= ap_ret_ready [i];
     end
-    //for (int i = 0; i < HLS_PARENT; i = i + 1) begin
-    //    db_ap_hls_req   [i] <= ap_hls_req   [i];
-    //    db_ap_hls_retReq[i] <= ap_hls_retReq[i];
-    //    db_ap_hls_retPop[i] <= ap_hls_retPop[i];
-    //end
-    //for (int i = 0; i < RV_NUM; i = i + 1) begin
-    //    for (int j = 0; j < HLS_NUM; j = j + 1) begin
-    //        db_hls_start[i * HLS_NUM + j] <= hls_start[i][j];
-    //        db_hls_call [i * HLS_NUM + j] <= hls_call [i][j];
-    //    end
-    //end
 end
 
 endmodule

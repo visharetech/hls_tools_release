@@ -24,9 +24,12 @@ class cparser:
     def config(self, clang_path):
         clang.cindex.Config.set_library_path(clang_path)
 
-    def extract_func(self, filename, clang_args):
+    def extract_func(self, filename, cflag=[]):
+        args = ['-x', 'c++', '-std=c++14', '-fms-extensions', '-m32']
+        args.extend(cflag)
+
         index = clang.cindex.Index.create()
-        translation_unit = index.parse(filename, args=clang_args)
+        translation_unit = index.parse(filename, args=args)
         
         func_list = OrderedDict()
         self._traverse_ast(translation_unit.cursor, filename, func_list)
@@ -52,10 +55,18 @@ class cparser:
 
         code = re.sub(r'//.*', '', code)                        #remove // comment
         code = re.sub(r'/\*.*?\*/', '', code, flags=re.DOTALL)  #remove /**/ comment
-        code = code.split('{', 1)[0]                            #remove subsequent string after { 
-        code = re.sub(r'\s+', ' ', code)                        #replace multiple space into single space
-        code = code.replace('\r', '').replace('\n', '')         #remove newline character
-        return code                                             #Finally, it will get IMPL(xxx) extract from the source
+
+        pragma_list = []
+
+        codelines = code.splitlines()
+        for line in codelines:
+            if '#pragma ' in line:
+                pragma_list.append(line.strip())
+
+        function_decl = code.split('{', 1)[0]                            #remove subsequent string after { 
+        function_decl = re.sub(r'\s+', ' ', function_decl)                        #replace multiple space into single space
+        function_decl = function_decl.replace('\r', '').replace('\n', '')         #remove newline character
+        return function_decl, pragma_list                                    #Finally, it will get IMPL(xxx) extract from the source
 
     def _traverse_ast(self, node, filter_filename, func_list):
         if node.kind == clang.cindex.CursorKind.FUNCTION_DECL:
@@ -67,11 +78,11 @@ class cparser:
                     return
         
             func_name = node.spelling
-            
-            return_type = node.result_type.spelling
-            
 
-            raw_func_decl = self._get_func_decl(node)
+            return_type = node.result_type.spelling
+
+
+            raw_func_decl, pragma_list = self._get_func_decl(node)
             if 'IMPL(' in raw_func_decl:
                 print(f'IMPL(xxx) Function: {func_name}')
                 is_impl_func = True
@@ -94,6 +105,7 @@ class cparser:
                 'return_type'   : return_type,
                 'para'          : param_list,
                 'func_impl'     : raw_func_decl,
+                'pragma'        : pragma_list,
                 'is_impl_func'  : is_impl_func,
                 'visible'       : True
             }
@@ -101,21 +113,5 @@ class cparser:
         # Recurse through children nodes
         for child in node.get_children():
             self._traverse_ast(child, filter_filename, func_list)
-
-
-
-#if __name__ == "__main__":
-#    config('/usr/lib/llvm-6.0/lib')
-#    
-#    #include_dir = '/mnt/d/Frank/openhevc_hls/openHEVC_accelerator/openHEVC-hevc_rext/source'
-#    #cpp_filename = '/mnt/d/Frank/openhevc_hls/openHEVC_accelerator/openHEVC-hevc_rext/source/libavcodec/hevc_hls.cpp'
-#
-#    include_dir = '/mnt/d/Frank/kvazaar_hls/kvazaar_nht_version/src'
-#    cpp_filename = '/mnt/d/Frank/kvazaar_hls/kvazaar_nht_version/src/hls.cpp'
-#    
-#    args = ['-I' + include_dir]
-#    args.append('-DCAPTURE_COSIM')
-#    
-#    extract_func(source_file, cflags)
 
 

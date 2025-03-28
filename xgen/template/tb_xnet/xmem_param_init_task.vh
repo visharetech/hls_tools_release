@@ -158,7 +158,48 @@ task automatic risc_cmd_write;
 endtask
 
 
+task automatic set_xmember_base;
+	input int enum_xmember;
+	input int base;
+	int elem_no;
+	int idx;
+	begin
+		$display ("enum_xmember: %d\n", enum_xmember);
+		elem_no = grp_xmember[enum_xmember][0];
 
+		for (int n=0; n<elem_no; n++) begin
+			idx = grp_xmember[enum_xmember][n+1];
+			//$display ("elem_idx: %d", idx);
+			load_reqMux_cmd(base+diff_offset[idx], typeId[idx], bits[idx], muxNum[idx], s[idx], ba[idx], d[idx], ap[idx]);
+			offset[idx] =base+diff_offset[idx];
+		end
+	end
+endtask
+
+
+
+task automatic set_xmember_base_by_name;
+	input string name;
+	input int base;
+	begin 
+		int enum_xmember, elem_no, idx;
+		for (int i = 0; i < total_max_xmember; i++) begin
+			if (name == xmember_name[i]) begin
+				enum_xmember = i;
+				break;
+			end
+		end
+		$display ("enum_xmember: %d\n", enum_xmember);
+		elem_no = grp_xmember[enum_xmember][0];
+		$display ("elem_no: %d\n", elem_no);
+		for (int n=0; n<elem_no; n++) begin
+			idx = grp_xmember[enum_xmember][n+1];
+			$display ("elem_idx: %d", idx);
+			load_reqMux_cmd(base+diff_offset[idx], typeId[idx], bits[idx], muxNum[idx], s[idx], ba[idx], d[idx], ap[idx]);
+			offset[idx] =base+diff_offset[idx];
+		end
+	end
+endtask
 
 
 

@@ -40,7 +40,7 @@ def extract_para_info(para_info, func_impl, func_name):
                 'category'        : 'openhevc_cabac',
                 'var_type'        :  var_type,
                 'ov_cap_top'      : 'HEVCCONTEXT_ARG',
-                'ov_cap_init'     : f'    CABAC_LOG_START("{func_name}_decode_bin.dat")\n',
+                'ov_cap_init'     : f'    CABAC_LOG_START()\n',
                 'ov_cap_deinit'   : '\n    CABAC_LOG_END()\n',
                 'ov_cap_call'     : 'HEVCCONTEXT_ARG_CALL',
                 'ov_tb_call'      : 'HEVCCONTEXT_ARG_CALL'
@@ -134,6 +134,17 @@ def extract_para_info(para_info, func_impl, func_name):
             }
             continue
 
+        #handle special case - dcache
+        if var_name == 'xcache_null_base':
+            argvs[var_name] = {
+                'skip_capture'  : True,
+                'category'      : 'xcache_null_base',
+                'var_type'      : var_type,
+                'arr'           : 'XCACHE_MAX_DEPTH',
+                'ov_cap_top'    : 'uint8_t xcache_null_base[XCACHE_MAX_DEPTH]'
+            }
+            continue
+
         #handle special case - bNeighborFlags_t
         if var_type == 'bNeighborFlags_t':
             argvs[var_name] = {
@@ -151,10 +162,11 @@ def extract_para_info(para_info, func_impl, func_name):
             arrnum = re.findall(r'\[([^]]+)\]', var_type)
             #remove const in arrays argv[1] but keep const in argvs
             
-            if len(arrnum) == 1 and int(arrnum[0]) >= DYNAMIC_ARRAY_THRESHOLD:
-                category = 'dynamic_array'
-            else:
-                category = 'array'
+            #if len(arrnum) == 1 and int(arrnum[0]) >= DYNAMIC_ARRAY_THRESHOLD:
+            #    category = 'dynamic_array'
+            #else:
+            #    category = 'array'
+            category = 'array'
 
             var_type_no_bracket = var_type.split('[')[0].strip()
 
@@ -355,52 +367,55 @@ def gen_capture_func(is_remark, return_type, function_name, argvs):
     else:
         skip_capture_code = f'{function_call_string}'
 
-    if config.parent_func is None:
-        tgopen_argv.insert(0, f'"{function_name}_output.bin"')
-        parent_func_prefix = f'\nstatic CCapture capture_{function_name};\n'          \
-                             f'CCapture *capture = &capture_{function_name};\n'      \
-                             'pthread_t __tid = pthread_self();\n'
-                            
+    if function_name in config.parent_func_list:
+        parent_func_prefix = '\n\n'                                                             \
+                                '    pthread_t __tid = pthread_self();\n'                       \
+                                '    CaptureGrpKey key(__tid, __func__);\n'                     \
+                                '    capture_group.create_if_not_exist(key, true);\n'           \
+                                '    capture_group.set_inside_parent_func(key, true);\n'        \
+                                '    std::unordered_set<CCapture*> capture_list;\n'             \
+                                '    capture_group.get_capture_list(__func__, capture_list);\n'
+
+        parent_func_prefix += '    static std::mutex mtx;\n'                                    \
+                                '    std::lock_guard<std::mutex> lock(mtx);\n'
+
+
+        deinit_code += '\n    capture_group.set_inside_parent_func(key, false);\n'
+        parent_func_postfix = ''
+    elif function_name in config.func_list:
+        parent_func_prefix = '\n\n'                                                             \
+                                '    pthread_t __tid = pthread_self();\n'                       \
+                                '    CaptureGrpKey key(__tid, __func__);\n'                     \
+                                '    capture_group.create_if_not_exist(key, false);\n'          \
+                                '    std::unordered_set<CCapture*> capture_list;\n'             \
+                                '    capture_group.get_capture_list(__func__, capture_list);\n'
+
+        parent_func_prefix += '    static std::mutex mtx;\n'                                    \
+                                '    std::lock_guard<std::mutex> lock(mtx);\n'
 
         parent_func_postfix = ''
     else:
-        tgopen_argv.insert(0, f'"{config.parent_func}_output.bin"')
+        parent_func_prefix = '\n\nif (capture_group.is_capture_func(__func__)) {\n'             \
+                                '    pthread_t __tid = pthread_self();\n'                       \
+                                '    std::unordered_set<CCapture*> capture_list;\n'             \
+                                '    capture_group.get_capture_list(__func__, capture_list);\n'
 
-        if config.parent_func == function_name:
-            parent_func_prefix = '\nCCapture *capture;\n'                                       \
-                                'pthread_t __tid = pthread_self();\n'                           \
-                                'auto iter = capture_group.items.find(__tid);\n'                          \
-                                '    if (iter == capture_group.items.end()){\n'                           \
-                                f'        capture = new CCapture("{function_name}", true);\n'   \
-                                '        capture_group.items[__tid] = capture;\n'                         \
-                                '    } else {\n'                                                \
-                                '        capture = capture_group.items[__tid];\n'                         \
-                                '    }\n'                                                       \
-                                '    capture->set_inside_parent_func(true);\n\n'
-            deinit_code += '\n    capture->set_inside_parent_func(false);\n'
-            parent_func_postfix = ''
-        else:
-            parent_func_prefix = '\n\nif (CCapture::is_inside_parent_func()) {\n'  \
-                                 '    pthread_t __tid = pthread_self();\n'         \
-                                 '    CCapture *capture = capture_group.items[__tid];\n'
 
-            parent_func_postfix = '\n} else {\n'                \
-                              f'    {skip_capture_code}\n'      \
-                              '}'
+        parent_func_postfix = '\n} else {\n'                    \
+                            f'    {skip_capture_code}\n'        \
+                            '}'
 
     # handle return type !
     if return_type != 'void':
         temp_vars_definition += f'\n    {return_type} ans;'
 
-        if config.parent_func is None or config.parent_func == function_name:
-            # Do not captrue return value if it is child function
-            tgopen_argv.append('ans')
-            tgcapture_after_argv.append('ans')
+        tgopen_argv.append('ans')
+        tgcapture_after_argv.append('ans')
 
         function_call_string = f'ans = {function_call_string}'
         return_string = '\n    return ans;'
 
-    if (not is_remark) or (config.parent_func is not None):
+    if (not is_remark) or (len(config.parent_func_list) > 0):
         enable = '1'
     else:
         enable = '0 //cosim_code_generator: This function is marked as skip in function_list.txt'

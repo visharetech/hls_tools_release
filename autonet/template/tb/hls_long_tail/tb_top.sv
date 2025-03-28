@@ -23,11 +23,13 @@ localparam AXI2_DATA_WIDTH = 256;
 localparam AXI2_LEN_WIDTH  = 8;
 localparam AXI2_ID_WIDTH   = 8;
 localparam AXI2_STRB_WIDTH = AXI2_DATA_WIDTH / 8;
-`ifndef HLS_LOCAL_DCACHE
+`ifdef HLS_RISCV_L1CACHE
 localparam DC_PORTS        = CORE_NUM * 3;
-`else
+`else `ifdef HLS_LOCAL_DCACHE
 localparam DC_PORTS        = HLS_CACHE + 2;
-`endif
+`else
+localparam DC_PORTS        = 1;
+`endif `endif
 localparam DC_SIZE         = 32 * 1024 * 1024;   //Cache byte size per core
 
 //Module IO Ports
@@ -56,7 +58,7 @@ logic                           rv_prnt_reqVld_i        [CORE_NUM];
 logic [31 : 0]                  rv_prnt_reqChild_i      [CORE_NUM];
 logic [31 : 0]                  rv_prnt_reqPc_i         [CORE_NUM];
 logic [255 : 0]                 rv_prnt_reqArgs_i       [CORE_NUM];
-logic                           rv_prnt_reqReturn_i     [CORE_NUM];
+logic [1 : 0]                   rv_prnt_reqReturn_i     [CORE_NUM];
 logic                           rv_prnt_retRdy_i        [CORE_NUM];
 logic                           rv_prnt_retVld_o        [CORE_NUM];
 logic [31 : 0]                  rv_prnt_retChild_o      [CORE_NUM];
@@ -83,7 +85,7 @@ logic                           df_chld_retRdy_o;
 logic                           df_chld_retVld_i;
 logic [31 : 0]                  df_chld_retParent_i;
 logic [31 : 0]                  df_chld_retDat_i;
-`ifndef HLS_LOCAL_DCACHE
+`ifdef HLS_RISCV_L1CACHE
 //connecting to dcache use interface arbiter
 logic                           dcArb_hls_user_rdy      [CORE_NUM];
 logic                           dcArb_hls_user_re       [CORE_NUM];
@@ -104,7 +106,7 @@ logic [3 : 0]                   cpEng_dc_bwe            [CORE_NUM];
 logic [31 : 0]                  cpEng_dc_wad            [CORE_NUM];
 logic [31 : 0]                  cpEng_dc_wdat           [CORE_NUM];
 logic                           cpEng_dc_wrdy           [CORE_NUM];
-`else
+`else `ifdef HLS_LOCAL_DCACHE
 //connecting to dcache use interface arbiter
 logic                           dcArb_hls_user_rdy      [HLS_CACHE];
 logic                           dcArb_hls_user_ap_ce    [HLS_CACHE];
@@ -126,7 +128,7 @@ logic [3 : 0]                   cpEng_dc_bwe;
 logic [31 : 0]                  cpEng_dc_wad;
 logic [31 : 0]                  cpEng_dc_wdat;
 logic                           cpEng_dc_wrdy;
-`endif
+`endif `endif
 //DecodeBin
 logic [CABAC_NUM_BITS - 1 : 0]  decBin_sel              [CORE_NUM];
 logic [ 8 : 0]                  decBin_ctx              [CORE_NUM];
@@ -255,6 +257,9 @@ logic [3 : 0]                   dc_we_mask [DC_PORTS];
 logic [31 : 0]                  dc_d0      [DC_PORTS];
 logic [31 : 0]                  dc_q0      [DC_PORTS];
 logic                           dc_q0_vld  [DC_PORTS];
+semaphore                       core_key   [CORE_NUM];
+semaphore                       hls_key    [HLS_NUM];
+semaphore                       glb_key;
 
 
 //Macro to read argument/return from tgcapture
@@ -436,7 +441,7 @@ logic                           dc_q0_vld  [DC_PORTS];
 
 //Cache model
 always_comb begin
-`ifndef HLS_LOCAL_DCACHE    
+`ifdef HLS_RISCV_L1CACHE    
     dc_ap_ce = '{default:1'b1};
     for (int i = 0; i < CORE_NUM; i++) begin
         dc_ce0     [i] = dcArb_hls_user_re[i] | dcArb_hls_user_we[i];
@@ -466,7 +471,7 @@ always_comb begin
         dc_d0      [2*CORE_NUM+i] = cpEng_dc_wdat[i];
         cpEng_dc_wrdy[i] = dc_ready[2*CORE_NUM+i];
     end
-`else
+`else `ifdef HLS_LOCAL_DCACHE
     for (int i = 0; i < HLS_CACHE; i++) begin
         dc_ap_ce   [i] = dcArb_hls_user_ap_ce[i];
         dc_ce0     [i] = dcArb_hls_user_re[i] | dcArb_hls_user_we[i];
@@ -494,7 +499,14 @@ always_comb begin
     dc_address0[HLS_CACHE+1] = cpEng_dc_wad;
     dc_d0      [HLS_CACHE+1] = cpEng_dc_wdat;
     cpEng_dc_wrdy = dc_ready[HLS_CACHE+1];
-`endif    
+`else
+    dc_ap_ce    = '{default:'0};
+    dc_ce0      = '{default:'0};
+    dc_we0      = '{default:'0};
+    dc_we_mask  = '{default:'0};
+    dc_address0 = '{default:'0};
+    dc_d0       = '{default:'0};
+`endif `endif
 end
 cache_model #(
     .CORES          ( DC_PORTS         ),
@@ -658,19 +670,41 @@ logic [7:0] DMA_TDATA;
 logic DMA_TVALID;
 
 //Run hls
-task automatic run_hls(int c, int hls);
+task automatic run_hls(int c, int thread, int hls);
+    hls_key[hls].get(1);
     case(hls)
         ${running_task}
     endcase
+    hls_key[hls].put(1);
 endtask
 
 //Run core
 task automatic run_core(int c);
     if (c < CORE_NUM) begin
+        /***** Example to test all HLS *****/
         //for (int i = 0; i < HLS_NUM; i++) begin
-        //    run_hls(c, i);
+        //    run_hls(c, 0, i);
         //end
-        run_hls(c, innerloop_ff_hevc_extract_rbsp_1_hls);
+
+        /***** Example to test HLS with multi-threading *****/
+        //fork
+        //    TH0: begin
+        //        //Lock edge_buffer
+        //        glb_key.get(1);
+        //        run_hls(c, c * 4 + 0, interp_vert_generic_ex_hls);
+        //        run_hls(c, c * 4 + 0, interp_horiz_generic_ex_hls);
+        //        //Unlock edge_buffer
+        //        glb_key.put(1);
+        //    end
+        //    TH1: begin
+        //        run_hls(c, c * 4 + 1, hls_decode_neighbour_hls);
+        //        run_hls(c, c * 4 + 1, init_intra_neighbors_hls);
+        //        run_hls(c, c * 4 + 1, ff_hevc_set_neighbour_available_hls);
+        //    end
+        //join
+
+        /***** Test single HLS *****/
+        run_hls(c, 0, innerloop_ff_hevc_extract_rbsp_1_hls);
     end
 endtask
 
@@ -731,6 +765,19 @@ initial begin
     @ (posedge clk);
 
     parse_csv_file(${csv_filepath});
+
+    //Lock/unlock for multi-thread ap_call interface within one core
+    for (int i = 0; i < CORE_NUM; i++) begin
+        core_key[i] = new(1);
+    end
+
+    //Lock/unlock for hls test task
+    for (int i = 0; i < HLS_NUM; i++) begin
+        hls_key[i] = new(1);        
+    end
+    
+    //Global lock/unlock
+    glb_key = new(1);
 
     //Running task
     fork

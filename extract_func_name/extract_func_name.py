@@ -103,10 +103,10 @@ def gen_autonet_pragma(filepath, func_list):
 
         content += '''
 //no endmodule in this file. Hence, use GEN_VERILOG to generate verilog code
+#pragma AUTONET LOAD_JSON   load_hls_intf      c/hls.json
+
 #pragma AUTONET GEN_VERILOG
 #pragma AUTONET GEN_TB      gen_hls_long_tail_tb
-
-#pragma AUTONET LOAD_C      load_hls_intf      c/hls.h
 #pragma AUTONET GEN_C       gen_hls_ap_call    c/hls_apcall.h
 '''
 
@@ -233,13 +233,13 @@ def export_func_name():
     parser = argparse.ArgumentParser(description='Extract function and its parameters contains IMPL(xxx) macro')
     parser.add_argument('--src', dest='source_file', metavar='[HLS_FILE]', type=str, help='source_file', required=True)
     parser.add_argument('--func-filter', dest='func_filter', metavar='[FUNC_FILTER]', type=str, nargs='*', help='func_filter')
-    parser.add_argument('--cflags', dest='cflags', metavar='[CFLAGS]', nargs='*', default = [], help='cflags')
+    parser.add_argument('--cflag', dest='cflag', metavar='[CFLAG]', type=str, default='', help='additional cflags')
     parser.add_argument('-l', '--clang-path', dest='clang_path', metavar='[CLANG_PATH]', type=str, default=None, help='clang library path')
     parser.add_argument('--json', dest='json_file', metavar='[JSON_FILE]', type=str, help='json_file')
     parser.add_argument('--short-func-list', dest='short_func_list_file', metavar='[SHORT_FUNC_LIST_FILE]', type=str, help='short_func_list_file')
     parser.add_argument('--autonet-pragma', dest='autonet_pragma_file', metavar='[AUTONET_PRAGMA_FILE]', type=str, help='autonet_pragma_file')
     parser.add_argument('--autonet-enum', dest='autonet_enum_func_file', metavar='[AUTONET_ENUM_FUNC_FILE]', type=str, help='autonet_enum_func_file')
-    parser.add_argument('--autonet-cheader', dest='autonet_cheader_file', metavar='[AUTONET_C_HEADER_FILE]', type=str, help='autonet_c_header_file')
+    parser.add_argument('--autonet-json', dest='autonet_json_file', metavar='[AUTONET_JSON_FILE]', type=str, help='autonet_json_file')
     parser.add_argument('--arg-keyword', dest='special_arg_keyword', metavar='[SPECIAL_ARG_KEYWORD]', type=str, nargs='*', help='special arg keyword')
     parser.add_argument('--ap-ce', action="store_true", help='enable hls ap_ce signal')
 
@@ -255,10 +255,10 @@ def export_func_name():
         colorlog.info(f'clang path: {args.clang_path}')
         parser.config(args.clang_path)
 
-    for item in args.cflags:
-        colorlog.info(f'cflags: {item}')
+    if args.cflag:
+        colorlog.info(f'clang additional cflag:{args.cflag}')
 
-    func_list = parser.extract_func(args.source_file, args.cflags)
+    func_list = parser.extract_func(args.source_file, args.cflag.split())
 
     filter_func_info(func_list, args.func_filter)
 
@@ -282,9 +282,9 @@ def export_func_name():
     if args.autonet_enum_func_file is not None:
         gen_autonet_enum(args.autonet_enum_func_file, func_list)
 
-    if args.autonet_cheader_file is not None:
-        gen_autonet_c_header(args.autonet_cheader_file, func_list)
-
+    if args.autonet_json_file is not None:
+        save_to_json(args.autonet_json_file, func_list)
+        #gen_autonet_c_header(args.autonet_json_file, func_list)
 
 if __name__ == "__main__":
     export_func_name()

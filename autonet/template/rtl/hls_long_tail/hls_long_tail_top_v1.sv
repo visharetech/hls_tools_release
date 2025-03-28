@@ -11,6 +11,8 @@
 //                      v1.4 - Lock signal for cache arbiter among HLS.
 //                      v1.5 - Output all HLS cache interface and is selected by top level arbiter
 //                      v1.6 - Use xcache
+//                      v1.7 - Function arbiter (v7)
+//                      v1.8 - copyEngine only used for HLS_LOCAL_DCACHE or HLS_RISCV_L1CACHE
 ////////////////////////////////////////////////////////////////////////////////
 
 //param_list = ${param_list}
@@ -27,6 +29,11 @@ module hls_long_tail_top_v1 ${param_list}
     parameter ENABLE_DMA     = 1,
     parameter ENABLE_PROFILE = 0,
     parameter EN_RISCV_XMEM1 = 0,
+`ifdef HLS_LOCAL_DCACHE
+    parameter DCACHE_ABITS   = `HLS_LOCAL_DCACHE_ABITS,
+`else
+    parameter DCACHE_ABITS   = 32,
+`endif
     //XCACHE
     parameter AXI_ADDR_WIDTH  = 32,
     parameter AXI_DATA_WIDTH  = 256,
@@ -66,7 +73,7 @@ module hls_long_tail_top_v1 ${param_list}
     input        [31 : 0]                 rv_prnt_reqChild_i      [CORE_NUM],
     input        [31 : 0]                 rv_prnt_reqPc_i         [CORE_NUM],
     input        [255 : 0]                rv_prnt_reqArgs_i       [CORE_NUM],
-    input                                 rv_prnt_reqReturn_i     [CORE_NUM],
+    input        [1 : 0]                  rv_prnt_reqReturn_i     [CORE_NUM],
     input                                 rv_prnt_retRdy_i        [CORE_NUM],
     output logic                          rv_prnt_retVld_o        [CORE_NUM],
     output logic [31 : 0]                 rv_prnt_retChild_o      [CORE_NUM],
@@ -99,19 +106,19 @@ module hls_long_tail_top_v1 ${param_list}
     output logic                          dcArb_hls_user_re       [CORE_NUM],
     output logic                          dcArb_hls_user_we       [CORE_NUM],
     output logic [3  : 0]                 dcArb_hls_user_we_mask  [CORE_NUM],
-    output logic [31 : 0]                 dcArb_hls_user_adr      [CORE_NUM],
+    output logic [DCACHE_ABITS-1 : 0]     dcArb_hls_user_adr      [CORE_NUM],
     output logic [31 : 0]                 dcArb_hls_user_wdat     [CORE_NUM],
     output logic                          dcArb_hls_user_csr_flush[CORE_NUM],
     input        [31 : 0]                 dcArb_hls_user_rdat     [CORE_NUM],
     input                                 dcArb_hls_user_rdat_vld [CORE_NUM],
     //Copy Engine to riscv L1 dacache
     output logic                          cpEng_dc_re             [CORE_NUM],
-    output logic [31 : 0]                 cpEng_dc_rad            [CORE_NUM],
+    output logic [DCACHE_ABITS-1 : 0]     cpEng_dc_rad            [CORE_NUM],
     input                                 cpEng_dc_rrdy           [CORE_NUM],
     input        [31 : 0]                 cpEng_dc_rdat           [CORE_NUM],
     input                                 cpEng_dc_rdat_vld       [CORE_NUM],
     output logic [3 : 0]                  cpEng_dc_bwe            [CORE_NUM],
-    output logic [31 : 0]                 cpEng_dc_wad            [CORE_NUM],
+    output logic [DCACHE_ABITS-1 : 0]     cpEng_dc_wad            [CORE_NUM],
     output logic [31 : 0]                 cpEng_dc_wdat           [CORE_NUM],
     input                                 cpEng_dc_wrdy           [CORE_NUM],
 `else `ifdef HLS_LOCAL_DCACHE
@@ -121,19 +128,19 @@ module hls_long_tail_top_v1 ${param_list}
     output logic                          dcArb_hls_user_re       [HLS_CACHE],
     output logic                          dcArb_hls_user_we       [HLS_CACHE],
     output logic [3  : 0]                 dcArb_hls_user_we_mask  [HLS_CACHE],
-    output logic [31 : 0]                 dcArb_hls_user_adr      [HLS_CACHE],
+    output logic [DCACHE_ABITS-1 : 0]     dcArb_hls_user_adr      [HLS_CACHE],
     output logic [31 : 0]                 dcArb_hls_user_wdat     [HLS_CACHE],
     output logic                          dcArb_hls_user_csr_flush[HLS_CACHE],
     input        [31 : 0]                 dcArb_hls_user_rdat     [HLS_CACHE],
     input                                 dcArb_hls_user_rdat_vld [HLS_CACHE],
     //Copy Engine to local dacache
     output logic                          cpEng_dc_re,
-    output logic [31 : 0]                 cpEng_dc_rad,
+    output logic [DCACHE_ABITS-1 : 0]     cpEng_dc_rad,
     input                                 cpEng_dc_rrdy,
     input        [31 : 0]                 cpEng_dc_rdat,
     input                                 cpEng_dc_rdat_vld,
     output logic [3 : 0]                  cpEng_dc_bwe,
-    output logic [31 : 0]                 cpEng_dc_wad,
+    output logic [DCACHE_ABITS-1 : 0]     cpEng_dc_wad,
     output logic [31 : 0]                 cpEng_dc_wdat,
     input                                 cpEng_dc_wrdy,
 `endif `endif
@@ -269,15 +276,23 @@ localparam XMEM_ADDR_WIDTH          = 32;
 localparam XMEM_DATA_WIDTH          = 32;
 localparam DMA_ADDR_WIDTH           = 20;
 localparam DMA_DATA_WIDTH           = 32;
+//edward 2025-03-14: copyEngine is used if HLS_LOCAL_DCACHE or HLS_RISCV_L1CACHE
+`ifdef HLS_RISCV_L1CACHE
+localparam MEMCPY_COPYENGINE        = 1;
+`else `ifdef HLS_LOCAL_DCACHE
+localparam MEMCPY_COPYENGINE        = 1;
+`else
+localparam MEMCPY_COPYENGINE        = 0;
+`endif `endif
 //Function arbiter parameters
 localparam PARENT                   = CORE_NUM + HLS_PARENT;        //Riscv, parent HLS
-localparam CHILD                    = CORE_NUM + 1 + 1 + HLS_NUM;   //Riscv, cmdr, copyEngine, all HLS
+localparam CHILD                    = CORE_NUM + 1 + MEMCPY_COPYENGINE + HLS_NUM;   //Riscv, cmdr, copyEngine, all HLS
 localparam RV_PARENT_ID             = 0;
 localparam HLS_PARENT_ID            = CORE_NUM;
 localparam HLS_CHILD_ID             = 0;
 localparam CPY_CHILD_ID             = HLS_NUM;
-localparam DF_CHILD_ID              = HLS_NUM + 1;
-localparam RV_CHILD_ID              = HLS_NUM + 2;
+localparam DF_CHILD_ID              = HLS_NUM + MEMCPY_COPYENGINE;
+localparam RV_CHILD_ID              = HLS_NUM + MEMCPY_COPYENGINE + 1;
 //DMA parameters
 localparam RISC_DWIDTH              = 32;
 localparam DMA_NUM                  = 2;	//previous: 4 	(so: changed)
@@ -286,9 +301,12 @@ localparam AXI_ARB_ID_WIDTH         = $$clog2(DMA_NUM) + 1;
 localparam DMA_AXIS_AXI4_AWIDTH     = AXI2_ADDR_WIDTH;
 localparam DMA_AXIS_AXI4_DWIDTH     = AXI2_DATA_WIDTH;
 localparam DMA_AXIS_AXI4_T_DW       = 8;//AXI_DATA_WIDTH;
-localparam DMA_AXIS_AXI4_REGS_AW    = 4;
+localparam DMA_AXIS_AXI4_REGS_AW    = 32; //4
 localparam DMA_AXIS_AXI4_RAM_STYLE  = "distributed";
 localparam DMA_AXIS_AXI4_FIFO_DEPTH = 1024 / (DMA_AXIS_AXI4_DWIDTH / DMA_AXIS_AXI4_T_DW);
+
+//localparam USE_COPY_ENG_IN_LONG_TAIL = `USE_COPY_ENG_IN_LONG_TAIL;
+localparam USE_COPY_ENG_IN_LONG_TAIL = 1;
 //Localparam used by function arbiter
 `include "func_arbiter_param.vh"
 
@@ -307,7 +325,9 @@ logic                                ap_done     [HLS_NUM];
 logic                                ap_busy     [HLS_NUM];
 logic [HLS_RET_WIDTH - 1 : 0]        ap_return   [HLS_NUM][HLS_RET_VECTOR];
 logic [7 : 0]                        ap_parent   [HLS_NUM];
-logic                                ap_req_ret  [HLS_NUM];
+logic [LOG_THREAD - 1 : 0]           ap_thread   [HLS_NUM];
+logic [LOG_SEQ - 1 : 0]              ap_callSeq  [HLS_NUM];
+logic [1 : 0]                        ap_req_ret  [HLS_NUM];
 logic [7 : 0]                        ap_core     [HLS_NUM];
 logic [7 : 0]                        ap_part     [HLS_NUM];
 logic                                ap_xmem_ready[HLS_NUM];
@@ -361,25 +381,30 @@ logic                                parent2_cmdfifo_write_i  [PARENT];
 `endif
 logic [CHILD-1:0]                    child_ap_ce_o;
 logic [CHILD-1:0]                    child_ap_done_i;
-logic                                child_retReq_o;
+logic [1:0]                          child_retReq_o;
 logic                                child_rdy_i             [CHILD];
 logic [CHILD - 1 : 0]                child_callVld_o;
+logic [LOG_THREAD - 1 : 0]           child_thread_o;
 logic [LOG_PARENT - 1 : 0]           child_parent_o;
 logic [ARG_W - 1 : 0]                child_pc_o;
 logic [TOTAL_ARGS_W - 1 : 0]         child_args_o;
-
+logic [LOG_SEQ - 1 : 0]              child_callSeq_o;
 logic                                xmemStart;
 logic [LOG_CHILD-1:0]                xmemStartFunc;
 logic                                xmemCancel_p1;
 logic                                xmemCancel_p2;
-
 logic                                child_retRdy_o          [CHILD];
 logic                                child_retVld_i          [CHILD];
 logic [31 : 0]                       child_retDin_i          [CHILD];
+logic [LOG_THREAD - 1 : 0]           child_retThread_i       [CHILD];
 logic [LOG_PARENT - 1 : 0]           child_parentMod_i       [CHILD];
+logic [LOG_SEQ - 1 : 0]              child_retSeq_i          [CHILD];
+logic                                child_retMode_i         [CHILD];
 logic [PARENT - 1 : 0]               parent_retFifo_pop_i;
 logic [PARENT - 1 : 0]               parent_retFifo_empty_n_o;
 logic [FULL_RET_DW - 1 : 0]          parent_retFifo_dout_o   [PARENT];
+(* mark_debug = "true" *);
+logic [THREAD-1:0]                   return_error_o;
 //CopyEngine
 logic                                copyEngine_copy_i;
 logic                                copyEngine_set_i;
@@ -398,9 +423,11 @@ logic [31 : 0]                       copyEngine_mem_wad_r;
 logic [63 : 0]                       copyEngine_mem_wdat_r;
 logic                                copyEngine_mem_wreq_rdy;
 logic [LOG_PARENT-1:0]               copyEngine_parent, copyEngine_parent_r;
+logic [LOG_THREAD-1:0]               copyEngine_thread, copyEngine_thread_r;
+logic [LOG_SEQ-1:0]                  copyEngine_callSeq, copyEngine_callSeq_r;
 logic                                copyEngine_run, copyEngine_run_r;
 logic [CORE_NUM_BIT-1:0]             copyEngine_core, copyEngine_core_r;
-logic                                copyEngine_ret, copyEngine_ret_r;
+logic [1 : 0]                        copyEngine_ret, copyEngine_ret_r;
 //DMA
 logic                                dma_finish      [DMA_NUM];
 logic                                dma_regs_we     [DMA_NUM];
@@ -416,21 +443,21 @@ logic                                hls_user_rdy     [CORE_NUM];
 logic                                hls_user_re      [CORE_NUM];
 logic                                hls_user_we      [CORE_NUM];
 logic [3  : 0]                       hls_user_we_mask [CORE_NUM];
-logic [31 : 0]                       hls_user_adr     [CORE_NUM];
+logic [DCACHE_ABITS-1 : 0]           hls_user_adr     [CORE_NUM];
 logic [31 : 0]                       hls_user_wdat    [CORE_NUM];
 logic [31 : 0]                       hls_user_rdat    [CORE_NUM];
 logic                                hls_user_rdat_vld[CORE_NUM];
-`else
+`else `ifdef HLS_LOCAL_DCACHE
 logic                                hls_user_rdy     [HLS_CACHE];
 logic                                hls_user_ap_ce   [HLS_CACHE];
 logic                                hls_user_re      [HLS_CACHE];
 logic                                hls_user_we      [HLS_CACHE];
 logic [3  : 0]                       hls_user_we_mask [HLS_CACHE];
-logic [31 : 0]                       hls_user_adr     [HLS_CACHE];
+logic [DCACHE_ABITS-1 : 0]           hls_user_adr     [HLS_CACHE];
 logic [31 : 0]                       hls_user_wdat    [HLS_CACHE];
 logic [31 : 0]                       hls_user_rdat    [HLS_CACHE];
 logic                                hls_user_rdat_vld[HLS_CACHE];
-`endif
+`endif `endif
 logic                                dc_ready         [HLS_NUM];
 logic                                dc_enable        [HLS_NUM];
 logic                                dc_lock_set      [HLS_NUM];
@@ -451,6 +478,7 @@ logic                                scalar_rdat_vld[BANK_NUM[MEM_TYPE_SCALAR]][
 //single port bank in array range
 logic                                array_argRdy   [BANK_NUM[MEM_TYPE_ARRAY]][ARRAY_MAX_MUX_NUM];
 logic                                array_ap_ce    [BANK_NUM[MEM_TYPE_ARRAY]][ARRAY_MAX_MUX_NUM];
+logic                                array_argWe    [BANK_NUM[MEM_TYPE_ARRAY]][ARRAY_MAX_MUX_NUM];
 logic                                array_argVld   [BANK_NUM[MEM_TYPE_ARRAY]][ARRAY_MAX_MUX_NUM];
 logic                                array_argAck   [BANK_NUM[MEM_TYPE_ARRAY]][ARRAY_MAX_MUX_NUM];
 logic [XMEM_AW - 1 : 0]              array_adr      [BANK_NUM[MEM_TYPE_ARRAY]][ARRAY_MAX_MUX_NUM];
@@ -616,19 +644,29 @@ end
 //--------------------------------------------------
 //used rv_prnt_reqChild_i bit9 to select child id larger than HLS_NUM
 //edward 2024-10-10: set bit8 to match software with offset 256
+//edward 2025-03-06: new defination of PC port (rv_prnt_reqPc_i) from RISCV:
+//    bit[7:0]  : core
+//    bit[15:8] : partition
+//    bit[31:16]: thread
+//edward 2025-03-06: new defination of return child port (rv_prnt_retChild_o) to RISCV:
+//    bit[15:0] : return child
+//    bit[31:16]: return thread
+//edward 2025-03-21: If riscv is writing xcache (rv_xcache_we), don't start HLS childs
 localparam CHILD_MAP_BIT = 8;
 `define RISCV_FUNC_ARBITER\
     for (int i = 0; i < CORE_NUM; i = i + 1) begin\
-        parent_cmdfifo_write_i[RV_PARENT_ID + i]                              = rv_prnt_reqVld_i[i];\
+        rv_prnt_reqRdy_o[i] = parent_cmdfifo_full_n_o[RV_PARENT_ID + i] && ~rv_xcache_we[i];\
+        parent_cmdfifo_write_i[RV_PARENT_ID + i] = rv_prnt_reqVld_i[i] && parent_cmdfifo_full_n_o[RV_PARENT_ID + i] && ~rv_xcache_we[i];\
         parent_cmdfifo_din_i  [RV_PARENT_ID + i][ARGS_MSB:ARGS_LSB]           = rv_prnt_reqArgs_i[i];\
-        parent_cmdfifo_din_i  [RV_PARENT_ID + i][CHILD_PC_MSB:CHILD_PC_LSB]   = rv_prnt_reqPc_i[i];\
+        parent_cmdfifo_din_i  [RV_PARENT_ID + i][THREAD_MSB:THREAD_LSB]       = rv_prnt_reqPc_i[i][16 +: LOG_THREAD];\
+        parent_cmdfifo_din_i  [RV_PARENT_ID + i][CHILD_PC_MSB:CHILD_PC_LSB]   = rv_prnt_reqPc_i[i][15:0];\
         parent_cmdfifo_din_i  [RV_PARENT_ID + i][CHILD_MOD_MSB:CHILD_MOD_LSB] = rv_prnt_reqChild_i[i][CHILD_MAP_BIT]? (rv_prnt_reqChild_i[i][CHILD_MAP_BIT-1:0] + HLS_NUM) : rv_prnt_reqChild_i[i][CHILD_MAP_BIT-1:0];\
-        parent_cmdfifo_din_i  [RV_PARENT_ID + i][RETREQ_BIT]                  = rv_prnt_reqReturn_i[i];\
-        parent_retFifo_pop_i  [RV_PARENT_ID + i]                              = rv_prnt_retRdy_i[i] & parent_retFifo_empty_n_o[RV_PARENT_ID + i];\
-        rv_prnt_reqRdy_o  [i] = parent_cmdfifo_full_n_o [RV_PARENT_ID + i];\
-        rv_prnt_retVld_o  [i] = parent_retFifo_empty_n_o[RV_PARENT_ID + i];\
-        rv_prnt_retChild_o[i] = parent_retFifo_dout_o[RV_PARENT_ID + i]  >> 32;\
-        rv_prnt_retDat_o  [i] = parent_retFifo_dout_o[RV_PARENT_ID + i]  ;\
+        parent_cmdfifo_din_i  [RV_PARENT_ID + i][RETREQ_MSB:RETREQ_LSB]       = rv_prnt_reqReturn_i[i];\
+        rv_prnt_retVld_o     [i] = parent_retFifo_empty_n_o[RV_PARENT_ID + i];\
+        rv_prnt_retChild_o[i][15:0]  = parent_retFifo_dout_o[RV_PARENT_ID + i][32+:LOG_CHILD];\
+        rv_prnt_retChild_o[i][31:16] = parent_retFifo_dout_o[RV_PARENT_ID + i][(32+LOG_CHILD)+:LOG_THREAD];\
+        rv_prnt_retDat_o     [i] = parent_retFifo_dout_o[RV_PARENT_ID + i];\
+        parent_retFifo_pop_i [RV_PARENT_ID + i] = rv_prnt_retRdy_i[i] & parent_retFifo_empty_n_o[RV_PARENT_ID + i];\
     end
 
 //---------------------------------------
@@ -716,7 +754,7 @@ always_comb begin
     for (int i = 0; i < HLS_PARENT; i = i + 1) begin
         ap_hls_req   [i] = parent_cmdfifo_write_i[HLS_PARENT_ID + i];
         ap_hls_id    [i] = parent_cmdfifo_din_i[HLS_PARENT_ID + i][CHILD_MOD_MSB:CHILD_MOD_LSB];
-        ap_hls_retReq[i] = parent_cmdfifo_din_i[HLS_PARENT_ID + i][RETREQ_BIT];
+        ap_hls_retReq[i] = parent_cmdfifo_din_i[HLS_PARENT_ID + i][RETREQ_MSB:RETREQ_LSB];
         ap_hls_retPop[i] = parent_retFifo_pop_i[HLS_PARENT_ID + i] & parent_retFifo_empty_n_o[HLS_PARENT_ID + i];
     end
 end
@@ -757,15 +795,22 @@ inst_riscv_xcache_bus (
 // Function arbiter
 //---------------------------------------
 func_arbiter #(
+    .THREAD           ( THREAD           ),
     .PARENT           ( PARENT           ),
     .CHILD            ( CHILD            ),
+    .SEQ              ( SEQ              ),
+    .SEQBUF           ( SEQBUF           ),
     .CMD_FIFO_DW      ( CMD_FIFO_DW      ),
+    .LOG_THREAD       ( LOG_THREAD       ),
     .LOG_PARENT       ( LOG_PARENT       ),
-    .LOG_CHILD        ( LOG_CHILD        )
+    .LOG_CHILD        ( LOG_CHILD        ),
+    .LOG_SEQ          ( LOG_SEQ          ),
+    .LOG_SEQBUF       ( LOG_SEQBUF       )
 )
 inst_func_arbiter (
     .rstn                     ( rstn                     ),
     .clk                      ( clk                      ),
+    .return_error_o           ( return_error_o           ),
 `ifdef FUNC_PARENT_FIFO
     .parent_cmdfifo_din_i     ( parent2_cmdfifo_din_i    ),
     .parent_cmdfifo_full_n_o  ( parent2_cmdfifo_full_n_o ),
@@ -780,9 +825,11 @@ inst_func_arbiter (
     .child_retReq_o           ( child_retReq_o           ),
     .child_rdy_i              ( child_rdy_i              ),
     .child_callVld_o          ( child_callVld_o          ),
+    .child_thread_o           ( child_thread_o           ),
     .child_parent_o           ( child_parent_o           ),
     .child_pc_o               ( child_pc_o               ),
     .child_args_o             ( child_args_o             ),
+    .child_callSeq_o          ( child_callSeq_o          ),
     .xmemStart                (                          ),
     .xmemStartFunc            (                          ),
     .xmemCancel_p1            (                          ),
@@ -790,7 +837,10 @@ inst_func_arbiter (
     .child_retRdy_o           ( child_retRdy_o           ),
     .child_retVld_i           ( child_retVld_i           ),
     .child_retDin_i           ( child_retDin_i           ),
+    .child_retThread_i        ( child_retThread_i        ),
     .child_parentMod_i        ( child_parentMod_i        ),
+    .child_retSeq_i           ( child_retSeq_i           ),
+    .child_retMode_i          ( child_retMode_i          ),
     .parent_retFifo_pop_i     ( parent_retFifo_pop_i     ),
     .parent_retFifo_empty_n_o ( parent_retFifo_empty_n_o ),
     .parent_retFifo_dout_o    ( parent_retFifo_dout_o    )
@@ -834,82 +884,137 @@ always_comb begin
         //*** To handle pipeline, ap_core/ap_part is must be inputted to HLS to access dcache/xmem ***
         child_rdy_i[i + HLS_CHILD_ID] = ~ap_busy[i];
         //Child return
-        child_retVld_i   [i + HLS_CHILD_ID] = ap_done[i] & ap_req_ret[i];
+        child_retVld_i   [i + HLS_CHILD_ID] = ap_done[i] & ap_req_ret[i][0];
         child_retDin_i   [i + HLS_CHILD_ID] = ap_return[i][0];
         child_parentMod_i[i + HLS_CHILD_ID] = ap_parent[i];
+        child_retThread_i[i + HLS_CHILD_ID] = ap_thread[i];
+        child_retSeq_i   [i + HLS_CHILD_ID] = ap_callSeq[i];
+        child_retMode_i  [i + HLS_CHILD_ID] = ap_req_ret[i][1];
         //Stall HLS if function return arbiter is busy
         ap_ret_ready[i] = child_retRdy_o[i + HLS_CHILD_ID];
     end
     //copyEngine
     //edward 2024-10-10: copyEngine with memset (param[3]=1)
     //edward 2024-10-10: param[4] is used to select dcache core.
-    copyEngine_copy_i = 0;
-    copyEngine_set_i = 0;
-    copyEngine_setVal_i = child_args_o[1*32 +: 32];
-    copyEngine_run = copyEngine_run_r;
-    copyEngine_len_i = child_args_o[0*32 +: 32];
-    copyEngine_src_i = child_args_o[1*32 +: 32];
-    copyEngine_dst_i = child_args_o[2*32 +: 32];
-    copyEngine_parent = copyEngine_parent_r;
-    copyEngine_core = copyEngine_core_r;
-    copyEngine_ret = copyEngine_ret_r;
-    child_rdy_i       [CPY_CHILD_ID] = copyEngine_done_o;
-    child_retVld_i    [CPY_CHILD_ID] = 0;
-    child_retDin_i    [CPY_CHILD_ID] = 1;
-    child_parentMod_i [CPY_CHILD_ID] = copyEngine_parent_r;
-    if (copyEngine_run_r && copyEngine_done_o) begin
-        copyEngine_run    = 0;
-        child_retVld_i   [CPY_CHILD_ID] = copyEngine_ret_r;
+    //edward 2025-03-14: copyEngine is used if HLS_LOCAL_DCACHE or HLS_RISCV_L1CACHE
+    if (MEMCPY_COPYENGINE == 1) begin
+        copyEngine_copy_i = 0;
+        copyEngine_set_i = 0;
+        copyEngine_setVal_i = child_args_o[1*32 +: 32];
+        copyEngine_run = copyEngine_run_r;
+        copyEngine_len_i = child_args_o[0*32 +: 32];
+        copyEngine_src_i = child_args_o[1*32 +: 32];
+        copyEngine_dst_i = child_args_o[2*32 +: 32];
+        copyEngine_parent = copyEngine_parent_r;
+        copyEngine_thread = copyEngine_thread_r;
+        copyEngine_callSeq = copyEngine_callSeq_r;
+        copyEngine_core = copyEngine_core_r;
+        copyEngine_ret = copyEngine_ret_r;
+        child_rdy_i       [CPY_CHILD_ID] = copyEngine_done_o;
+        child_retVld_i    [CPY_CHILD_ID] = 0;
+        child_retDin_i    [CPY_CHILD_ID] = 1;
+        child_parentMod_i [CPY_CHILD_ID] = copyEngine_parent_r;
+        child_retThread_i [CPY_CHILD_ID] = copyEngine_thread_r;
+        child_retSeq_i    [CPY_CHILD_ID] = copyEngine_callSeq_r;
+        child_retMode_i   [CPY_CHILD_ID] = copyEngine_ret_r[1];
+        if (copyEngine_run_r && copyEngine_done_o) begin
+            copyEngine_run    = 0;
+            child_retVld_i   [CPY_CHILD_ID] = copyEngine_ret_r[0];
+        end
+        if (child_callVld_o[CPY_CHILD_ID] && ~copyEngine_run && copyEngine_done_o) begin
+            copyEngine_copy_i  = ~child_args_o[3*32];
+            copyEngine_set_i   = child_args_o[3*32];
+            copyEngine_parent  = child_parent_o;
+            copyEngine_thread  = child_thread_o;
+            copyEngine_callSeq = child_callSeq_o;
+            copyEngine_core    = child_args_o[4*32 +: 32];
+            copyEngine_ret     = child_retReq_o;
+            copyEngine_run     = 1;
+        end
     end
-    if (child_callVld_o[CPY_CHILD_ID] && ~copyEngine_run && copyEngine_done_o) begin
-        copyEngine_copy_i = ~child_args_o[3*32];
-        copyEngine_set_i  = child_args_o[3*32];
-        copyEngine_parent = child_parent_o;
-        copyEngine_core   = child_args_o[4*32 +: 32];
-        copyEngine_ret    = child_retReq_o;
-        copyEngine_run    = 1;
+    else begin
+        copyEngine_copy_i = 0;
+        copyEngine_set_i = 0;
+        copyEngine_setVal_i = 0;
+        copyEngine_len_i = 0;
+        copyEngine_src_i = 0;
+        copyEngine_dst_i = 0;
+        copyEngine_parent = 0;
+        copyEngine_thread = 0;
+        copyEngine_callSeq = 0;
+        copyEngine_run = 0;
+        copyEngine_core = 0;
+        copyEngine_ret = 0;
     end
     //Commander
-    df_chld_reqParent_o = child_parent_o;
+    //edward 2025-03-06: new defination of parent port (df_chld_reqParent_o & df_chld_retParent_i)
+    //  bit[7:0]  : parent
+    //  bit[15:8] : thread
+    //  bit[22:16]: callSeq
+    //  bit[23]   : retMode
+    df_chld_reqParent_o[7:0]   = child_parent_o;
+    df_chld_reqParent_o[15:8]  = child_thread_o;
+    df_chld_reqParent_o[22:16] = child_callSeq_o;
+    df_chld_reqParent_o[23]    = child_retReq_o[1];
+    df_chld_reqParent_o[31:24] = 0;
     df_chld_reqPc_o     = child_pc_o;
     df_chld_reqArgs_o   = child_args_o;
-    df_chld_reqReturn_o = child_retReq_o;
+    df_chld_reqReturn_o = child_retReq_o[0];
     df_chld_reqVld_o    = child_callVld_o [DF_CHILD_ID];
     df_chld_retRdy_o    = child_retRdy_o  [DF_CHILD_ID];
     child_rdy_i      [DF_CHILD_ID] = df_chld_reqRdy_i;
     child_retVld_i   [DF_CHILD_ID] = df_chld_retVld_i;
-    child_parentMod_i[DF_CHILD_ID] = df_chld_retParent_i;
+    child_parentMod_i[DF_CHILD_ID] = df_chld_retParent_i[7:0];
+    child_retThread_i[DF_CHILD_ID] = df_chld_retParent_i[15:8];
+    child_retSeq_i   [DF_CHILD_ID] = df_chld_retParent_i[22:16];
+    child_retMode_i  [DF_CHILD_ID] = df_chld_retParent_i[23];
     child_retDin_i   [DF_CHILD_ID] = df_chld_retDat_i;
     //Riscv is child
     for (int i = 0; i < CORE_NUM; i = i + 1) begin
         //riscv connected to CHILD (riscv is child)
-        rv_chld_reqParent_o[i] = child_parent_o;
+        //edward 2025-03-06: new defination of parent port (rv_chld_reqParent_o & rv_chld_retParent_i)
+        //  bit[7:0]  : parent
+        //  bit[15:8] : thread
+        //  bit[22:16]: callSeq
+        //  bit[23]   : retMode
+        rv_chld_reqParent_o[i][7:0]   = child_parent_o;
+        rv_chld_reqParent_o[i][15:8]  = child_thread_o;
+        rv_chld_reqParent_o[i][22:16] = child_callSeq_o;
+        rv_chld_reqParent_o[i][23]    = child_retReq_o[1];
+        rv_chld_reqParent_o[i][31:24] = 0;
         rv_chld_reqPc_o    [i] = child_pc_o;
         rv_chld_reqArgs_o  [i] = child_args_o;
-        rv_chld_reqReturn_o[i] = child_retReq_o;
+        rv_chld_reqReturn_o[i] = child_retReq_o[0];
         rv_chld_reqVld_o   [i] = child_callVld_o [RV_CHILD_ID + i];
         rv_chld_retRdy_o   [i] = child_retRdy_o  [RV_CHILD_ID + i];
         child_rdy_i      [RV_CHILD_ID + i] = rv_chld_reqRdy_i[i];
         child_retVld_i   [RV_CHILD_ID + i] = rv_chld_retVld_i[i];
-        child_parentMod_i[RV_CHILD_ID + i] = rv_chld_retParent_i[i];
+        child_parentMod_i[RV_CHILD_ID + i] = rv_chld_retParent_i[i][7:0];
+        child_retThread_i[RV_CHILD_ID + i] = rv_chld_retParent_i[i][15:8];
+        child_retSeq_i   [RV_CHILD_ID + i] = rv_chld_retParent_i[i][22:16];
+        child_retMode_i  [RV_CHILD_ID + i] = rv_chld_retParent_i[i][23];
         child_retDin_i   [RV_CHILD_ID + i] = rv_chld_retDat_i[i];
     end
 
 end
 always @ (posedge clk or negedge rstn) begin
     if (~rstn) begin
-        ap_arb_start        <= '{default:'0};
-        ap_arb_ret          <= '{default:'0};
-        ap_parent           <= '{default:'0};
-        ap_req_ret          <= '{default:'0};
-        ap_core             <= '{default:'0};
-        ap_part             <= '{default:'0};
-        ap_busy             <= '{default:'0};
-        ap_arb_start_r      <= '{default:'0};
-        copyEngine_parent_r <= 0;
-        copyEngine_run_r    <= 0;
-        copyEngine_core_r   <= 0;
-        copyEngine_ret_r    <= 0;        
+        ap_arb_start         <= '{default:'0};
+        ap_arb_ret           <= '{default:'0};
+        ap_parent            <= '{default:'0};
+        ap_thread            <= '{default:'0};
+        ap_callSeq           <= '{default:'0};
+        ap_req_ret           <= '{default:'0};
+        ap_core              <= '{default:'0};
+        ap_part              <= '{default:'0};
+        ap_busy              <= '{default:'0};
+        ap_arb_start_r       <= '{default:'0};
+        copyEngine_parent_r  <= 0;
+        copyEngine_thread_r  <= 0;
+        copyEngine_callSeq_r <= 0;
+        copyEngine_run_r     <= 0;
+        copyEngine_core_r    <= 0;
+        copyEngine_ret_r     <= 0;        
     end
     else begin
         ap_arb_start_r <= ap_arb_start;
@@ -920,6 +1025,8 @@ always @ (posedge clk or negedge rstn) begin
                 ap_arb_start[i] <= 1;
                 ap_busy     [i] <= 1;
                 ap_parent   [i][LOG_PARENT-1:0] <= child_parent_o;
+                ap_thread   [i][LOG_THREAD-1:0] <= child_thread_o;
+                ap_callSeq  [i][LOG_SEQ-1:0]    <= child_callSeq_o;
                 //For HLS-HLS intercall, PC is used as core id and xmem partition.
                 ap_core     [i][CORE_NUM_BIT-1:0] <= child_pc_o[7:0] - START_CORE;
                 ap_part     [i][LOG2_MAX_PARTITION-1:0] <= child_pc_o[15:8];
@@ -941,7 +1048,7 @@ always @ (posedge clk or negedge rstn) begin
         //edward 2024-11-04: Only ask custom_connection to re-read if request return.
         ap_arb_ret <= '{default:'0};
         for (int i = 0; i < HLS_NUM; i = i + 1) begin
-            if (ap_done[i] && ap_ce[i] && (ap_parent[i] >= HLS_PARENT_ID) && ap_req_ret[i]) begin
+            if (ap_done[i] && ap_ce[i] && (ap_parent[i] >= HLS_PARENT_ID) && ap_req_ret[i][0]) begin
                 ap_arb_ret[HLS_PARENT_IDX[ap_parent[i] - HLS_PARENT_ID]] <= 1;
             end
 `ifdef CUSTOM_CONN_RELOAD_TEST
@@ -951,10 +1058,12 @@ always @ (posedge clk or negedge rstn) begin
 `endif
         end
         //CopyEngine
-        copyEngine_parent_r <= copyEngine_parent;
-        copyEngine_run_r    <= copyEngine_run;
-        copyEngine_core_r   <= copyEngine_core;
-        copyEngine_ret_r    <= copyEngine_ret;
+        copyEngine_parent_r  <= copyEngine_parent;
+        copyEngine_thread_r  <= copyEngine_thread;
+        copyEngine_callSeq_r <= copyEngine_callSeq;
+        copyEngine_run_r     <= copyEngine_run;
+        copyEngine_core_r    <= copyEngine_core;
+        copyEngine_ret_r     <= copyEngine_ret;
     end
 end
 
@@ -1000,37 +1109,50 @@ end
 //---------------------------------------
 // CopyEngine
 //---------------------------------------
-copyEngine  #(
-    .DATA_WIDTH     ( 64                       ),
-    .ADDR_WIDTH     ( 32                       ),
-    .LEN            ( 32                       ),
-    .FULL_WORD_SIZE ( 64 / 8                   )
-) copyEngine (
-    .rstn           ( rstn                     ),
-    .clk            ( clk                      ),
-    .src_dw_sel_i   ( 1'b0                     ),
-    .dst_dw_sel_i   ( 1'b0                     ),
-    .copy_i         ( copyEngine_copy_i        ),
-    .set_i          ( copyEngine_set_i         ),
-    .setVal_i       ( copyEngine_setVal_i      ),
-    .flush_i        ( 1'b0                     ),
-    .len_i          ( copyEngine_len_i         ),
-    .src_i          ( copyEngine_src_i         ),
-    .dst_i          ( copyEngine_dst_i         ),
-    .done_o         ( copyEngine_done_o        ),
-    .mem_re_r       ( copyEngine_mem_re_r      ),
-    .mem_rad_r      ( copyEngine_mem_rad_r     ),
-    .mem_rreq_rdy   ( copyEngine_mem_rreq_rdy  ),
-    .mem_rdat       ( copyEngine_mem_rdat      ),
-    .mem_rdat_rdy   ( copyEngine_mem_rdat_rdy  ),
-    .mem_bwe_r      ( copyEngine_mem_bwe_r     ),
-    .mem_wad_r      ( copyEngine_mem_wad_r     ),
-    .mem_wdat_r     ( copyEngine_mem_wdat_r    ),
-    .mem_wreq_rdy   ( copyEngine_mem_wreq_rdy  ),
-    .flush_r        (                          ),
-    .cmd_adr_r      (                          ),
-    .cmd_rdy        ( 1'b0                     )
-);
+//edward 2025-03-14: copyEngine is used if HLS_LOCAL_DCACHE or HLS_RISCV_L1CACHE
+generate
+if (MEMCPY_COPYENGINE == 1) begin : INST_COPYENGINE
+    copyEngine  #(
+        .DATA_WIDTH     ( 64                       ),
+        .ADDR_WIDTH     ( 32                       ),
+        .LEN            ( 32                       ),
+        .FULL_WORD_SIZE ( 64 / 8                   )
+    ) copyEngine (
+        .rstn           ( rstn                     ),
+        .clk            ( clk                      ),
+        .src_dw_sel_i   ( 1'b0                     ),
+        .dst_dw_sel_i   ( 1'b0                     ),
+        .copy_i         ( copyEngine_copy_i        ),
+        .set_i          ( copyEngine_set_i         ),
+        .setVal_i       ( copyEngine_setVal_i      ),
+        .flush_i        ( 1'b0                     ),
+        .len_i          ( copyEngine_len_i         ),
+        .src_i          ( copyEngine_src_i         ),
+        .dst_i          ( copyEngine_dst_i         ),
+        .done_o         ( copyEngine_done_o        ),
+        .mem_re_r       ( copyEngine_mem_re_r      ),
+        .mem_rad_r      ( copyEngine_mem_rad_r     ),
+        .mem_rreq_rdy   ( copyEngine_mem_rreq_rdy  ),
+        .mem_rdat       ( copyEngine_mem_rdat      ),
+        .mem_rdat_rdy   ( copyEngine_mem_rdat_rdy  ),
+        .mem_bwe_r      ( copyEngine_mem_bwe_r     ),
+        .mem_wad_r      ( copyEngine_mem_wad_r     ),
+        .mem_wdat_r     ( copyEngine_mem_wdat_r    ),
+        .mem_wreq_rdy   ( copyEngine_mem_wreq_rdy  ),
+        .flush_r        (                          ),
+        .cmd_adr_r      (                          ),
+        .cmd_rdy        ( 1'b0                     )
+    );
+end
+else begin
+    assign copyEngine_done_o     = 0;    
+    assign copyEngine_mem_re_r   = 0;
+    assign copyEngine_mem_rad_r  = 0;
+    assign copyEngine_mem_bwe_r  = 0;
+    assign copyEngine_mem_wad_r  = 0;
+    assign copyEngine_mem_wdat_r = 0;
+end
+endgenerate
 
 //---------------------------------------
 // Dcache Interface
@@ -1056,10 +1178,6 @@ assign dcArb_hls_user_wdat      = hls_user_wdat;
 assign dcArb_hls_user_csr_flush = '{default:'0};
 assign hls_user_rdat            = dcArb_hls_user_rdat;
 assign hls_user_rdat_vld        = dcArb_hls_user_rdat_vld;
-`else
-assign hls_user_rdy             = '{default:1'b1};
-assign hls_user_rdat            = '{default:'0};
-assign hls_user_rdat_vld        = '{default:'0};
 `endif `endif
 always @ (posedge clk or negedge rstn) begin
     if (~rstn) begin
@@ -1074,7 +1192,7 @@ always @ (posedge clk or negedge rstn) begin
             if (dc_enable[j] & ap_arb_start[j] & ~ap_arb_start_r[j]) begin
                 dc_lock_req[j] <= 1;
                 //Also, unlock parent
-                if (ap_req_ret[j] && ap_parent[j] >= HLS_PARENT_ID && dc_enable[HLS_PARENT_IDX[ap_parent[j]-HLS_PARENT_ID]]) begin
+                if (ap_req_ret[j][0] && ap_parent[j] >= HLS_PARENT_ID && dc_enable[HLS_PARENT_IDX[ap_parent[j]-HLS_PARENT_ID]]) begin
                     dc_lock_req[HLS_PARENT_IDX[ap_parent[j]-HLS_PARENT_ID]] <= 0;
                 end
             end
@@ -1082,7 +1200,7 @@ always @ (posedge clk or negedge rstn) begin
             else if (dc_enable[j] & ap_done[j]) begin
                 dc_lock_req[j] <= 0;
                 //Also, re-lock parent
-                if (ap_req_ret[j] && ap_parent[j] >= HLS_PARENT_ID && dc_enable[HLS_PARENT_IDX[ap_parent[j]-HLS_PARENT_ID]]) begin
+                if (ap_req_ret[j][0] && ap_parent[j] >= HLS_PARENT_ID && dc_enable[HLS_PARENT_IDX[ap_parent[j]-HLS_PARENT_ID]]) begin
                     dc_lock_req[HLS_PARENT_IDX[ap_parent[j]-HLS_PARENT_ID]] <= 1;
                 end
             end
@@ -1179,6 +1297,7 @@ inst_xcache(
     //For single port bank (ARRAY range)
     .array_argRdy        ( array_argRdy            ),   //o
     .array_ap_ce         ( array_ap_ce             ),   //i
+    .array_argWe	     ( array_argWe			   ),	//i
     .array_argVld        ( array_argVld            ),   //i
     .array_argAck        ( array_argAck            ),   //o
     .array_adr           ( array_adr               ),   //i

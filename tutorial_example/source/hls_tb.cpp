@@ -10,6 +10,30 @@
     #define TBCONFIG_ALL                             0
 #endif
 
+#ifndef TBCONFIG_XOR_DIFF_TYPE
+    #define TBCONFIG_XOR_DIFF_TYPE                   0
+#endif
+
+#ifndef TBCONFIG_ASSIGN_ARRAY_COMPLETE
+    #define TBCONFIG_ASSIGN_ARRAY_COMPLETE           0
+#endif
+
+#ifndef TBCONFIG_ARRAY_XOR
+    #define TBCONFIG_ARRAY_XOR                       0
+#endif
+
+#ifndef TBCONFIG_VECTOR_ADD
+    #define TBCONFIG_VECTOR_ADD                      0
+#endif
+
+#ifndef TBCONFIG_FILL_VALUE
+    #define TBCONFIG_FILL_VALUE                      0
+#endif
+
+#ifndef TBCONFIG_HEVC_LOOP_FILTER_CHROMA_8BIT_HLS
+    #define TBCONFIG_HEVC_LOOP_FILTER_CHROMA_8BIT_HLS 0
+#endif
+
 #ifndef TBCONFIG_CNN_HLS
     #define TBCONFIG_CNN_HLS                         0
 #endif
@@ -52,7 +76,7 @@ void ap_uint_to_array(TSRC &src, TDST *dst, size_t dst_count){
 #endif
 
 bool test_xor_diff_type(){
-#if 0 //cosim_code_generator: This function is marked as skip in function_list.txt
+#if (TBCONFIG_XOR_DIFF_TYPE || TBCONFIG_ALL)
     printf("Test xor_diff_type\n");
     // define input variables 
     uint16_t xor_val16;
@@ -93,7 +117,7 @@ bool test_xor_diff_type(){
 }
 
 bool test_assign_array_complete(){
-#if 0 //cosim_code_generator: This function is marked as skip in function_list.txt
+#if (TBCONFIG_ASSIGN_ARRAY_COMPLETE || TBCONFIG_ALL)
     printf("Test assign_array_complete\n");
     // define input variables 
     int base;
@@ -133,7 +157,7 @@ bool test_assign_array_complete(){
 }
 
 bool test_array_xor(){
-#if 0 //cosim_code_generator: This function is marked as skip in function_list.txt
+#if (TBCONFIG_ARRAY_XOR || TBCONFIG_ALL)
     printf("Test array_xor\n");
     // define input variables 
     int count;
@@ -175,7 +199,7 @@ bool test_array_xor(){
 }
 
 bool test_vector_add(){
-#if 0 //cosim_code_generator: This function is marked as skip in function_list.txt
+#if (TBCONFIG_VECTOR_ADD || TBCONFIG_ALL)
     printf("Test vector_add\n");
     // define input variables 
 
@@ -216,7 +240,7 @@ bool test_vector_add(){
 }
 
 bool test_fill_value(){
-#if 0 //cosim_code_generator: This function is marked as skip in function_list.txt
+#if (TBCONFIG_FILL_VALUE || TBCONFIG_ALL)
     printf("Test fill_value\n");
     // define input variables 
     int value;
@@ -257,7 +281,7 @@ bool test_fill_value(){
 }
 
 bool test_hevc_loop_filter_chroma_8bit_hls(){
-#if 0 //cosim_code_generator: This function is marked as skip in function_list.txt
+#if (TBCONFIG_HEVC_LOOP_FILTER_CHROMA_8BIT_HLS || TBCONFIG_ALL)
     printf("Test hevc_loop_filter_chroma_8bit_hls\n");
     // define input variables 
     int frame_offset;

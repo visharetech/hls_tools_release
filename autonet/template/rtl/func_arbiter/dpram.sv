@@ -27,6 +27,16 @@ module dpram #(
             always @(posedge rd_clk) begin
                 if (we) RAM[waddr]<=din;
             end
+            
+            //edward 2025-03-06: For simlation to prevent 'x'
+            // synthesis translate_off
+            // synopsys translate_off
+            initial begin
+                RAM = '{default:'0};
+                dout = 0;
+            end
+            // synopsys translate_on
+            // synthesis translate_on
         end
         else if (usr_ram_style=="ultra" && rd_lat==0) begin
             (* ram_style = "ultra" *)	logic [dw-1:0] RAM [max_size-1:0];
@@ -35,6 +45,15 @@ module dpram #(
             always @(posedge rd_clk) begin
                 if (we) RAM[waddr]<=din;
             end
+            
+            //edward 2025-03-06: For simlation to prevent 'x'
+            // synthesis translate_off
+            // synopsys translate_off
+            initial begin
+                RAM = '{default:'0};
+            end
+            // synopsys translate_on
+            // synthesis translate_on
         end
         else if (rd_lat==1) begin
             logic [dw-1:0] RAM [max_size-1:0];
@@ -45,6 +64,16 @@ module dpram #(
             always @(posedge wr_clk) begin
                 if (we) RAM[waddr]<=din;
             end
+            
+            //edward 2025-03-06: For simlation to prevent 'x'
+            // synthesis translate_off
+            // synopsys translate_off
+            initial begin
+                RAM = '{default:'0};
+                dout = 0;
+            end
+            // synopsys translate_on
+            // synthesis translate_on
         end
         else begin
             logic [dw-1:0] RAM [max_size-1:0];
@@ -53,6 +82,15 @@ module dpram #(
             always @(posedge wr_clk) begin
                 if (we) RAM[waddr]<=din;
             end
+            
+            //edward 2025-03-06: For simlation to prevent 'x'
+            // synthesis translate_off
+            // synopsys translate_off
+            initial begin
+                RAM = '{default:'0};
+            end
+            // synopsys translate_on
+            // synthesis translate_on
         end
     endgenerate
 

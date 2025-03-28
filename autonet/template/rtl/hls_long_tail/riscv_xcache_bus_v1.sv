@@ -36,6 +36,7 @@ module riscv_xcache_bus_v1 import xcache_param_pkg::*;
 );
 
 logic                       rv_req;
+logic                       rv_wait_dout;
 logic [31 : 0]              rv_addr2[RV_NUM];
 logic [RV_IDX_BITS - 1 : 0] rv_idx;
 logic [RV_IDX_BITS - 1 : 0] rv_idx_buf[4];
@@ -54,24 +55,25 @@ always_comb begin
     for (int i = 0; i < RV_NUM; i = i + 1) begin
         tmp1 = arb_rrpt + i[RV_IDX_BITS - 1 : 0];
         if (tmp1 >= RV_NUM) tmp1 = tmp1 - RV_NUM;
-        if (rv_re[tmp1] == 1 || rv_we[tmp1] != 0) begin
+        if ((rv_re[tmp1] == 1 || rv_we[tmp1] != 0) && rv_wait_dout == 0) begin
             rv_req = 1;
             rv_idx = tmp1;
             break;
         end
     end
     mem_part = rv_part [rv_idx];
-    mem_re   = rv_re   [rv_idx];
-    mem_we   = rv_we   [rv_idx];
+    mem_re   = (rv_wait_dout)? 0 : rv_re[rv_idx];
+    mem_we   = (rv_wait_dout)? 0 : rv_we[rv_idx];
     mem_ad   = rv_addr [rv_idx];
     mem_di   = rv_wdata[rv_idx];
     for (int i = 0; i < RV_NUM; i = i + 1) begin
-        rv_ready[i] = mem_rdy & (rv_idx == i);
+        rv_ready[i] = mem_rdy & (rv_idx == i) & ~rv_wait_dout;
     end
 end
 always @ (posedge clk or negedge rstn) begin
     if (~rstn) begin
         arb_rrpt        <= 0;
+        rv_wait_dout    <= 0;
         rv_idx_buf      <= '{default:'0};
         rv_idx_buf_head <= 0;
         rv_idx_buf_tail <= 0;
@@ -83,9 +85,11 @@ always @ (posedge clk or negedge rstn) begin
         if (rv_req & mem_re & mem_rdy) begin
             rv_idx_buf[rv_idx_buf_tail] <= rv_idx;
             rv_idx_buf_tail <= rv_idx_buf_tail + 1;
+            rv_wait_dout <= 1;
         end
         if (mem_do_vld) begin
             rv_idx_buf_head <= rv_idx_buf_head + 1;
+            rv_wait_dout <= 0;
         end
     end
 end

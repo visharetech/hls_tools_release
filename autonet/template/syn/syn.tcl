@@ -10,7 +10,7 @@ create_project hls_long_tail_top -part xcvu19p-fsva3824-2-e -force
 # ###########################
 # macro
 # ###########################
-set define_macro [format "HLS_LOCAL_DCACHE=1"]
+#set define_macro [format "HLS_LOCAL_DCACHE=1"]
 
 # ###########################
 # include path
@@ -26,8 +26,8 @@ set_param project.singleFileAddWarning.Threshold 1000
 set_property STEPS.SYNTH_DESIGN.ARGS.FLATTEN_HIERARCHY none [get_runs synth_1]
 set_property -name {STEPS.SYNTH_DESIGN.ARGS.MORE OPTIONS} -value {-mode out_of_context} -objects [get_runs synth_1]
 set_property target_language Verilog [current_project]
-set_property verilog_define $define_macro [current_fileset]
-set_property verilog_define $define_macro [get_filesets sim_1]
+#set_property verilog_define $define_macro [current_fileset]
+#set_property verilog_define $define_macro [get_filesets sim_1]
 set_property include_dirs $include_path [current_fileset]
 set_property include_dirs $include_path [get_filesets sim_1]
 
@@ -89,19 +89,26 @@ add_files -norecurse $RTL_PATH/cyclicCache/cyclicCache.sv
 #add_files -norecurse $RTL_PATH/cyclicCache/nway_mem.sv
 add_files -norecurse $RTL_PATH/coherence_cache/cache_axi4_arbiter_v1.sv
 # func_arb
-add_files -norecurse $RTL_PATH/func_arbiter/call_arbiter_v4.sv
+add_files -norecurse $RTL_PATH/func_arbiter/call_arbiter_v7.sv
 add_files -norecurse $RTL_PATH/func_arbiter/copyEngine_v2.sv
 add_files -norecurse $RTL_PATH/func_arbiter/dpram.sv
-add_files -norecurse $RTL_PATH/func_arbiter/func_arbiter_v4.sv
+add_files -norecurse $RTL_PATH/func_arbiter/func_arbiter_v7.sv
 add_files -norecurse $RTL_PATH/func_arbiter/linked_fifo_v3a.sv
 add_files -norecurse $RTL_PATH/func_arbiter/mq_rrpop_fifo.sv
-add_files -norecurse $RTL_PATH/func_arbiter/return_arbiter_v5_2.sv
+add_files -norecurse $RTL_PATH/func_arbiter/return_arbiter_v8.sv
 add_files -norecurse $RTL_PATH/func_arbiter/sync_fifo_v2.sv
 # axiDMA
 add_files -norecurse $RTL_PATH/dma_axiStream_axi4_t/dma_axi4_to_stream_t.sv
 add_files -norecurse $RTL_PATH/dma_axiStream_axi4_t/dma_stream_to_axi4_v2_t.sv
 add_files -norecurse $RTL_PATH/dma_axiStream_axi4_t/dma_axiStream_axi4_regs_t.sv
 add_files -norecurse $RTL_PATH/dma_axiStream_axi4_t/dma_axiStream_axi4_top_t.sv
+# copyEngine
+add_files -norecurse $RTL_PATH/copyEngine/cacheIf_axi4_conv.sv
+add_files -norecurse $RTL_PATH/copyEngine/cacheIf_axi4_pkg.sv
+add_files -norecurse $RTL_PATH/copyEngine/cacheIf_axi4_rchan.sv
+add_files -norecurse $RTL_PATH/copyEngine/cacheIf_axi4_wchan.sv
+add_files -norecurse $RTL_PATH/copyEngine/copyEngine_axi4_wrp.sv
+add_files -norecurse $RTL_PATH/copyEngine/copyEngine_v3.sv
 # innerloop
 add_files -norecurse $RTL_PATH/longtail_hevc_2/innerloop.sv
 add_files -norecurse $RTL_PATH/longtail_hevc_2/innerloop_ff_hevc_extract_rbsp_1_hls.sv

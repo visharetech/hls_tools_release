@@ -38,10 +38,12 @@ typedef struct signal_info{
     uint32_t width;
     datatype_t datatype;
     std::vector<uint8_t> content;
+    bool crc_verify_mode;
 
     signal_info(){
         width = 0;
         datatype = UNKNWON_TYPE;
+    	crc_verify_mode = false;
     }
 
     void clear_data() {
@@ -208,13 +210,33 @@ public:
 
             auto & test_content = it->second.content;
 
-            if (buf_size > test_content.size()) {
-                //resize the vector only if the size is smaller than read buf_size
-                test_content.reserve(buf_size);
-                test_content.resize(buf_size);
-            }
-            if (fread(test_content.data(), 1, buf_size, fi) != buf_size) {
-                return ferror(fi);
+
+            if (buf_size & 0x80000000) {
+                // handle with CRC data
+                it->second.crc_verify_mode = true;
+                buf_size &= 0x7FFFFFFF;
+                if (buf_size != 4) {
+                    printf("unexpected error during read crc data\n");
+                    exit(-1);
+                }
+                if (buf_size > test_content.size()) {
+                    //resize the vector only if the size is smaller than read buf_size
+                    test_content.reserve(buf_size);
+                    test_content.resize(buf_size);
+                }
+                if (fread(test_content.data(), 1, buf_size, fi) != buf_size) {
+                    return ferror(fi);
+                }
+            } else {
+            	it->second.crc_verify_mode = false;
+                if (buf_size > test_content.size()) {
+                    //resize the vector only if the size is smaller than read buf_size
+                    test_content.reserve(buf_size);
+                    test_content.resize(buf_size);
+                }
+                if (fread(test_content.data(), 1, buf_size, fi) != buf_size) {
+                    return ferror(fi);
+                }
             }
         }
         return 0;
@@ -341,15 +363,30 @@ private:
 
     template<typename T>
     void check_data(const std::string& signame, const T& var) {
-        T var2;
-        pop_data(signame, (uint8_t*)&var2, sizeof(T));
-        if (std::memcmp(&var, &var2, sizeof(T)) != 0) {
-            std::cout << "tgCheckError: " << signame << " ,sizeOf: " << sizeof(T) << std::endl;
+        
+        auto &siginfo = sinfo.at(signame);
+        
+        if (siginfo.crc_verify_mode){
+            uint32_t expect_crc_value;
+            memcpy(&expect_crc_value, siginfo.content.data(), 4);
+            uint32_t calc_crc_value = crc32((uint8_t*)&var, sizeof(T));
+            if (expect_crc_value != calc_crc_value){
+                std::cout << "tgCheckError: " << signame << " ,sizeOf: " << sizeof(T) << std::endl;
+                printf("actual_crc: %08X\n", calc_crc_value);
+                printf("expect_crc: %08X\n", expect_crc_value);
+                exit(-1);
+            }
+        } else {
+            T var2;
+            pop_data(signame, (uint8_t*)&var2, sizeof(T));
+            if (std::memcmp(&var, &var2, sizeof(T)) != 0) {
+                std::cout << "tgCheckError: " << signame << " ,sizeOf: " << sizeof(T) << std::endl;
 
-            dump_content("actual_result", &var, sizeof(T));
-            dump_content("expect_result", &var2, sizeof(T));
-            
-            exit(-1);
+                dump_content("actual_result", &var, sizeof(T));
+                dump_content("expect_result", &var2, sizeof(T));
+                
+                exit(-1);
+            }
         }
     }
 

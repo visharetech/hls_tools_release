@@ -2,10 +2,10 @@
 func_name,is_array,offset,varname,dir,width,depth,remark
 innerloop_ff_hevc_extract_rbsp_1_hls,0,640,zero_i,in,8,1,
 innerloop_ff_hevc_extract_rbsp_1_hls,0,640,zero_o,out,8,1,
-innerloop_ff_hevc_extract_rbsp_1_hls,0,1116,loop_init,in,32,1,
-innerloop_ff_hevc_extract_rbsp_1_hls,0,1124,loop_len,in,32,1,
-innerloop_ff_hevc_extract_rbsp_1_hls,0,1120,loop_inc,in,32,1,
-innerloop_ff_hevc_extract_rbsp_1_hls,0,1128,loop_cnt,out,32,1,
+innerloop_ff_hevc_extract_rbsp_1_hls,0,1120,loop_init,in,32,1,
+innerloop_ff_hevc_extract_rbsp_1_hls,0,1128,loop_len,in,32,1,
+innerloop_ff_hevc_extract_rbsp_1_hls,0,1124,loop_inc,in,32,1,
+innerloop_ff_hevc_extract_rbsp_1_hls,0,1132,loop_cnt,out,32,1,
 #innerloop_ff_hevc_extract_rbsp_2_hls,0,0,skipped_bytes_pos_is_null,in,8,1,apcall_arg
 innerloop_ff_hevc_extract_rbsp_2_hls,0,632,si_loop_i,in,32,1,
 innerloop_ff_hevc_extract_rbsp_2_hls,0,632,si_loop_o,out,32,1,
@@ -15,11 +15,11 @@ innerloop_ff_hevc_extract_rbsp_2_hls,0,640,zero_i,in,8,1,
 innerloop_ff_hevc_extract_rbsp_2_hls,0,640,zero_o,out,8,1,
 innerloop_ff_hevc_extract_rbsp_2_hls,0,628,skipped_bytes_i,in,32,1,
 innerloop_ff_hevc_extract_rbsp_2_hls,0,628,skipped_bytes_o,out,32,1,
-innerloop_ff_hevc_extract_rbsp_2_hls,1,8232,skipped_bytes_pos_d0,out,32,1024,addr_width=10
-innerloop_ff_hevc_extract_rbsp_2_hls,0,1116,loop_init,in,32,1,
-innerloop_ff_hevc_extract_rbsp_2_hls,0,1124,loop_len,in,32,1,
-innerloop_ff_hevc_extract_rbsp_2_hls,0,1120,loop_inc,in,32,1,
-innerloop_ff_hevc_extract_rbsp_2_hls,0,1128,loop_cnt,out,32,1,
+innerloop_ff_hevc_extract_rbsp_2_hls,1,8192,skipped_bytes_pos_Din_A,out,32,1024,bram_xmem addr_width=32 we_width=4
+innerloop_ff_hevc_extract_rbsp_2_hls,0,1120,loop_init,in,32,1,
+innerloop_ff_hevc_extract_rbsp_2_hls,0,1128,loop_len,in,32,1,
+innerloop_ff_hevc_extract_rbsp_2_hls,0,1124,loop_inc,in,32,1,
+innerloop_ff_hevc_extract_rbsp_2_hls,0,1132,loop_cnt,out,32,1,
 #fill_ref_samples_mtdma_top_wrp,0,0,x0,in,13,1,apcall_arg
 #fill_ref_samples_mtdma_top_wrp,0,0,y0,in,13,1,apcall_arg
 #fill_ref_samples_mtdma_top_wrp,0,0,cidx,in,2,1,apcall_arg
@@ -33,7 +33,7 @@ fill_ref_samples_mtdma_top_wrp,0,656,leftUnits,in,8,1,
 fill_ref_samples_mtdma_top_wrp,0,660,unitWidth,in,8,1,
 fill_ref_samples_mtdma_top_wrp,0,664,unitHeight,in,8,1,
 fill_ref_samples_mtdma_top_wrp,0,668,log2TrSize,in,3,1,
-fill_ref_samples_mtdma_top_wrp,0,672,bNeighborFlags,in,65,1,
+fill_ref_samples_mtdma_top_wrp,0,672,bNeighborFlags,in,65,1,split_u32_array
 fill_ref_samples_mtdma_top_wrp,0,684,numIntraNeighbor_c,in,6,1,
 fill_ref_samples_mtdma_top_wrp,0,688,totalUnits_c,in,8,1,
 fill_ref_samples_mtdma_top_wrp,0,692,aboveUnits_c,in,8,1,
@@ -41,7 +41,7 @@ fill_ref_samples_mtdma_top_wrp,0,696,leftUnits_c,in,8,1,
 fill_ref_samples_mtdma_top_wrp,0,700,unitWidth_c,in,8,1,
 fill_ref_samples_mtdma_top_wrp,0,704,unitHeight_c,in,8,1,
 fill_ref_samples_mtdma_top_wrp,0,708,log2TrSize_c,in,3,1,
-fill_ref_samples_mtdma_top_wrp,0,712,bNeighborFlags_c,in,65,1,
+fill_ref_samples_mtdma_top_wrp,0,712,bNeighborFlags_c,in,65,1,split_u32_array
 #hevc_find_frame_end_hls,0,0,buff_size_i,in,32,1,apcall_arg
 hevc_find_frame_end_hls,0,0,state64_i,in,64,1,
 hevc_find_frame_end_hls,0,0,state64_o,out,64,1,
@@ -84,988 +84,8 @@ intra_prediction_unit_ex_hls,0,324,chroma_array_type,in,32,1,parent_func
 intra_prediction_unit_ex_hls,0,576,max_trafo_depth,out,8,1,parent_func
 intra_prediction_unit_ex_hls,0,384,max_transform_hierarchy_depth_intra,in,32,1,parent_func
 intra_prediction_unit_ex_hls,0,568,intra_split_flag,in,8,1,parent_func
-intra_prediction_unit_ex_hls,0,1252,dc_tab_ipm_p,in,32,1,xmem_dcache_pointer parent_func
-#hls_transform_unit_ex_hls,0,0,tid,in,32,1,apcall_arg
-#hls_transform_unit_ex_hls,0,0,x0,in,32,1,apcall_arg
-#hls_transform_unit_ex_hls,0,0,y0,in,32,1,apcall_arg
-#hls_transform_unit_ex_hls,0,0,xBase,in,32,1,apcall_arg
-#hls_transform_unit_ex_hls,0,0,yBase,in,32,1,apcall_arg
-#hls_transform_unit_ex_hls,0,0,log2_cb_size,in,32,1,apcall_arg
-#hls_transform_unit_ex_hls,0,0,log2_size,in,32,1,apcall_arg
-#hls_transform_unit_ex_hls,0,0,blk_idx,in,32,1,apcall_arg
-hls_transform_unit_ex_hls,0,20,cbf_luma,in,32,1,parent_func
-hls_transform_unit_ex_hls,0,16,cbf_data,in,8,1,parent_func
-hls_transform_unit_ex_hls,0,1260,dc_min_tb_addr_zs_p,in,32,1,xmem_dcache_pointer parent_func
-hls_transform_unit_ex_hls,0,1156,chroma_qp_offset_list_len_minus1,in,8,1,parent_func
-hls_transform_unit_ex_hls,0,1264,dc_cb_qp_offset_list_p,in,32,1,xmem_dcache_pointer parent_func
-hls_transform_unit_ex_hls,0,1268,dc_cr_qp_offset_list_p,in,32,1,xmem_dcache_pointer parent_func
-hls_transform_unit_ex_hls,0,1132,qp_bd_offset,in,32,1,parent_func
-hls_transform_unit_ex_hls,0,1272,dc_qp_y_tab_p,in,32,1,xmem_dcache_pointer parent_func
-hls_transform_unit_ex_hls,0,560,pred_mode,in,8,1,parent_func
-hls_transform_unit_ex_hls,1,336,hshift_0,in,32,3,(complete partition) parent_func
-hls_transform_unit_ex_hls,1,340,hshift_1,in,32,3,(complete partition) parent_func
-hls_transform_unit_ex_hls,1,344,hshift_2,in,32,3,(complete partition) parent_func
-hls_transform_unit_ex_hls,1,348,vshift_0,in,32,3,(complete partition) parent_func
-hls_transform_unit_ex_hls,1,352,vshift_1,in,32,3,(complete partition) parent_func
-hls_transform_unit_ex_hls,1,356,vshift_2,in,32,3,(complete partition) parent_func
-hls_transform_unit_ex_hls,0,484,tu_intra_pred_mode,in,32,1,parent_func
-hls_transform_unit_ex_hls,0,488,tu_intra_pred_mode_c,in,32,1,parent_func
-hls_transform_unit_ex_hls,0,572,cu_transquant_bypass_flag,in,8,1,parent_func
-hls_transform_unit_ex_hls,0,492,tu_cu_qp_offset_cb,out,8,1,parent_func
-hls_transform_unit_ex_hls,0,496,tu_cu_qp_offset_cr,out,8,1,parent_func
-hls_transform_unit_ex_hls,0,536,qp_y_i,in,8,1,parent_func
-hls_transform_unit_ex_hls,0,536,qp_y_o,out,8,1,parent_func
-hls_transform_unit_ex_hls,0,168,log2_trafo_size,out,32,1,parent_func
-hls_transform_unit_ex_hls,0,56,log2_trafo_size_c_i,in,8,1,parent_func
-hls_transform_unit_ex_hls,0,56,log2_trafo_size_c_o,out,8,1,parent_func
-hls_transform_unit_ex_hls,0,48,scan_idx_i,in,8,1,parent_func
-hls_transform_unit_ex_hls,0,48,scan_idx_o,out,8,1,parent_func
-hls_transform_unit_ex_hls,0,52,scan_idx_c,out,8,1,parent_func
-hls_transform_unit_ex_hls,0,1136,cmdr_run_i,in,8,1,parent_func
-hls_transform_unit_ex_hls,0,1136,cmdr_run_o,out,8,1,parent_func
-hls_transform_unit_ex_hls,1,1240,buf_data_0,in,32,3,(complete partition) parent_func
-hls_transform_unit_ex_hls,1,1244,buf_data_1,in,32,3,(complete partition) parent_func
-hls_transform_unit_ex_hls,1,1248,buf_data_2,in,32,3,(complete partition) parent_func
-hls_transform_unit_ex_hls,1,1144,xm_linesize_0,in,32,3,(complete partition) parent_func
-hls_transform_unit_ex_hls,1,1148,xm_linesize_1,in,32,3,(complete partition) parent_func
-hls_transform_unit_ex_hls,1,1152,xm_linesize_2,in,32,3,(complete partition) parent_func
-hls_transform_unit_ex_hls,0,1140,pixel_shift,in,32,1,parent_func
-hls_transform_unit_ex_hls,0,160,nPbW,out,32,1,parent_func
-hls_transform_unit_ex_hls,0,164,nPbH,out,32,1,parent_func
-hls_transform_unit_ex_hls,0,580,cand_up,out,1,1,parent_func
-hls_transform_unit_ex_hls,0,584,cand_left,out,1,1,parent_func
-hls_transform_unit_ex_hls,0,588,cand_up_left,out,1,1,parent_func
-hls_transform_unit_ex_hls,0,592,cand_up_right_sap,out,1,1,parent_func
-hls_transform_unit_ex_hls,0,596,cand_up_right,out,1,1,parent_func
-hls_transform_unit_ex_hls,0,600,cand_bottom_left_i,in,1,1,parent_func
-hls_transform_unit_ex_hls,0,600,cand_bottom_left_o,out,1,1,parent_func
-hls_transform_unit_ex_hls,0,1488,cand_up_c,out,1,1,parent_func
-hls_transform_unit_ex_hls,0,1492,cand_left_c,out,1,1,parent_func
-hls_transform_unit_ex_hls,0,1496,cand_up_left_c,out,1,1,parent_func
-hls_transform_unit_ex_hls,0,1500,cand_up_right_sap_c,out,1,1,parent_func
-hls_transform_unit_ex_hls,0,1504,cand_up_right_c,out,1,1,parent_func
-hls_transform_unit_ex_hls,0,1508,cand_bottom_left_c_i,in,1,1,parent_func
-hls_transform_unit_ex_hls,0,1508,cand_bottom_left_c_o,out,1,1,parent_func
-hls_transform_unit_ex_hls,0,360,log2_ctb_size,in,32,1,parent_func
-hls_transform_unit_ex_hls,0,604,ctb_up_flag,in,1,1,parent_func
-hls_transform_unit_ex_hls,0,608,ctb_left_flag,in,1,1,parent_func
-hls_transform_unit_ex_hls,0,612,ctb_up_left_flag,in,1,1,parent_func
-hls_transform_unit_ex_hls,0,616,ctb_up_right_flag,in,1,1,parent_func
-hls_transform_unit_ex_hls,0,620,end_of_tiles_x,in,16,1,parent_func
-hls_transform_unit_ex_hls,0,624,end_of_tiles_y,in,16,1,parent_func
-hls_transform_unit_ex_hls,0,472,tu_is_cu_chroma_qp_offset_coded_i,in,8,1,parent_func
-hls_transform_unit_ex_hls,0,472,tu_is_cu_chroma_qp_offset_coded_o,out,8,1,parent_func
-hls_transform_unit_ex_hls,0,476,tu_is_cu_qp_delta_coded_i,in,8,1,parent_func
-hls_transform_unit_ex_hls,0,476,tu_is_cu_qp_delta_coded_o,out,8,1,parent_func
-hls_transform_unit_ex_hls,0,468,tu_cu_qp_delta,out,32,1,parent_func
-hls_transform_unit_ex_hls,0,500,tu_cross_pf,out,8,1,parent_func
-hls_transform_unit_ex_hls,0,532,first_qp_group_i,in,8,1,parent_func
-hls_transform_unit_ex_hls,0,532,first_qp_group_o,out,8,1,parent_func
-hls_transform_unit_ex_hls,0,328,chroma_format_idc,in,32,1,parent_func
-hls_transform_unit_ex_hls,0,448,cu_chroma_qp_offset_enabled_flag,in,8,1,parent_func
-hls_transform_unit_ex_hls,0,428,cu_qp_delta_enabled_flag,in,8,1,parent_func
-hls_transform_unit_ex_hls,0,540,qPy_pred,in,32,1,parent_func
-hls_transform_unit_ex_hls,0,436,diff_cu_qp_delta_depth,in,32,1,parent_func
-hls_transform_unit_ex_hls,0,368,log2_min_cb_size,in,32,1,parent_func
-hls_transform_unit_ex_hls,0,392,min_cb_width,in,32,1,parent_func
-hls_transform_unit_ex_hls,0,460,slice_qp,in,8,1,parent_func
-#hls_transform_unit_ex_hls_dup1,0,0,tid,in,32,1,apcall_arg
-#hls_transform_unit_ex_hls_dup1,0,0,x0,in,32,1,apcall_arg
-#hls_transform_unit_ex_hls_dup1,0,0,y0,in,32,1,apcall_arg
-#hls_transform_unit_ex_hls_dup1,0,0,xBase,in,32,1,apcall_arg
-#hls_transform_unit_ex_hls_dup1,0,0,yBase,in,32,1,apcall_arg
-#hls_transform_unit_ex_hls_dup1,0,0,log2_cb_size,in,32,1,apcall_arg
-#hls_transform_unit_ex_hls_dup1,0,0,log2_size,in,32,1,apcall_arg
-#hls_transform_unit_ex_hls_dup1,0,0,blk_idx,in,32,1,apcall_arg
-hls_transform_unit_ex_hls_dup1,0,20,cbf_luma,in,32,1,parent_func
-hls_transform_unit_ex_hls_dup1,0,16,cbf_data,in,8,1,parent_func
-hls_transform_unit_ex_hls_dup1,0,1260,dc_min_tb_addr_zs_p,in,32,1,xmem_dcache_pointer parent_func
-hls_transform_unit_ex_hls_dup1,0,1156,chroma_qp_offset_list_len_minus1,in,8,1,parent_func
-hls_transform_unit_ex_hls_dup1,0,1264,dc_cb_qp_offset_list_p,in,32,1,xmem_dcache_pointer parent_func
-hls_transform_unit_ex_hls_dup1,0,1268,dc_cr_qp_offset_list_p,in,32,1,xmem_dcache_pointer parent_func
-hls_transform_unit_ex_hls_dup1,0,1132,qp_bd_offset,in,32,1,parent_func
-hls_transform_unit_ex_hls_dup1,0,1272,dc_qp_y_tab_p,in,32,1,xmem_dcache_pointer parent_func
-hls_transform_unit_ex_hls_dup1,0,560,pred_mode,in,8,1,parent_func
-hls_transform_unit_ex_hls_dup1,1,336,hshift_0,in,32,3,(complete partition) parent_func
-hls_transform_unit_ex_hls_dup1,1,340,hshift_1,in,32,3,(complete partition) parent_func
-hls_transform_unit_ex_hls_dup1,1,344,hshift_2,in,32,3,(complete partition) parent_func
-hls_transform_unit_ex_hls_dup1,1,348,vshift_0,in,32,3,(complete partition) parent_func
-hls_transform_unit_ex_hls_dup1,1,352,vshift_1,in,32,3,(complete partition) parent_func
-hls_transform_unit_ex_hls_dup1,1,356,vshift_2,in,32,3,(complete partition) parent_func
-hls_transform_unit_ex_hls_dup1,0,484,tu_intra_pred_mode,in,32,1,parent_func
-hls_transform_unit_ex_hls_dup1,0,488,tu_intra_pred_mode_c,in,32,1,parent_func
-hls_transform_unit_ex_hls_dup1,0,572,cu_transquant_bypass_flag,in,8,1,parent_func
-hls_transform_unit_ex_hls_dup1,0,492,tu_cu_qp_offset_cb,out,8,1,parent_func
-hls_transform_unit_ex_hls_dup1,0,496,tu_cu_qp_offset_cr,out,8,1,parent_func
-hls_transform_unit_ex_hls_dup1,0,536,qp_y_i,in,8,1,parent_func
-hls_transform_unit_ex_hls_dup1,0,536,qp_y_o,out,8,1,parent_func
-hls_transform_unit_ex_hls_dup1,0,168,log2_trafo_size,out,32,1,parent_func
-hls_transform_unit_ex_hls_dup1,0,56,log2_trafo_size_c_i,in,8,1,parent_func
-hls_transform_unit_ex_hls_dup1,0,56,log2_trafo_size_c_o,out,8,1,parent_func
-hls_transform_unit_ex_hls_dup1,0,48,scan_idx_i,in,8,1,parent_func
-hls_transform_unit_ex_hls_dup1,0,48,scan_idx_o,out,8,1,parent_func
-hls_transform_unit_ex_hls_dup1,0,52,scan_idx_c,out,8,1,parent_func
-hls_transform_unit_ex_hls_dup1,0,1136,cmdr_run_i,in,8,1,parent_func
-hls_transform_unit_ex_hls_dup1,0,1136,cmdr_run_o,out,8,1,parent_func
-hls_transform_unit_ex_hls_dup1,1,1240,buf_data_0,in,32,3,(complete partition) parent_func
-hls_transform_unit_ex_hls_dup1,1,1244,buf_data_1,in,32,3,(complete partition) parent_func
-hls_transform_unit_ex_hls_dup1,1,1248,buf_data_2,in,32,3,(complete partition) parent_func
-hls_transform_unit_ex_hls_dup1,1,1144,xm_linesize_0,in,32,3,(complete partition) parent_func
-hls_transform_unit_ex_hls_dup1,1,1148,xm_linesize_1,in,32,3,(complete partition) parent_func
-hls_transform_unit_ex_hls_dup1,1,1152,xm_linesize_2,in,32,3,(complete partition) parent_func
-hls_transform_unit_ex_hls_dup1,0,1140,pixel_shift,in,32,1,parent_func
-hls_transform_unit_ex_hls_dup1,0,160,nPbW,out,32,1,parent_func
-hls_transform_unit_ex_hls_dup1,0,164,nPbH,out,32,1,parent_func
-hls_transform_unit_ex_hls_dup1,0,580,cand_up,out,1,1,parent_func
-hls_transform_unit_ex_hls_dup1,0,584,cand_left,out,1,1,parent_func
-hls_transform_unit_ex_hls_dup1,0,588,cand_up_left,out,1,1,parent_func
-hls_transform_unit_ex_hls_dup1,0,592,cand_up_right_sap,out,1,1,parent_func
-hls_transform_unit_ex_hls_dup1,0,596,cand_up_right,out,1,1,parent_func
-hls_transform_unit_ex_hls_dup1,0,600,cand_bottom_left_i,in,1,1,parent_func
-hls_transform_unit_ex_hls_dup1,0,600,cand_bottom_left_o,out,1,1,parent_func
-hls_transform_unit_ex_hls_dup1,0,1488,cand_up_c,out,1,1,parent_func
-hls_transform_unit_ex_hls_dup1,0,1492,cand_left_c,out,1,1,parent_func
-hls_transform_unit_ex_hls_dup1,0,1496,cand_up_left_c,out,1,1,parent_func
-hls_transform_unit_ex_hls_dup1,0,1500,cand_up_right_sap_c,out,1,1,parent_func
-hls_transform_unit_ex_hls_dup1,0,1504,cand_up_right_c,out,1,1,parent_func
-hls_transform_unit_ex_hls_dup1,0,1508,cand_bottom_left_c_i,in,1,1,parent_func
-hls_transform_unit_ex_hls_dup1,0,1508,cand_bottom_left_c_o,out,1,1,parent_func
-hls_transform_unit_ex_hls_dup1,0,360,log2_ctb_size,in,32,1,parent_func
-hls_transform_unit_ex_hls_dup1,0,604,ctb_up_flag,in,1,1,parent_func
-hls_transform_unit_ex_hls_dup1,0,608,ctb_left_flag,in,1,1,parent_func
-hls_transform_unit_ex_hls_dup1,0,612,ctb_up_left_flag,in,1,1,parent_func
-hls_transform_unit_ex_hls_dup1,0,616,ctb_up_right_flag,in,1,1,parent_func
-hls_transform_unit_ex_hls_dup1,0,620,end_of_tiles_x,in,16,1,parent_func
-hls_transform_unit_ex_hls_dup1,0,624,end_of_tiles_y,in,16,1,parent_func
-hls_transform_unit_ex_hls_dup1,0,472,tu_is_cu_chroma_qp_offset_coded_i,in,8,1,parent_func
-hls_transform_unit_ex_hls_dup1,0,472,tu_is_cu_chroma_qp_offset_coded_o,out,8,1,parent_func
-hls_transform_unit_ex_hls_dup1,0,476,tu_is_cu_qp_delta_coded_i,in,8,1,parent_func
-hls_transform_unit_ex_hls_dup1,0,476,tu_is_cu_qp_delta_coded_o,out,8,1,parent_func
-hls_transform_unit_ex_hls_dup1,0,468,tu_cu_qp_delta,out,32,1,parent_func
-hls_transform_unit_ex_hls_dup1,0,500,tu_cross_pf,out,8,1,parent_func
-hls_transform_unit_ex_hls_dup1,0,532,first_qp_group_i,in,8,1,parent_func
-hls_transform_unit_ex_hls_dup1,0,532,first_qp_group_o,out,8,1,parent_func
-hls_transform_unit_ex_hls_dup1,0,328,chroma_format_idc,in,32,1,parent_func
-hls_transform_unit_ex_hls_dup1,0,448,cu_chroma_qp_offset_enabled_flag,in,8,1,parent_func
-hls_transform_unit_ex_hls_dup1,0,428,cu_qp_delta_enabled_flag,in,8,1,parent_func
-hls_transform_unit_ex_hls_dup1,0,540,qPy_pred,in,32,1,parent_func
-hls_transform_unit_ex_hls_dup1,0,436,diff_cu_qp_delta_depth,in,32,1,parent_func
-hls_transform_unit_ex_hls_dup1,0,368,log2_min_cb_size,in,32,1,parent_func
-hls_transform_unit_ex_hls_dup1,0,392,min_cb_width,in,32,1,parent_func
-hls_transform_unit_ex_hls_dup1,0,460,slice_qp,in,8,1,parent_func
-#hls_transform_unit_ex_hls_dup2,0,0,tid,in,32,1,apcall_arg
-#hls_transform_unit_ex_hls_dup2,0,0,x0,in,32,1,apcall_arg
-#hls_transform_unit_ex_hls_dup2,0,0,y0,in,32,1,apcall_arg
-#hls_transform_unit_ex_hls_dup2,0,0,xBase,in,32,1,apcall_arg
-#hls_transform_unit_ex_hls_dup2,0,0,yBase,in,32,1,apcall_arg
-#hls_transform_unit_ex_hls_dup2,0,0,log2_cb_size,in,32,1,apcall_arg
-#hls_transform_unit_ex_hls_dup2,0,0,log2_size,in,32,1,apcall_arg
-#hls_transform_unit_ex_hls_dup2,0,0,blk_idx,in,32,1,apcall_arg
-hls_transform_unit_ex_hls_dup2,0,20,cbf_luma,in,32,1,parent_func
-hls_transform_unit_ex_hls_dup2,0,16,cbf_data,in,8,1,parent_func
-hls_transform_unit_ex_hls_dup2,0,1260,dc_min_tb_addr_zs_p,in,32,1,xmem_dcache_pointer parent_func
-hls_transform_unit_ex_hls_dup2,0,1156,chroma_qp_offset_list_len_minus1,in,8,1,parent_func
-hls_transform_unit_ex_hls_dup2,0,1264,dc_cb_qp_offset_list_p,in,32,1,xmem_dcache_pointer parent_func
-hls_transform_unit_ex_hls_dup2,0,1268,dc_cr_qp_offset_list_p,in,32,1,xmem_dcache_pointer parent_func
-hls_transform_unit_ex_hls_dup2,0,1132,qp_bd_offset,in,32,1,parent_func
-hls_transform_unit_ex_hls_dup2,0,1272,dc_qp_y_tab_p,in,32,1,xmem_dcache_pointer parent_func
-hls_transform_unit_ex_hls_dup2,0,560,pred_mode,in,8,1,parent_func
-hls_transform_unit_ex_hls_dup2,1,336,hshift_0,in,32,3,(complete partition) parent_func
-hls_transform_unit_ex_hls_dup2,1,340,hshift_1,in,32,3,(complete partition) parent_func
-hls_transform_unit_ex_hls_dup2,1,344,hshift_2,in,32,3,(complete partition) parent_func
-hls_transform_unit_ex_hls_dup2,1,348,vshift_0,in,32,3,(complete partition) parent_func
-hls_transform_unit_ex_hls_dup2,1,352,vshift_1,in,32,3,(complete partition) parent_func
-hls_transform_unit_ex_hls_dup2,1,356,vshift_2,in,32,3,(complete partition) parent_func
-hls_transform_unit_ex_hls_dup2,0,484,tu_intra_pred_mode,in,32,1,parent_func
-hls_transform_unit_ex_hls_dup2,0,488,tu_intra_pred_mode_c,in,32,1,parent_func
-hls_transform_unit_ex_hls_dup2,0,572,cu_transquant_bypass_flag,in,8,1,parent_func
-hls_transform_unit_ex_hls_dup2,0,492,tu_cu_qp_offset_cb,out,8,1,parent_func
-hls_transform_unit_ex_hls_dup2,0,496,tu_cu_qp_offset_cr,out,8,1,parent_func
-hls_transform_unit_ex_hls_dup2,0,536,qp_y_i,in,8,1,parent_func
-hls_transform_unit_ex_hls_dup2,0,536,qp_y_o,out,8,1,parent_func
-hls_transform_unit_ex_hls_dup2,0,168,log2_trafo_size,out,32,1,parent_func
-hls_transform_unit_ex_hls_dup2,0,56,log2_trafo_size_c_i,in,8,1,parent_func
-hls_transform_unit_ex_hls_dup2,0,56,log2_trafo_size_c_o,out,8,1,parent_func
-hls_transform_unit_ex_hls_dup2,0,48,scan_idx_i,in,8,1,parent_func
-hls_transform_unit_ex_hls_dup2,0,48,scan_idx_o,out,8,1,parent_func
-hls_transform_unit_ex_hls_dup2,0,52,scan_idx_c,out,8,1,parent_func
-hls_transform_unit_ex_hls_dup2,0,1136,cmdr_run_i,in,8,1,parent_func
-hls_transform_unit_ex_hls_dup2,0,1136,cmdr_run_o,out,8,1,parent_func
-hls_transform_unit_ex_hls_dup2,1,1240,buf_data_0,in,32,3,(complete partition) parent_func
-hls_transform_unit_ex_hls_dup2,1,1244,buf_data_1,in,32,3,(complete partition) parent_func
-hls_transform_unit_ex_hls_dup2,1,1248,buf_data_2,in,32,3,(complete partition) parent_func
-hls_transform_unit_ex_hls_dup2,1,1144,xm_linesize_0,in,32,3,(complete partition) parent_func
-hls_transform_unit_ex_hls_dup2,1,1148,xm_linesize_1,in,32,3,(complete partition) parent_func
-hls_transform_unit_ex_hls_dup2,1,1152,xm_linesize_2,in,32,3,(complete partition) parent_func
-hls_transform_unit_ex_hls_dup2,0,1140,pixel_shift,in,32,1,parent_func
-hls_transform_unit_ex_hls_dup2,0,160,nPbW,out,32,1,parent_func
-hls_transform_unit_ex_hls_dup2,0,164,nPbH,out,32,1,parent_func
-hls_transform_unit_ex_hls_dup2,0,580,cand_up,out,1,1,parent_func
-hls_transform_unit_ex_hls_dup2,0,584,cand_left,out,1,1,parent_func
-hls_transform_unit_ex_hls_dup2,0,588,cand_up_left,out,1,1,parent_func
-hls_transform_unit_ex_hls_dup2,0,592,cand_up_right_sap,out,1,1,parent_func
-hls_transform_unit_ex_hls_dup2,0,596,cand_up_right,out,1,1,parent_func
-hls_transform_unit_ex_hls_dup2,0,600,cand_bottom_left_i,in,1,1,parent_func
-hls_transform_unit_ex_hls_dup2,0,600,cand_bottom_left_o,out,1,1,parent_func
-hls_transform_unit_ex_hls_dup2,0,1488,cand_up_c,out,1,1,parent_func
-hls_transform_unit_ex_hls_dup2,0,1492,cand_left_c,out,1,1,parent_func
-hls_transform_unit_ex_hls_dup2,0,1496,cand_up_left_c,out,1,1,parent_func
-hls_transform_unit_ex_hls_dup2,0,1500,cand_up_right_sap_c,out,1,1,parent_func
-hls_transform_unit_ex_hls_dup2,0,1504,cand_up_right_c,out,1,1,parent_func
-hls_transform_unit_ex_hls_dup2,0,1508,cand_bottom_left_c_i,in,1,1,parent_func
-hls_transform_unit_ex_hls_dup2,0,1508,cand_bottom_left_c_o,out,1,1,parent_func
-hls_transform_unit_ex_hls_dup2,0,360,log2_ctb_size,in,32,1,parent_func
-hls_transform_unit_ex_hls_dup2,0,604,ctb_up_flag,in,1,1,parent_func
-hls_transform_unit_ex_hls_dup2,0,608,ctb_left_flag,in,1,1,parent_func
-hls_transform_unit_ex_hls_dup2,0,612,ctb_up_left_flag,in,1,1,parent_func
-hls_transform_unit_ex_hls_dup2,0,616,ctb_up_right_flag,in,1,1,parent_func
-hls_transform_unit_ex_hls_dup2,0,620,end_of_tiles_x,in,16,1,parent_func
-hls_transform_unit_ex_hls_dup2,0,624,end_of_tiles_y,in,16,1,parent_func
-hls_transform_unit_ex_hls_dup2,0,472,tu_is_cu_chroma_qp_offset_coded_i,in,8,1,parent_func
-hls_transform_unit_ex_hls_dup2,0,472,tu_is_cu_chroma_qp_offset_coded_o,out,8,1,parent_func
-hls_transform_unit_ex_hls_dup2,0,476,tu_is_cu_qp_delta_coded_i,in,8,1,parent_func
-hls_transform_unit_ex_hls_dup2,0,476,tu_is_cu_qp_delta_coded_o,out,8,1,parent_func
-hls_transform_unit_ex_hls_dup2,0,468,tu_cu_qp_delta,out,32,1,parent_func
-hls_transform_unit_ex_hls_dup2,0,500,tu_cross_pf,out,8,1,parent_func
-hls_transform_unit_ex_hls_dup2,0,532,first_qp_group_i,in,8,1,parent_func
-hls_transform_unit_ex_hls_dup2,0,532,first_qp_group_o,out,8,1,parent_func
-hls_transform_unit_ex_hls_dup2,0,328,chroma_format_idc,in,32,1,parent_func
-hls_transform_unit_ex_hls_dup2,0,448,cu_chroma_qp_offset_enabled_flag,in,8,1,parent_func
-hls_transform_unit_ex_hls_dup2,0,428,cu_qp_delta_enabled_flag,in,8,1,parent_func
-hls_transform_unit_ex_hls_dup2,0,540,qPy_pred,in,32,1,parent_func
-hls_transform_unit_ex_hls_dup2,0,436,diff_cu_qp_delta_depth,in,32,1,parent_func
-hls_transform_unit_ex_hls_dup2,0,368,log2_min_cb_size,in,32,1,parent_func
-hls_transform_unit_ex_hls_dup2,0,392,min_cb_width,in,32,1,parent_func
-hls_transform_unit_ex_hls_dup2,0,460,slice_qp,in,8,1,parent_func
-#hls_transform_unit_ex_hls_dup3,0,0,tid,in,32,1,apcall_arg
-#hls_transform_unit_ex_hls_dup3,0,0,x0,in,32,1,apcall_arg
-#hls_transform_unit_ex_hls_dup3,0,0,y0,in,32,1,apcall_arg
-#hls_transform_unit_ex_hls_dup3,0,0,xBase,in,32,1,apcall_arg
-#hls_transform_unit_ex_hls_dup3,0,0,yBase,in,32,1,apcall_arg
-#hls_transform_unit_ex_hls_dup3,0,0,log2_cb_size,in,32,1,apcall_arg
-#hls_transform_unit_ex_hls_dup3,0,0,log2_size,in,32,1,apcall_arg
-#hls_transform_unit_ex_hls_dup3,0,0,blk_idx,in,32,1,apcall_arg
-hls_transform_unit_ex_hls_dup3,0,20,cbf_luma,in,32,1,parent_func
-hls_transform_unit_ex_hls_dup3,0,16,cbf_data,in,8,1,parent_func
-hls_transform_unit_ex_hls_dup3,0,1260,dc_min_tb_addr_zs_p,in,32,1,xmem_dcache_pointer parent_func
-hls_transform_unit_ex_hls_dup3,0,1156,chroma_qp_offset_list_len_minus1,in,8,1,parent_func
-hls_transform_unit_ex_hls_dup3,0,1264,dc_cb_qp_offset_list_p,in,32,1,xmem_dcache_pointer parent_func
-hls_transform_unit_ex_hls_dup3,0,1268,dc_cr_qp_offset_list_p,in,32,1,xmem_dcache_pointer parent_func
-hls_transform_unit_ex_hls_dup3,0,1132,qp_bd_offset,in,32,1,parent_func
-hls_transform_unit_ex_hls_dup3,0,1272,dc_qp_y_tab_p,in,32,1,xmem_dcache_pointer parent_func
-hls_transform_unit_ex_hls_dup3,0,560,pred_mode,in,8,1,parent_func
-hls_transform_unit_ex_hls_dup3,1,336,hshift_0,in,32,3,(complete partition) parent_func
-hls_transform_unit_ex_hls_dup3,1,340,hshift_1,in,32,3,(complete partition) parent_func
-hls_transform_unit_ex_hls_dup3,1,344,hshift_2,in,32,3,(complete partition) parent_func
-hls_transform_unit_ex_hls_dup3,1,348,vshift_0,in,32,3,(complete partition) parent_func
-hls_transform_unit_ex_hls_dup3,1,352,vshift_1,in,32,3,(complete partition) parent_func
-hls_transform_unit_ex_hls_dup3,1,356,vshift_2,in,32,3,(complete partition) parent_func
-hls_transform_unit_ex_hls_dup3,0,484,tu_intra_pred_mode,in,32,1,parent_func
-hls_transform_unit_ex_hls_dup3,0,488,tu_intra_pred_mode_c,in,32,1,parent_func
-hls_transform_unit_ex_hls_dup3,0,572,cu_transquant_bypass_flag,in,8,1,parent_func
-hls_transform_unit_ex_hls_dup3,0,492,tu_cu_qp_offset_cb,out,8,1,parent_func
-hls_transform_unit_ex_hls_dup3,0,496,tu_cu_qp_offset_cr,out,8,1,parent_func
-hls_transform_unit_ex_hls_dup3,0,536,qp_y_i,in,8,1,parent_func
-hls_transform_unit_ex_hls_dup3,0,536,qp_y_o,out,8,1,parent_func
-hls_transform_unit_ex_hls_dup3,0,168,log2_trafo_size,out,32,1,parent_func
-hls_transform_unit_ex_hls_dup3,0,56,log2_trafo_size_c_i,in,8,1,parent_func
-hls_transform_unit_ex_hls_dup3,0,56,log2_trafo_size_c_o,out,8,1,parent_func
-hls_transform_unit_ex_hls_dup3,0,48,scan_idx_i,in,8,1,parent_func
-hls_transform_unit_ex_hls_dup3,0,48,scan_idx_o,out,8,1,parent_func
-hls_transform_unit_ex_hls_dup3,0,52,scan_idx_c,out,8,1,parent_func
-hls_transform_unit_ex_hls_dup3,0,1136,cmdr_run_i,in,8,1,parent_func
-hls_transform_unit_ex_hls_dup3,0,1136,cmdr_run_o,out,8,1,parent_func
-hls_transform_unit_ex_hls_dup3,1,1240,buf_data_0,in,32,3,(complete partition) parent_func
-hls_transform_unit_ex_hls_dup3,1,1244,buf_data_1,in,32,3,(complete partition) parent_func
-hls_transform_unit_ex_hls_dup3,1,1248,buf_data_2,in,32,3,(complete partition) parent_func
-hls_transform_unit_ex_hls_dup3,1,1144,xm_linesize_0,in,32,3,(complete partition) parent_func
-hls_transform_unit_ex_hls_dup3,1,1148,xm_linesize_1,in,32,3,(complete partition) parent_func
-hls_transform_unit_ex_hls_dup3,1,1152,xm_linesize_2,in,32,3,(complete partition) parent_func
-hls_transform_unit_ex_hls_dup3,0,1140,pixel_shift,in,32,1,parent_func
-hls_transform_unit_ex_hls_dup3,0,160,nPbW,out,32,1,parent_func
-hls_transform_unit_ex_hls_dup3,0,164,nPbH,out,32,1,parent_func
-hls_transform_unit_ex_hls_dup3,0,580,cand_up,out,1,1,parent_func
-hls_transform_unit_ex_hls_dup3,0,584,cand_left,out,1,1,parent_func
-hls_transform_unit_ex_hls_dup3,0,588,cand_up_left,out,1,1,parent_func
-hls_transform_unit_ex_hls_dup3,0,592,cand_up_right_sap,out,1,1,parent_func
-hls_transform_unit_ex_hls_dup3,0,596,cand_up_right,out,1,1,parent_func
-hls_transform_unit_ex_hls_dup3,0,600,cand_bottom_left_i,in,1,1,parent_func
-hls_transform_unit_ex_hls_dup3,0,600,cand_bottom_left_o,out,1,1,parent_func
-hls_transform_unit_ex_hls_dup3,0,1488,cand_up_c,out,1,1,parent_func
-hls_transform_unit_ex_hls_dup3,0,1492,cand_left_c,out,1,1,parent_func
-hls_transform_unit_ex_hls_dup3,0,1496,cand_up_left_c,out,1,1,parent_func
-hls_transform_unit_ex_hls_dup3,0,1500,cand_up_right_sap_c,out,1,1,parent_func
-hls_transform_unit_ex_hls_dup3,0,1504,cand_up_right_c,out,1,1,parent_func
-hls_transform_unit_ex_hls_dup3,0,1508,cand_bottom_left_c_i,in,1,1,parent_func
-hls_transform_unit_ex_hls_dup3,0,1508,cand_bottom_left_c_o,out,1,1,parent_func
-hls_transform_unit_ex_hls_dup3,0,360,log2_ctb_size,in,32,1,parent_func
-hls_transform_unit_ex_hls_dup3,0,604,ctb_up_flag,in,1,1,parent_func
-hls_transform_unit_ex_hls_dup3,0,608,ctb_left_flag,in,1,1,parent_func
-hls_transform_unit_ex_hls_dup3,0,612,ctb_up_left_flag,in,1,1,parent_func
-hls_transform_unit_ex_hls_dup3,0,616,ctb_up_right_flag,in,1,1,parent_func
-hls_transform_unit_ex_hls_dup3,0,620,end_of_tiles_x,in,16,1,parent_func
-hls_transform_unit_ex_hls_dup3,0,624,end_of_tiles_y,in,16,1,parent_func
-hls_transform_unit_ex_hls_dup3,0,472,tu_is_cu_chroma_qp_offset_coded_i,in,8,1,parent_func
-hls_transform_unit_ex_hls_dup3,0,472,tu_is_cu_chroma_qp_offset_coded_o,out,8,1,parent_func
-hls_transform_unit_ex_hls_dup3,0,476,tu_is_cu_qp_delta_coded_i,in,8,1,parent_func
-hls_transform_unit_ex_hls_dup3,0,476,tu_is_cu_qp_delta_coded_o,out,8,1,parent_func
-hls_transform_unit_ex_hls_dup3,0,468,tu_cu_qp_delta,out,32,1,parent_func
-hls_transform_unit_ex_hls_dup3,0,500,tu_cross_pf,out,8,1,parent_func
-hls_transform_unit_ex_hls_dup3,0,532,first_qp_group_i,in,8,1,parent_func
-hls_transform_unit_ex_hls_dup3,0,532,first_qp_group_o,out,8,1,parent_func
-hls_transform_unit_ex_hls_dup3,0,328,chroma_format_idc,in,32,1,parent_func
-hls_transform_unit_ex_hls_dup3,0,448,cu_chroma_qp_offset_enabled_flag,in,8,1,parent_func
-hls_transform_unit_ex_hls_dup3,0,428,cu_qp_delta_enabled_flag,in,8,1,parent_func
-hls_transform_unit_ex_hls_dup3,0,540,qPy_pred,in,32,1,parent_func
-hls_transform_unit_ex_hls_dup3,0,436,diff_cu_qp_delta_depth,in,32,1,parent_func
-hls_transform_unit_ex_hls_dup3,0,368,log2_min_cb_size,in,32,1,parent_func
-hls_transform_unit_ex_hls_dup3,0,392,min_cb_width,in,32,1,parent_func
-hls_transform_unit_ex_hls_dup3,0,460,slice_qp,in,8,1,parent_func
-#hls_transform_tree_hls,0,0,tid,in,32,1,apcall_arg
-#hls_transform_tree_hls,0,0,x0,in,32,1,apcall_arg
-#hls_transform_tree_hls,0,0,y0,in,32,1,apcall_arg
-hls_transform_tree_hls,0,168,log2_trafo_size,out,32,1,parent_func
-#hls_transform_tree_hls,0,0,s_log2_trafo_size,in,32,1,apcall_arg
-hls_transform_tree_hls,0,12,split_transform_flag,out,8,1,parent_func
-hls_transform_tree_hls,0,16,cbf_data,out,8,1,parent_func
-hls_transform_tree_hls,0,1160,disable_deblocking_filter_flag,in,8,1,parent_func
-hls_transform_tree_hls,0,440,transquant_bypass_enable_flag,in,8,1,parent_func
-hls_transform_tree_hls,0,572,cu_transquant_bypass_flag,in,8,1,parent_func
-hls_transform_tree_hls,0,480,tu_chroma_mode_c,out,32,1,parent_func
-hls_transform_tree_hls,0,484,tu_intra_pred_mode,out,32,1,parent_func
-hls_transform_tree_hls,0,488,tu_intra_pred_mode_c,out,32,1,parent_func
-hls_transform_tree_hls,1,508,pu_chroma_mode_c_0,in,8,4,(complete partition) parent_func
-hls_transform_tree_hls,1,509,pu_chroma_mode_c_1,in,8,4,(complete partition) parent_func
-hls_transform_tree_hls,1,510,pu_chroma_mode_c_2,in,8,4,(complete partition) parent_func
-hls_transform_tree_hls,1,511,pu_chroma_mode_c_3,in,8,4,(complete partition) parent_func
-hls_transform_tree_hls,1,512,pu_intra_pred_mode_0,in,8,4,(complete partition) parent_func
-hls_transform_tree_hls,1,513,pu_intra_pred_mode_1,in,8,4,(complete partition) parent_func
-hls_transform_tree_hls,1,514,pu_intra_pred_mode_2,in,8,4,(complete partition) parent_func
-hls_transform_tree_hls,1,515,pu_intra_pred_mode_3,in,8,4,(complete partition) parent_func
-hls_transform_tree_hls,1,516,pu_intra_pred_mode_c_0,in,8,4,(complete partition) parent_func
-hls_transform_tree_hls,1,517,pu_intra_pred_mode_c_1,in,8,4,(complete partition) parent_func
-hls_transform_tree_hls,1,518,pu_intra_pred_mode_c_2,in,8,4,(complete partition) parent_func
-hls_transform_tree_hls,1,519,pu_intra_pred_mode_c_3,in,8,4,(complete partition) parent_func
-hls_transform_tree_hls,0,568,intra_split_flag,in,8,1,parent_func
-hls_transform_tree_hls,0,364,log2_max_trafo_size,in,32,1,parent_func
-hls_transform_tree_hls,0,376,log2_min_tb_size,in,32,1,parent_func
-hls_transform_tree_hls,0,576,max_trafo_depth,in,8,1,parent_func
-hls_transform_tree_hls,0,380,max_transform_hierarchy_depth_inter,in,32,1,parent_func
-hls_transform_tree_hls,0,560,pred_mode,in,8,1,parent_func
-hls_transform_tree_hls,0,564,part_mode,in,8,1,parent_func
-hls_transform_tree_hls,0,324,chroma_array_type,in,32,1,parent_func
-hls_transform_tree_hls,0,328,chroma_format_idc,in,32,1,parent_func
-hls_transform_tree_hls,0,20,cbf_luma_i,in,32,1,parent_func
-hls_transform_tree_hls,0,20,cbf_luma_o,out,32,1,parent_func
-hls_transform_tree_hls,0,1328,rv_hls_transform_unit,in,32,1,parent_func
-hls_transform_tree_hls,0,1332,rv_ff_hevc_deblocking_boundary_strengths,in,32,1,parent_func
-hls_transform_tree_hls,0,1336,rv_set_deblocking_bypass,in,32,1,parent_func
-hls_transform_tree_hls,0,1236,rv_callback_flag,in,32,1,parent_func
-hls_transform_tree_hls,0,388,min_tb_width,in,32,1,parent_func
-hls_transform_tree_hls,0,360,log2_ctb_size,in,32,1,parent_func
-#hls_transform_tree_hls,0,0,dc_luma_p,in,32,1,apcall_arg_dcache_pointer
-#hls_transform_tree_hls_dup1,0,0,tid,in,32,1,apcall_arg
-#hls_transform_tree_hls_dup1,0,0,x0,in,32,1,apcall_arg
-#hls_transform_tree_hls_dup1,0,0,y0,in,32,1,apcall_arg
-hls_transform_tree_hls_dup1,0,168,log2_trafo_size,out,32,1,parent_func
-#hls_transform_tree_hls_dup1,0,0,s_log2_trafo_size,in,32,1,apcall_arg
-hls_transform_tree_hls_dup1,0,12,split_transform_flag,out,8,1,parent_func
-hls_transform_tree_hls_dup1,0,16,cbf_data,out,8,1,parent_func
-hls_transform_tree_hls_dup1,0,1160,disable_deblocking_filter_flag,in,8,1,parent_func
-hls_transform_tree_hls_dup1,0,440,transquant_bypass_enable_flag,in,8,1,parent_func
-hls_transform_tree_hls_dup1,0,572,cu_transquant_bypass_flag,in,8,1,parent_func
-hls_transform_tree_hls_dup1,0,480,tu_chroma_mode_c,out,32,1,parent_func
-hls_transform_tree_hls_dup1,0,484,tu_intra_pred_mode,out,32,1,parent_func
-hls_transform_tree_hls_dup1,0,488,tu_intra_pred_mode_c,out,32,1,parent_func
-hls_transform_tree_hls_dup1,1,508,pu_chroma_mode_c_0,in,8,4,(complete partition) parent_func
-hls_transform_tree_hls_dup1,1,509,pu_chroma_mode_c_1,in,8,4,(complete partition) parent_func
-hls_transform_tree_hls_dup1,1,510,pu_chroma_mode_c_2,in,8,4,(complete partition) parent_func
-hls_transform_tree_hls_dup1,1,511,pu_chroma_mode_c_3,in,8,4,(complete partition) parent_func
-hls_transform_tree_hls_dup1,1,512,pu_intra_pred_mode_0,in,8,4,(complete partition) parent_func
-hls_transform_tree_hls_dup1,1,513,pu_intra_pred_mode_1,in,8,4,(complete partition) parent_func
-hls_transform_tree_hls_dup1,1,514,pu_intra_pred_mode_2,in,8,4,(complete partition) parent_func
-hls_transform_tree_hls_dup1,1,515,pu_intra_pred_mode_3,in,8,4,(complete partition) parent_func
-hls_transform_tree_hls_dup1,1,516,pu_intra_pred_mode_c_0,in,8,4,(complete partition) parent_func
-hls_transform_tree_hls_dup1,1,517,pu_intra_pred_mode_c_1,in,8,4,(complete partition) parent_func
-hls_transform_tree_hls_dup1,1,518,pu_intra_pred_mode_c_2,in,8,4,(complete partition) parent_func
-hls_transform_tree_hls_dup1,1,519,pu_intra_pred_mode_c_3,in,8,4,(complete partition) parent_func
-hls_transform_tree_hls_dup1,0,568,intra_split_flag,in,8,1,parent_func
-hls_transform_tree_hls_dup1,0,364,log2_max_trafo_size,in,32,1,parent_func
-hls_transform_tree_hls_dup1,0,376,log2_min_tb_size,in,32,1,parent_func
-hls_transform_tree_hls_dup1,0,576,max_trafo_depth,in,8,1,parent_func
-hls_transform_tree_hls_dup1,0,380,max_transform_hierarchy_depth_inter,in,32,1,parent_func
-hls_transform_tree_hls_dup1,0,560,pred_mode,in,8,1,parent_func
-hls_transform_tree_hls_dup1,0,564,part_mode,in,8,1,parent_func
-hls_transform_tree_hls_dup1,0,324,chroma_array_type,in,32,1,parent_func
-hls_transform_tree_hls_dup1,0,328,chroma_format_idc,in,32,1,parent_func
-hls_transform_tree_hls_dup1,0,20,cbf_luma_i,in,32,1,parent_func
-hls_transform_tree_hls_dup1,0,20,cbf_luma_o,out,32,1,parent_func
-hls_transform_tree_hls_dup1,0,1328,rv_hls_transform_unit,in,32,1,parent_func
-hls_transform_tree_hls_dup1,0,1332,rv_ff_hevc_deblocking_boundary_strengths,in,32,1,parent_func
-hls_transform_tree_hls_dup1,0,1336,rv_set_deblocking_bypass,in,32,1,parent_func
-hls_transform_tree_hls_dup1,0,1236,rv_callback_flag,in,32,1,parent_func
-hls_transform_tree_hls_dup1,0,388,min_tb_width,in,32,1,parent_func
-hls_transform_tree_hls_dup1,0,360,log2_ctb_size,in,32,1,parent_func
-#hls_transform_tree_hls_dup1,0,0,dc_luma_p,in,32,1,apcall_arg_dcache_pointer
-#hls_transform_tree_hls_dup2,0,0,tid,in,32,1,apcall_arg
-#hls_transform_tree_hls_dup2,0,0,x0,in,32,1,apcall_arg
-#hls_transform_tree_hls_dup2,0,0,y0,in,32,1,apcall_arg
-hls_transform_tree_hls_dup2,0,168,log2_trafo_size,out,32,1,parent_func
-#hls_transform_tree_hls_dup2,0,0,s_log2_trafo_size,in,32,1,apcall_arg
-hls_transform_tree_hls_dup2,0,12,split_transform_flag,out,8,1,parent_func
-hls_transform_tree_hls_dup2,0,16,cbf_data,out,8,1,parent_func
-hls_transform_tree_hls_dup2,0,1160,disable_deblocking_filter_flag,in,8,1,parent_func
-hls_transform_tree_hls_dup2,0,440,transquant_bypass_enable_flag,in,8,1,parent_func
-hls_transform_tree_hls_dup2,0,572,cu_transquant_bypass_flag,in,8,1,parent_func
-hls_transform_tree_hls_dup2,0,480,tu_chroma_mode_c,out,32,1,parent_func
-hls_transform_tree_hls_dup2,0,484,tu_intra_pred_mode,out,32,1,parent_func
-hls_transform_tree_hls_dup2,0,488,tu_intra_pred_mode_c,out,32,1,parent_func
-hls_transform_tree_hls_dup2,1,508,pu_chroma_mode_c_0,in,8,4,(complete partition) parent_func
-hls_transform_tree_hls_dup2,1,509,pu_chroma_mode_c_1,in,8,4,(complete partition) parent_func
-hls_transform_tree_hls_dup2,1,510,pu_chroma_mode_c_2,in,8,4,(complete partition) parent_func
-hls_transform_tree_hls_dup2,1,511,pu_chroma_mode_c_3,in,8,4,(complete partition) parent_func
-hls_transform_tree_hls_dup2,1,512,pu_intra_pred_mode_0,in,8,4,(complete partition) parent_func
-hls_transform_tree_hls_dup2,1,513,pu_intra_pred_mode_1,in,8,4,(complete partition) parent_func
-hls_transform_tree_hls_dup2,1,514,pu_intra_pred_mode_2,in,8,4,(complete partition) parent_func
-hls_transform_tree_hls_dup2,1,515,pu_intra_pred_mode_3,in,8,4,(complete partition) parent_func
-hls_transform_tree_hls_dup2,1,516,pu_intra_pred_mode_c_0,in,8,4,(complete partition) parent_func
-hls_transform_tree_hls_dup2,1,517,pu_intra_pred_mode_c_1,in,8,4,(complete partition) parent_func
-hls_transform_tree_hls_dup2,1,518,pu_intra_pred_mode_c_2,in,8,4,(complete partition) parent_func
-hls_transform_tree_hls_dup2,1,519,pu_intra_pred_mode_c_3,in,8,4,(complete partition) parent_func
-hls_transform_tree_hls_dup2,0,568,intra_split_flag,in,8,1,parent_func
-hls_transform_tree_hls_dup2,0,364,log2_max_trafo_size,in,32,1,parent_func
-hls_transform_tree_hls_dup2,0,376,log2_min_tb_size,in,32,1,parent_func
-hls_transform_tree_hls_dup2,0,576,max_trafo_depth,in,8,1,parent_func
-hls_transform_tree_hls_dup2,0,380,max_transform_hierarchy_depth_inter,in,32,1,parent_func
-hls_transform_tree_hls_dup2,0,560,pred_mode,in,8,1,parent_func
-hls_transform_tree_hls_dup2,0,564,part_mode,in,8,1,parent_func
-hls_transform_tree_hls_dup2,0,324,chroma_array_type,in,32,1,parent_func
-hls_transform_tree_hls_dup2,0,328,chroma_format_idc,in,32,1,parent_func
-hls_transform_tree_hls_dup2,0,20,cbf_luma_i,in,32,1,parent_func
-hls_transform_tree_hls_dup2,0,20,cbf_luma_o,out,32,1,parent_func
-hls_transform_tree_hls_dup2,0,1328,rv_hls_transform_unit,in,32,1,parent_func
-hls_transform_tree_hls_dup2,0,1332,rv_ff_hevc_deblocking_boundary_strengths,in,32,1,parent_func
-hls_transform_tree_hls_dup2,0,1336,rv_set_deblocking_bypass,in,32,1,parent_func
-hls_transform_tree_hls_dup2,0,1236,rv_callback_flag,in,32,1,parent_func
-hls_transform_tree_hls_dup2,0,388,min_tb_width,in,32,1,parent_func
-hls_transform_tree_hls_dup2,0,360,log2_ctb_size,in,32,1,parent_func
-#hls_transform_tree_hls_dup2,0,0,dc_luma_p,in,32,1,apcall_arg_dcache_pointer
-#hls_transform_tree_hls_dup3,0,0,tid,in,32,1,apcall_arg
-#hls_transform_tree_hls_dup3,0,0,x0,in,32,1,apcall_arg
-#hls_transform_tree_hls_dup3,0,0,y0,in,32,1,apcall_arg
-hls_transform_tree_hls_dup3,0,168,log2_trafo_size,out,32,1,parent_func
-#hls_transform_tree_hls_dup3,0,0,s_log2_trafo_size,in,32,1,apcall_arg
-hls_transform_tree_hls_dup3,0,12,split_transform_flag,out,8,1,parent_func
-hls_transform_tree_hls_dup3,0,16,cbf_data,out,8,1,parent_func
-hls_transform_tree_hls_dup3,0,1160,disable_deblocking_filter_flag,in,8,1,parent_func
-hls_transform_tree_hls_dup3,0,440,transquant_bypass_enable_flag,in,8,1,parent_func
-hls_transform_tree_hls_dup3,0,572,cu_transquant_bypass_flag,in,8,1,parent_func
-hls_transform_tree_hls_dup3,0,480,tu_chroma_mode_c,out,32,1,parent_func
-hls_transform_tree_hls_dup3,0,484,tu_intra_pred_mode,out,32,1,parent_func
-hls_transform_tree_hls_dup3,0,488,tu_intra_pred_mode_c,out,32,1,parent_func
-hls_transform_tree_hls_dup3,1,508,pu_chroma_mode_c_0,in,8,4,(complete partition) parent_func
-hls_transform_tree_hls_dup3,1,509,pu_chroma_mode_c_1,in,8,4,(complete partition) parent_func
-hls_transform_tree_hls_dup3,1,510,pu_chroma_mode_c_2,in,8,4,(complete partition) parent_func
-hls_transform_tree_hls_dup3,1,511,pu_chroma_mode_c_3,in,8,4,(complete partition) parent_func
-hls_transform_tree_hls_dup3,1,512,pu_intra_pred_mode_0,in,8,4,(complete partition) parent_func
-hls_transform_tree_hls_dup3,1,513,pu_intra_pred_mode_1,in,8,4,(complete partition) parent_func
-hls_transform_tree_hls_dup3,1,514,pu_intra_pred_mode_2,in,8,4,(complete partition) parent_func
-hls_transform_tree_hls_dup3,1,515,pu_intra_pred_mode_3,in,8,4,(complete partition) parent_func
-hls_transform_tree_hls_dup3,1,516,pu_intra_pred_mode_c_0,in,8,4,(complete partition) parent_func
-hls_transform_tree_hls_dup3,1,517,pu_intra_pred_mode_c_1,in,8,4,(complete partition) parent_func
-hls_transform_tree_hls_dup3,1,518,pu_intra_pred_mode_c_2,in,8,4,(complete partition) parent_func
-hls_transform_tree_hls_dup3,1,519,pu_intra_pred_mode_c_3,in,8,4,(complete partition) parent_func
-hls_transform_tree_hls_dup3,0,568,intra_split_flag,in,8,1,parent_func
-hls_transform_tree_hls_dup3,0,364,log2_max_trafo_size,in,32,1,parent_func
-hls_transform_tree_hls_dup3,0,376,log2_min_tb_size,in,32,1,parent_func
-hls_transform_tree_hls_dup3,0,576,max_trafo_depth,in,8,1,parent_func
-hls_transform_tree_hls_dup3,0,380,max_transform_hierarchy_depth_inter,in,32,1,parent_func
-hls_transform_tree_hls_dup3,0,560,pred_mode,in,8,1,parent_func
-hls_transform_tree_hls_dup3,0,564,part_mode,in,8,1,parent_func
-hls_transform_tree_hls_dup3,0,324,chroma_array_type,in,32,1,parent_func
-hls_transform_tree_hls_dup3,0,328,chroma_format_idc,in,32,1,parent_func
-hls_transform_tree_hls_dup3,0,20,cbf_luma_i,in,32,1,parent_func
-hls_transform_tree_hls_dup3,0,20,cbf_luma_o,out,32,1,parent_func
-hls_transform_tree_hls_dup3,0,1328,rv_hls_transform_unit,in,32,1,parent_func
-hls_transform_tree_hls_dup3,0,1332,rv_ff_hevc_deblocking_boundary_strengths,in,32,1,parent_func
-hls_transform_tree_hls_dup3,0,1336,rv_set_deblocking_bypass,in,32,1,parent_func
-hls_transform_tree_hls_dup3,0,1236,rv_callback_flag,in,32,1,parent_func
-hls_transform_tree_hls_dup3,0,388,min_tb_width,in,32,1,parent_func
-hls_transform_tree_hls_dup3,0,360,log2_ctb_size,in,32,1,parent_func
-#hls_transform_tree_hls_dup3,0,0,dc_luma_p,in,32,1,apcall_arg_dcache_pointer
-#hls_coding_quadtree_hls,0,0,tid,in,32,1,apcall_arg
-#hls_coding_quadtree_hls,0,0,x0,in,32,1,apcall_arg
-#hls_coding_quadtree_hls,0,0,y0,in,32,1,apcall_arg
-#hls_coding_quadtree_hls,0,0,log2_cb_size,in,32,1,apcall_arg
-#hls_coding_quadtree_hls,0,0,cb_depth,in,32,1,apcall_arg
-hls_coding_quadtree_hls,0,300,x1_i,in,32,1,parent_func
-hls_coding_quadtree_hls,0,300,x1_o,out,32,1,parent_func
-hls_coding_quadtree_hls,0,304,y1_i,in,32,1,parent_func
-hls_coding_quadtree_hls,0,304,y1_o,out,32,1,parent_func
-hls_coding_quadtree_hls,0,312,log2_cb_size_minus_one_i,in,32,1,parent_func
-hls_coding_quadtree_hls,0,312,log2_cb_size_minus_one_o,out,32,1,parent_func
-hls_coding_quadtree_hls,0,316,cb_depth_plus_one_i,in,32,1,parent_func
-hls_coding_quadtree_hls,0,316,cb_depth_plus_one_o,out,32,1,parent_func
-hls_coding_quadtree_hls,0,408,width,in,32,1,parent_func
-hls_coding_quadtree_hls,0,332,height,in,32,1,parent_func
-hls_coding_quadtree_hls,0,292,split_cu_flag_i,in,32,1,parent_func
-hls_coding_quadtree_hls,0,292,split_cu_flag_o,out,32,1,parent_func
-hls_coding_quadtree_hls,0,296,more_data_i,in,32,1,parent_func
-hls_coding_quadtree_hls,0,296,more_data_o,out,32,1,parent_func
-hls_coding_quadtree_hls,0,1324,rv_hls_coding_unit,in,32,1,parent_func
-hls_coding_quadtree_hls,0,1236,rv_callback_flag,in,32,1,parent_func
-hls_coding_quadtree_hls,0,360,log2_ctb_size,in,32,1,parent_func
-hls_coding_quadtree_hls,0,540,qPy_pred,out,32,1,parent_func
-hls_coding_quadtree_hls,0,536,qp_y,in,8,1,parent_func
-hls_coding_quadtree_hls,0,40,qp_block_mask_i,in,32,1,parent_func
-hls_coding_quadtree_hls,0,40,qp_block_mask_o,out,32,1,parent_func
-hls_coding_quadtree_hls,0,308,cb_size_split_i,in,32,1,parent_func
-hls_coding_quadtree_hls,0,308,cb_size_split_o,out,32,1,parent_func
-hls_coding_quadtree_hls,0,368,log2_min_cb_size,in,32,1,parent_func
-hls_coding_quadtree_hls,0,392,min_cb_width,in,32,1,parent_func
-hls_coding_quadtree_hls,0,476,tu_is_cu_qp_delta_coded,out,8,1,parent_func
-hls_coding_quadtree_hls,0,468,tu_cu_qp_delta,out,32,1,parent_func
-hls_coding_quadtree_hls,0,472,tu_is_cu_chroma_qp_offset_coded,out,8,1,parent_func
-hls_coding_quadtree_hls,0,464,depth,out,32,1,parent_func
-hls_coding_quadtree_hls,0,608,ctb_left_flag,in,8,1,parent_func
-hls_coding_quadtree_hls,0,604,ctb_up_flag,in,8,1,parent_func
-hls_coding_quadtree_hls,0,428,cu_qp_delta_enabled_flag,in,8,1,parent_func
-hls_coding_quadtree_hls,0,436,diff_cu_qp_delta_depth,in,32,1,parent_func
-hls_coding_quadtree_hls,0,448,cu_chroma_qp_offset_enabled_flag,in,8,1,parent_func
-hls_coding_quadtree_hls,0,432,diff_cu_chroma_qp_offset_depth,in,8,1,parent_func
-hls_coding_quadtree_hls,0,1280,dc_tab_ct_depth_p,in,32,1,xmem_dcache_pointer parent_func
-#hls_coding_quadtree_hls_dup1,0,0,tid,in,32,1,apcall_arg
-#hls_coding_quadtree_hls_dup1,0,0,x0,in,32,1,apcall_arg
-#hls_coding_quadtree_hls_dup1,0,0,y0,in,32,1,apcall_arg
-#hls_coding_quadtree_hls_dup1,0,0,log2_cb_size,in,32,1,apcall_arg
-#hls_coding_quadtree_hls_dup1,0,0,cb_depth,in,32,1,apcall_arg
-hls_coding_quadtree_hls_dup1,0,300,x1_i,in,32,1,parent_func
-hls_coding_quadtree_hls_dup1,0,300,x1_o,out,32,1,parent_func
-hls_coding_quadtree_hls_dup1,0,304,y1_i,in,32,1,parent_func
-hls_coding_quadtree_hls_dup1,0,304,y1_o,out,32,1,parent_func
-hls_coding_quadtree_hls_dup1,0,312,log2_cb_size_minus_one_i,in,32,1,parent_func
-hls_coding_quadtree_hls_dup1,0,312,log2_cb_size_minus_one_o,out,32,1,parent_func
-hls_coding_quadtree_hls_dup1,0,316,cb_depth_plus_one_i,in,32,1,parent_func
-hls_coding_quadtree_hls_dup1,0,316,cb_depth_plus_one_o,out,32,1,parent_func
-hls_coding_quadtree_hls_dup1,0,408,width,in,32,1,parent_func
-hls_coding_quadtree_hls_dup1,0,332,height,in,32,1,parent_func
-hls_coding_quadtree_hls_dup1,0,292,split_cu_flag_i,in,32,1,parent_func
-hls_coding_quadtree_hls_dup1,0,292,split_cu_flag_o,out,32,1,parent_func
-hls_coding_quadtree_hls_dup1,0,296,more_data_i,in,32,1,parent_func
-hls_coding_quadtree_hls_dup1,0,296,more_data_o,out,32,1,parent_func
-hls_coding_quadtree_hls_dup1,0,1324,rv_hls_coding_unit,in,32,1,parent_func
-hls_coding_quadtree_hls_dup1,0,1236,rv_callback_flag,in,32,1,parent_func
-hls_coding_quadtree_hls_dup1,0,360,log2_ctb_size,in,32,1,parent_func
-hls_coding_quadtree_hls_dup1,0,540,qPy_pred,out,32,1,parent_func
-hls_coding_quadtree_hls_dup1,0,536,qp_y,in,8,1,parent_func
-hls_coding_quadtree_hls_dup1,0,40,qp_block_mask_i,in,32,1,parent_func
-hls_coding_quadtree_hls_dup1,0,40,qp_block_mask_o,out,32,1,parent_func
-hls_coding_quadtree_hls_dup1,0,308,cb_size_split_i,in,32,1,parent_func
-hls_coding_quadtree_hls_dup1,0,308,cb_size_split_o,out,32,1,parent_func
-hls_coding_quadtree_hls_dup1,0,368,log2_min_cb_size,in,32,1,parent_func
-hls_coding_quadtree_hls_dup1,0,392,min_cb_width,in,32,1,parent_func
-hls_coding_quadtree_hls_dup1,0,476,tu_is_cu_qp_delta_coded,out,8,1,parent_func
-hls_coding_quadtree_hls_dup1,0,468,tu_cu_qp_delta,out,32,1,parent_func
-hls_coding_quadtree_hls_dup1,0,472,tu_is_cu_chroma_qp_offset_coded,out,8,1,parent_func
-hls_coding_quadtree_hls_dup1,0,464,depth,out,32,1,parent_func
-hls_coding_quadtree_hls_dup1,0,608,ctb_left_flag,in,8,1,parent_func
-hls_coding_quadtree_hls_dup1,0,604,ctb_up_flag,in,8,1,parent_func
-hls_coding_quadtree_hls_dup1,0,428,cu_qp_delta_enabled_flag,in,8,1,parent_func
-hls_coding_quadtree_hls_dup1,0,436,diff_cu_qp_delta_depth,in,32,1,parent_func
-hls_coding_quadtree_hls_dup1,0,448,cu_chroma_qp_offset_enabled_flag,in,8,1,parent_func
-hls_coding_quadtree_hls_dup1,0,432,diff_cu_chroma_qp_offset_depth,in,8,1,parent_func
-hls_coding_quadtree_hls_dup1,0,1280,dc_tab_ct_depth_p,in,32,1,xmem_dcache_pointer parent_func
-#hls_coding_quadtree_hls_dup2,0,0,tid,in,32,1,apcall_arg
-#hls_coding_quadtree_hls_dup2,0,0,x0,in,32,1,apcall_arg
-#hls_coding_quadtree_hls_dup2,0,0,y0,in,32,1,apcall_arg
-#hls_coding_quadtree_hls_dup2,0,0,log2_cb_size,in,32,1,apcall_arg
-#hls_coding_quadtree_hls_dup2,0,0,cb_depth,in,32,1,apcall_arg
-hls_coding_quadtree_hls_dup2,0,300,x1_i,in,32,1,parent_func
-hls_coding_quadtree_hls_dup2,0,300,x1_o,out,32,1,parent_func
-hls_coding_quadtree_hls_dup2,0,304,y1_i,in,32,1,parent_func
-hls_coding_quadtree_hls_dup2,0,304,y1_o,out,32,1,parent_func
-hls_coding_quadtree_hls_dup2,0,312,log2_cb_size_minus_one_i,in,32,1,parent_func
-hls_coding_quadtree_hls_dup2,0,312,log2_cb_size_minus_one_o,out,32,1,parent_func
-hls_coding_quadtree_hls_dup2,0,316,cb_depth_plus_one_i,in,32,1,parent_func
-hls_coding_quadtree_hls_dup2,0,316,cb_depth_plus_one_o,out,32,1,parent_func
-hls_coding_quadtree_hls_dup2,0,408,width,in,32,1,parent_func
-hls_coding_quadtree_hls_dup2,0,332,height,in,32,1,parent_func
-hls_coding_quadtree_hls_dup2,0,292,split_cu_flag_i,in,32,1,parent_func
-hls_coding_quadtree_hls_dup2,0,292,split_cu_flag_o,out,32,1,parent_func
-hls_coding_quadtree_hls_dup2,0,296,more_data_i,in,32,1,parent_func
-hls_coding_quadtree_hls_dup2,0,296,more_data_o,out,32,1,parent_func
-hls_coding_quadtree_hls_dup2,0,1324,rv_hls_coding_unit,in,32,1,parent_func
-hls_coding_quadtree_hls_dup2,0,1236,rv_callback_flag,in,32,1,parent_func
-hls_coding_quadtree_hls_dup2,0,360,log2_ctb_size,in,32,1,parent_func
-hls_coding_quadtree_hls_dup2,0,540,qPy_pred,out,32,1,parent_func
-hls_coding_quadtree_hls_dup2,0,536,qp_y,in,8,1,parent_func
-hls_coding_quadtree_hls_dup2,0,40,qp_block_mask_i,in,32,1,parent_func
-hls_coding_quadtree_hls_dup2,0,40,qp_block_mask_o,out,32,1,parent_func
-hls_coding_quadtree_hls_dup2,0,308,cb_size_split_i,in,32,1,parent_func
-hls_coding_quadtree_hls_dup2,0,308,cb_size_split_o,out,32,1,parent_func
-hls_coding_quadtree_hls_dup2,0,368,log2_min_cb_size,in,32,1,parent_func
-hls_coding_quadtree_hls_dup2,0,392,min_cb_width,in,32,1,parent_func
-hls_coding_quadtree_hls_dup2,0,476,tu_is_cu_qp_delta_coded,out,8,1,parent_func
-hls_coding_quadtree_hls_dup2,0,468,tu_cu_qp_delta,out,32,1,parent_func
-hls_coding_quadtree_hls_dup2,0,472,tu_is_cu_chroma_qp_offset_coded,out,8,1,parent_func
-hls_coding_quadtree_hls_dup2,0,464,depth,out,32,1,parent_func
-hls_coding_quadtree_hls_dup2,0,608,ctb_left_flag,in,8,1,parent_func
-hls_coding_quadtree_hls_dup2,0,604,ctb_up_flag,in,8,1,parent_func
-hls_coding_quadtree_hls_dup2,0,428,cu_qp_delta_enabled_flag,in,8,1,parent_func
-hls_coding_quadtree_hls_dup2,0,436,diff_cu_qp_delta_depth,in,32,1,parent_func
-hls_coding_quadtree_hls_dup2,0,448,cu_chroma_qp_offset_enabled_flag,in,8,1,parent_func
-hls_coding_quadtree_hls_dup2,0,432,diff_cu_chroma_qp_offset_depth,in,8,1,parent_func
-hls_coding_quadtree_hls_dup2,0,1280,dc_tab_ct_depth_p,in,32,1,xmem_dcache_pointer parent_func
-#hls_coding_quadtree_hls_dup3,0,0,tid,in,32,1,apcall_arg
-#hls_coding_quadtree_hls_dup3,0,0,x0,in,32,1,apcall_arg
-#hls_coding_quadtree_hls_dup3,0,0,y0,in,32,1,apcall_arg
-#hls_coding_quadtree_hls_dup3,0,0,log2_cb_size,in,32,1,apcall_arg
-#hls_coding_quadtree_hls_dup3,0,0,cb_depth,in,32,1,apcall_arg
-hls_coding_quadtree_hls_dup3,0,300,x1_i,in,32,1,parent_func
-hls_coding_quadtree_hls_dup3,0,300,x1_o,out,32,1,parent_func
-hls_coding_quadtree_hls_dup3,0,304,y1_i,in,32,1,parent_func
-hls_coding_quadtree_hls_dup3,0,304,y1_o,out,32,1,parent_func
-hls_coding_quadtree_hls_dup3,0,312,log2_cb_size_minus_one_i,in,32,1,parent_func
-hls_coding_quadtree_hls_dup3,0,312,log2_cb_size_minus_one_o,out,32,1,parent_func
-hls_coding_quadtree_hls_dup3,0,316,cb_depth_plus_one_i,in,32,1,parent_func
-hls_coding_quadtree_hls_dup3,0,316,cb_depth_plus_one_o,out,32,1,parent_func
-hls_coding_quadtree_hls_dup3,0,408,width,in,32,1,parent_func
-hls_coding_quadtree_hls_dup3,0,332,height,in,32,1,parent_func
-hls_coding_quadtree_hls_dup3,0,292,split_cu_flag_i,in,32,1,parent_func
-hls_coding_quadtree_hls_dup3,0,292,split_cu_flag_o,out,32,1,parent_func
-hls_coding_quadtree_hls_dup3,0,296,more_data_i,in,32,1,parent_func
-hls_coding_quadtree_hls_dup3,0,296,more_data_o,out,32,1,parent_func
-hls_coding_quadtree_hls_dup3,0,1324,rv_hls_coding_unit,in,32,1,parent_func
-hls_coding_quadtree_hls_dup3,0,1236,rv_callback_flag,in,32,1,parent_func
-hls_coding_quadtree_hls_dup3,0,360,log2_ctb_size,in,32,1,parent_func
-hls_coding_quadtree_hls_dup3,0,540,qPy_pred,out,32,1,parent_func
-hls_coding_quadtree_hls_dup3,0,536,qp_y,in,8,1,parent_func
-hls_coding_quadtree_hls_dup3,0,40,qp_block_mask_i,in,32,1,parent_func
-hls_coding_quadtree_hls_dup3,0,40,qp_block_mask_o,out,32,1,parent_func
-hls_coding_quadtree_hls_dup3,0,308,cb_size_split_i,in,32,1,parent_func
-hls_coding_quadtree_hls_dup3,0,308,cb_size_split_o,out,32,1,parent_func
-hls_coding_quadtree_hls_dup3,0,368,log2_min_cb_size,in,32,1,parent_func
-hls_coding_quadtree_hls_dup3,0,392,min_cb_width,in,32,1,parent_func
-hls_coding_quadtree_hls_dup3,0,476,tu_is_cu_qp_delta_coded,out,8,1,parent_func
-hls_coding_quadtree_hls_dup3,0,468,tu_cu_qp_delta,out,32,1,parent_func
-hls_coding_quadtree_hls_dup3,0,472,tu_is_cu_chroma_qp_offset_coded,out,8,1,parent_func
-hls_coding_quadtree_hls_dup3,0,464,depth,out,32,1,parent_func
-hls_coding_quadtree_hls_dup3,0,608,ctb_left_flag,in,8,1,parent_func
-hls_coding_quadtree_hls_dup3,0,604,ctb_up_flag,in,8,1,parent_func
-hls_coding_quadtree_hls_dup3,0,428,cu_qp_delta_enabled_flag,in,8,1,parent_func
-hls_coding_quadtree_hls_dup3,0,436,diff_cu_qp_delta_depth,in,32,1,parent_func
-hls_coding_quadtree_hls_dup3,0,448,cu_chroma_qp_offset_enabled_flag,in,8,1,parent_func
-hls_coding_quadtree_hls_dup3,0,432,diff_cu_chroma_qp_offset_depth,in,8,1,parent_func
-hls_coding_quadtree_hls_dup3,0,1280,dc_tab_ct_depth_p,in,32,1,xmem_dcache_pointer parent_func
-#hls_coding_unit_hls,0,0,tid,in,32,1,apcall_arg
-#hls_coding_unit_hls,0,0,x0,in,32,1,apcall_arg
-#hls_coding_unit_hls,0,0,y0,in,32,1,apcall_arg
-#hls_coding_unit_hls,0,0,log2_cb_size,in,32,1,apcall_arg
-hls_coding_unit_hls,0,420,loop_filter_disable_flag,in,8,1,parent_func
-hls_coding_unit_hls,0,380,max_transform_hierarchy_depth_inter,in,32,1,parent_func
-hls_coding_unit_hls,0,1160,disable_deblocking_filter_flag,in,8,1,parent_func
-hls_coding_unit_hls,0,428,cu_qp_delta_enabled_flag,in,8,1,parent_func
-hls_coding_unit_hls,0,476,tu_is_cu_qp_delta_coded,in,8,1,parent_func
-hls_coding_unit_hls,0,572,cu_transquant_bypass_flag_i,in,8,1,parent_func
-hls_coding_unit_hls,0,572,cu_transquant_bypass_flag_o,out,8,1,parent_func
-hls_coding_unit_hls,0,28,pcm_flag_i,in,1,1,parent_func
-hls_coding_unit_hls,0,28,pcm_flag_o,out,1,1,parent_func
-hls_coding_unit_hls,0,504,merge_flag,in,8,1,parent_func
-hls_coding_unit_hls,0,560,pred_mode_i,in,8,1,parent_func
-hls_coding_unit_hls,0,560,pred_mode_o,out,8,1,parent_func
-hls_coding_unit_hls,0,564,part_mode_i,in,8,1,parent_func
-hls_coding_unit_hls,0,564,part_mode_o,out,8,1,parent_func
-hls_coding_unit_hls,0,576,max_trafo_depth,out,8,1,parent_func
-hls_coding_unit_hls,0,32,cb_size_i,in,32,1,parent_func
-hls_coding_unit_hls,0,32,cb_size_o,out,32,1,parent_func
-hls_coding_unit_hls,0,44,idx_i,in,32,1,parent_func
-hls_coding_unit_hls,0,44,idx_o,out,32,1,parent_func
-hls_coding_unit_hls,0,1164,xm_xBase,out,32,1,parent_func
-hls_coding_unit_hls,0,1168,xm_yBase,out,32,1,parent_func
-hls_coding_unit_hls,0,1172,xm_cb_xBase,out,32,1,parent_func
-hls_coding_unit_hls,0,1176,xm_cb_yBase,out,32,1,parent_func
-hls_coding_unit_hls,0,1180,xm_log2_cb_size,out,32,1,parent_func
-hls_coding_unit_hls,0,1336,rv_set_deblocking_bypass,in,32,1,parent_func
-hls_coding_unit_hls,0,1332,rv_ff_hevc_deblocking_boundary_strengths,in,32,1,parent_func
-hls_coding_unit_hls,0,1340,rv_hls_pcm_sample,in,32,1,parent_func
-hls_coding_unit_hls,0,1344,rv_hls_prediction_unit,in,32,1,parent_func
-hls_coding_unit_hls,0,1348,rv_hls_intra_prediction_unit,in,32,1,parent_func
-hls_coding_unit_hls,0,1352,rv_hls_transform_tree,in,32,1,parent_func
-hls_coding_unit_hls,0,1236,rv_callback_flag,in,32,1,parent_func
-hls_coding_unit_hls,0,36,length_r,out,32,1,parent_func
-hls_coding_unit_hls,0,544,xm_x,out,32,1,parent_func
-hls_coding_unit_hls,0,548,xm_y,out,32,1,parent_func
-hls_coding_unit_hls,1,512,pu_intra_pred_mode_0,out,8,4,(complete partition) parent_func
-hls_coding_unit_hls,1,513,pu_intra_pred_mode_1,out,8,4,(complete partition) parent_func
-hls_coding_unit_hls,1,514,pu_intra_pred_mode_2,out,8,4,(complete partition) parent_func
-hls_coding_unit_hls,1,515,pu_intra_pred_mode_3,out,8,4,(complete partition) parent_func
-hls_coding_unit_hls,0,540,qPy_pred,out,32,1,parent_func
-hls_coding_unit_hls,0,24,skip_flag_start,out,32,1,parent_func
-hls_coding_unit_hls,0,368,log2_min_cb_size,in,32,1,parent_func
-hls_coding_unit_hls,0,360,log2_ctb_size,in,32,1,parent_func
-hls_coding_unit_hls,0,436,diff_cu_qp_delta_depth,in,32,1,parent_func
-hls_coding_unit_hls,0,536,qp_y,in,8,1,parent_func
-hls_coding_unit_hls,0,440,transquant_bypass_enable_flag,in,8,1,parent_func
-hls_coding_unit_hls,0,392,min_cb_width,in,32,1,parent_func
-hls_coding_unit_hls,0,568,intra_split_flag,out,8,1,parent_func
-hls_coding_unit_hls,0,452,slice_type,in,8,1,parent_func
-hls_coding_unit_hls,0,608,ctb_left_flag,in,8,1,parent_func
-hls_coding_unit_hls,0,604,ctb_up_flag,in,8,1,parent_func
-hls_coding_unit_hls,0,320,amp_enabled_flag,in,8,1,parent_func
-hls_coding_unit_hls,0,400,pcm_enabled_flag,in,32,1,parent_func
-hls_coding_unit_hls,0,412,log2_min_pcm_cb_size,in,32,1,parent_func
-hls_coding_unit_hls,0,416,log2_max_pcm_cb_size,in,32,1,parent_func
-hls_coding_unit_hls,0,464,depth,in,32,1,parent_func
-hls_coding_unit_hls,0,1288,dc_skip_flag_p,in,32,1,xmem_dcache_pointer parent_func
-hls_coding_unit_hls,0,1272,dc_qp_y_tab_p,in,32,1,xmem_dcache_pointer parent_func
-hls_coding_unit_hls,0,1280,dc_tab_ct_depth_p,in,32,1,xmem_dcache_pointer parent_func
-#hls_coding_unit_hls_dup1,0,0,tid,in,32,1,apcall_arg
-#hls_coding_unit_hls_dup1,0,0,x0,in,32,1,apcall_arg
-#hls_coding_unit_hls_dup1,0,0,y0,in,32,1,apcall_arg
-#hls_coding_unit_hls_dup1,0,0,log2_cb_size,in,32,1,apcall_arg
-hls_coding_unit_hls_dup1,0,420,loop_filter_disable_flag,in,8,1,parent_func
-hls_coding_unit_hls_dup1,0,380,max_transform_hierarchy_depth_inter,in,32,1,parent_func
-hls_coding_unit_hls_dup1,0,1160,disable_deblocking_filter_flag,in,8,1,parent_func
-hls_coding_unit_hls_dup1,0,428,cu_qp_delta_enabled_flag,in,8,1,parent_func
-hls_coding_unit_hls_dup1,0,476,tu_is_cu_qp_delta_coded,in,8,1,parent_func
-hls_coding_unit_hls_dup1,0,572,cu_transquant_bypass_flag_i,in,8,1,parent_func
-hls_coding_unit_hls_dup1,0,572,cu_transquant_bypass_flag_o,out,8,1,parent_func
-hls_coding_unit_hls_dup1,0,28,pcm_flag_i,in,1,1,parent_func
-hls_coding_unit_hls_dup1,0,28,pcm_flag_o,out,1,1,parent_func
-hls_coding_unit_hls_dup1,0,504,merge_flag,in,8,1,parent_func
-hls_coding_unit_hls_dup1,0,560,pred_mode_i,in,8,1,parent_func
-hls_coding_unit_hls_dup1,0,560,pred_mode_o,out,8,1,parent_func
-hls_coding_unit_hls_dup1,0,564,part_mode_i,in,8,1,parent_func
-hls_coding_unit_hls_dup1,0,564,part_mode_o,out,8,1,parent_func
-hls_coding_unit_hls_dup1,0,576,max_trafo_depth,out,8,1,parent_func
-hls_coding_unit_hls_dup1,0,32,cb_size_i,in,32,1,parent_func
-hls_coding_unit_hls_dup1,0,32,cb_size_o,out,32,1,parent_func
-hls_coding_unit_hls_dup1,0,44,idx_i,in,32,1,parent_func
-hls_coding_unit_hls_dup1,0,44,idx_o,out,32,1,parent_func
-hls_coding_unit_hls_dup1,0,1164,xm_xBase,out,32,1,parent_func
-hls_coding_unit_hls_dup1,0,1168,xm_yBase,out,32,1,parent_func
-hls_coding_unit_hls_dup1,0,1172,xm_cb_xBase,out,32,1,parent_func
-hls_coding_unit_hls_dup1,0,1176,xm_cb_yBase,out,32,1,parent_func
-hls_coding_unit_hls_dup1,0,1180,xm_log2_cb_size,out,32,1,parent_func
-hls_coding_unit_hls_dup1,0,1336,rv_set_deblocking_bypass,in,32,1,parent_func
-hls_coding_unit_hls_dup1,0,1332,rv_ff_hevc_deblocking_boundary_strengths,in,32,1,parent_func
-hls_coding_unit_hls_dup1,0,1340,rv_hls_pcm_sample,in,32,1,parent_func
-hls_coding_unit_hls_dup1,0,1344,rv_hls_prediction_unit,in,32,1,parent_func
-hls_coding_unit_hls_dup1,0,1348,rv_hls_intra_prediction_unit,in,32,1,parent_func
-hls_coding_unit_hls_dup1,0,1352,rv_hls_transform_tree,in,32,1,parent_func
-hls_coding_unit_hls_dup1,0,1236,rv_callback_flag,in,32,1,parent_func
-hls_coding_unit_hls_dup1,0,36,length_r,out,32,1,parent_func
-hls_coding_unit_hls_dup1,0,544,xm_x,out,32,1,parent_func
-hls_coding_unit_hls_dup1,0,548,xm_y,out,32,1,parent_func
-hls_coding_unit_hls_dup1,1,512,pu_intra_pred_mode_0,out,8,4,(complete partition) parent_func
-hls_coding_unit_hls_dup1,1,513,pu_intra_pred_mode_1,out,8,4,(complete partition) parent_func
-hls_coding_unit_hls_dup1,1,514,pu_intra_pred_mode_2,out,8,4,(complete partition) parent_func
-hls_coding_unit_hls_dup1,1,515,pu_intra_pred_mode_3,out,8,4,(complete partition) parent_func
-hls_coding_unit_hls_dup1,0,540,qPy_pred,out,32,1,parent_func
-hls_coding_unit_hls_dup1,0,24,skip_flag_start,out,32,1,parent_func
-hls_coding_unit_hls_dup1,0,368,log2_min_cb_size,in,32,1,parent_func
-hls_coding_unit_hls_dup1,0,360,log2_ctb_size,in,32,1,parent_func
-hls_coding_unit_hls_dup1,0,436,diff_cu_qp_delta_depth,in,32,1,parent_func
-hls_coding_unit_hls_dup1,0,536,qp_y,in,8,1,parent_func
-hls_coding_unit_hls_dup1,0,440,transquant_bypass_enable_flag,in,8,1,parent_func
-hls_coding_unit_hls_dup1,0,392,min_cb_width,in,32,1,parent_func
-hls_coding_unit_hls_dup1,0,568,intra_split_flag,out,8,1,parent_func
-hls_coding_unit_hls_dup1,0,452,slice_type,in,8,1,parent_func
-hls_coding_unit_hls_dup1,0,608,ctb_left_flag,in,8,1,parent_func
-hls_coding_unit_hls_dup1,0,604,ctb_up_flag,in,8,1,parent_func
-hls_coding_unit_hls_dup1,0,320,amp_enabled_flag,in,8,1,parent_func
-hls_coding_unit_hls_dup1,0,400,pcm_enabled_flag,in,32,1,parent_func
-hls_coding_unit_hls_dup1,0,412,log2_min_pcm_cb_size,in,32,1,parent_func
-hls_coding_unit_hls_dup1,0,416,log2_max_pcm_cb_size,in,32,1,parent_func
-hls_coding_unit_hls_dup1,0,464,depth,in,32,1,parent_func
-hls_coding_unit_hls_dup1,0,1288,dc_skip_flag_p,in,32,1,xmem_dcache_pointer parent_func
-hls_coding_unit_hls_dup1,0,1272,dc_qp_y_tab_p,in,32,1,xmem_dcache_pointer parent_func
-hls_coding_unit_hls_dup1,0,1280,dc_tab_ct_depth_p,in,32,1,xmem_dcache_pointer parent_func
-#hls_coding_unit_hls_dup2,0,0,tid,in,32,1,apcall_arg
-#hls_coding_unit_hls_dup2,0,0,x0,in,32,1,apcall_arg
-#hls_coding_unit_hls_dup2,0,0,y0,in,32,1,apcall_arg
-#hls_coding_unit_hls_dup2,0,0,log2_cb_size,in,32,1,apcall_arg
-hls_coding_unit_hls_dup2,0,420,loop_filter_disable_flag,in,8,1,parent_func
-hls_coding_unit_hls_dup2,0,380,max_transform_hierarchy_depth_inter,in,32,1,parent_func
-hls_coding_unit_hls_dup2,0,1160,disable_deblocking_filter_flag,in,8,1,parent_func
-hls_coding_unit_hls_dup2,0,428,cu_qp_delta_enabled_flag,in,8,1,parent_func
-hls_coding_unit_hls_dup2,0,476,tu_is_cu_qp_delta_coded,in,8,1,parent_func
-hls_coding_unit_hls_dup2,0,572,cu_transquant_bypass_flag_i,in,8,1,parent_func
-hls_coding_unit_hls_dup2,0,572,cu_transquant_bypass_flag_o,out,8,1,parent_func
-hls_coding_unit_hls_dup2,0,28,pcm_flag_i,in,1,1,parent_func
-hls_coding_unit_hls_dup2,0,28,pcm_flag_o,out,1,1,parent_func
-hls_coding_unit_hls_dup2,0,504,merge_flag,in,8,1,parent_func
-hls_coding_unit_hls_dup2,0,560,pred_mode_i,in,8,1,parent_func
-hls_coding_unit_hls_dup2,0,560,pred_mode_o,out,8,1,parent_func
-hls_coding_unit_hls_dup2,0,564,part_mode_i,in,8,1,parent_func
-hls_coding_unit_hls_dup2,0,564,part_mode_o,out,8,1,parent_func
-hls_coding_unit_hls_dup2,0,576,max_trafo_depth,out,8,1,parent_func
-hls_coding_unit_hls_dup2,0,32,cb_size_i,in,32,1,parent_func
-hls_coding_unit_hls_dup2,0,32,cb_size_o,out,32,1,parent_func
-hls_coding_unit_hls_dup2,0,44,idx_i,in,32,1,parent_func
-hls_coding_unit_hls_dup2,0,44,idx_o,out,32,1,parent_func
-hls_coding_unit_hls_dup2,0,1164,xm_xBase,out,32,1,parent_func
-hls_coding_unit_hls_dup2,0,1168,xm_yBase,out,32,1,parent_func
-hls_coding_unit_hls_dup2,0,1172,xm_cb_xBase,out,32,1,parent_func
-hls_coding_unit_hls_dup2,0,1176,xm_cb_yBase,out,32,1,parent_func
-hls_coding_unit_hls_dup2,0,1180,xm_log2_cb_size,out,32,1,parent_func
-hls_coding_unit_hls_dup2,0,1336,rv_set_deblocking_bypass,in,32,1,parent_func
-hls_coding_unit_hls_dup2,0,1332,rv_ff_hevc_deblocking_boundary_strengths,in,32,1,parent_func
-hls_coding_unit_hls_dup2,0,1340,rv_hls_pcm_sample,in,32,1,parent_func
-hls_coding_unit_hls_dup2,0,1344,rv_hls_prediction_unit,in,32,1,parent_func
-hls_coding_unit_hls_dup2,0,1348,rv_hls_intra_prediction_unit,in,32,1,parent_func
-hls_coding_unit_hls_dup2,0,1352,rv_hls_transform_tree,in,32,1,parent_func
-hls_coding_unit_hls_dup2,0,1236,rv_callback_flag,in,32,1,parent_func
-hls_coding_unit_hls_dup2,0,36,length_r,out,32,1,parent_func
-hls_coding_unit_hls_dup2,0,544,xm_x,out,32,1,parent_func
-hls_coding_unit_hls_dup2,0,548,xm_y,out,32,1,parent_func
-hls_coding_unit_hls_dup2,1,512,pu_intra_pred_mode_0,out,8,4,(complete partition) parent_func
-hls_coding_unit_hls_dup2,1,513,pu_intra_pred_mode_1,out,8,4,(complete partition) parent_func
-hls_coding_unit_hls_dup2,1,514,pu_intra_pred_mode_2,out,8,4,(complete partition) parent_func
-hls_coding_unit_hls_dup2,1,515,pu_intra_pred_mode_3,out,8,4,(complete partition) parent_func
-hls_coding_unit_hls_dup2,0,540,qPy_pred,out,32,1,parent_func
-hls_coding_unit_hls_dup2,0,24,skip_flag_start,out,32,1,parent_func
-hls_coding_unit_hls_dup2,0,368,log2_min_cb_size,in,32,1,parent_func
-hls_coding_unit_hls_dup2,0,360,log2_ctb_size,in,32,1,parent_func
-hls_coding_unit_hls_dup2,0,436,diff_cu_qp_delta_depth,in,32,1,parent_func
-hls_coding_unit_hls_dup2,0,536,qp_y,in,8,1,parent_func
-hls_coding_unit_hls_dup2,0,440,transquant_bypass_enable_flag,in,8,1,parent_func
-hls_coding_unit_hls_dup2,0,392,min_cb_width,in,32,1,parent_func
-hls_coding_unit_hls_dup2,0,568,intra_split_flag,out,8,1,parent_func
-hls_coding_unit_hls_dup2,0,452,slice_type,in,8,1,parent_func
-hls_coding_unit_hls_dup2,0,608,ctb_left_flag,in,8,1,parent_func
-hls_coding_unit_hls_dup2,0,604,ctb_up_flag,in,8,1,parent_func
-hls_coding_unit_hls_dup2,0,320,amp_enabled_flag,in,8,1,parent_func
-hls_coding_unit_hls_dup2,0,400,pcm_enabled_flag,in,32,1,parent_func
-hls_coding_unit_hls_dup2,0,412,log2_min_pcm_cb_size,in,32,1,parent_func
-hls_coding_unit_hls_dup2,0,416,log2_max_pcm_cb_size,in,32,1,parent_func
-hls_coding_unit_hls_dup2,0,464,depth,in,32,1,parent_func
-hls_coding_unit_hls_dup2,0,1288,dc_skip_flag_p,in,32,1,xmem_dcache_pointer parent_func
-hls_coding_unit_hls_dup2,0,1272,dc_qp_y_tab_p,in,32,1,xmem_dcache_pointer parent_func
-hls_coding_unit_hls_dup2,0,1280,dc_tab_ct_depth_p,in,32,1,xmem_dcache_pointer parent_func
-#hls_coding_unit_hls_dup3,0,0,tid,in,32,1,apcall_arg
-#hls_coding_unit_hls_dup3,0,0,x0,in,32,1,apcall_arg
-#hls_coding_unit_hls_dup3,0,0,y0,in,32,1,apcall_arg
-#hls_coding_unit_hls_dup3,0,0,log2_cb_size,in,32,1,apcall_arg
-hls_coding_unit_hls_dup3,0,420,loop_filter_disable_flag,in,8,1,parent_func
-hls_coding_unit_hls_dup3,0,380,max_transform_hierarchy_depth_inter,in,32,1,parent_func
-hls_coding_unit_hls_dup3,0,1160,disable_deblocking_filter_flag,in,8,1,parent_func
-hls_coding_unit_hls_dup3,0,428,cu_qp_delta_enabled_flag,in,8,1,parent_func
-hls_coding_unit_hls_dup3,0,476,tu_is_cu_qp_delta_coded,in,8,1,parent_func
-hls_coding_unit_hls_dup3,0,572,cu_transquant_bypass_flag_i,in,8,1,parent_func
-hls_coding_unit_hls_dup3,0,572,cu_transquant_bypass_flag_o,out,8,1,parent_func
-hls_coding_unit_hls_dup3,0,28,pcm_flag_i,in,1,1,parent_func
-hls_coding_unit_hls_dup3,0,28,pcm_flag_o,out,1,1,parent_func
-hls_coding_unit_hls_dup3,0,504,merge_flag,in,8,1,parent_func
-hls_coding_unit_hls_dup3,0,560,pred_mode_i,in,8,1,parent_func
-hls_coding_unit_hls_dup3,0,560,pred_mode_o,out,8,1,parent_func
-hls_coding_unit_hls_dup3,0,564,part_mode_i,in,8,1,parent_func
-hls_coding_unit_hls_dup3,0,564,part_mode_o,out,8,1,parent_func
-hls_coding_unit_hls_dup3,0,576,max_trafo_depth,out,8,1,parent_func
-hls_coding_unit_hls_dup3,0,32,cb_size_i,in,32,1,parent_func
-hls_coding_unit_hls_dup3,0,32,cb_size_o,out,32,1,parent_func
-hls_coding_unit_hls_dup3,0,44,idx_i,in,32,1,parent_func
-hls_coding_unit_hls_dup3,0,44,idx_o,out,32,1,parent_func
-hls_coding_unit_hls_dup3,0,1164,xm_xBase,out,32,1,parent_func
-hls_coding_unit_hls_dup3,0,1168,xm_yBase,out,32,1,parent_func
-hls_coding_unit_hls_dup3,0,1172,xm_cb_xBase,out,32,1,parent_func
-hls_coding_unit_hls_dup3,0,1176,xm_cb_yBase,out,32,1,parent_func
-hls_coding_unit_hls_dup3,0,1180,xm_log2_cb_size,out,32,1,parent_func
-hls_coding_unit_hls_dup3,0,1336,rv_set_deblocking_bypass,in,32,1,parent_func
-hls_coding_unit_hls_dup3,0,1332,rv_ff_hevc_deblocking_boundary_strengths,in,32,1,parent_func
-hls_coding_unit_hls_dup3,0,1340,rv_hls_pcm_sample,in,32,1,parent_func
-hls_coding_unit_hls_dup3,0,1344,rv_hls_prediction_unit,in,32,1,parent_func
-hls_coding_unit_hls_dup3,0,1348,rv_hls_intra_prediction_unit,in,32,1,parent_func
-hls_coding_unit_hls_dup3,0,1352,rv_hls_transform_tree,in,32,1,parent_func
-hls_coding_unit_hls_dup3,0,1236,rv_callback_flag,in,32,1,parent_func
-hls_coding_unit_hls_dup3,0,36,length_r,out,32,1,parent_func
-hls_coding_unit_hls_dup3,0,544,xm_x,out,32,1,parent_func
-hls_coding_unit_hls_dup3,0,548,xm_y,out,32,1,parent_func
-hls_coding_unit_hls_dup3,1,512,pu_intra_pred_mode_0,out,8,4,(complete partition) parent_func
-hls_coding_unit_hls_dup3,1,513,pu_intra_pred_mode_1,out,8,4,(complete partition) parent_func
-hls_coding_unit_hls_dup3,1,514,pu_intra_pred_mode_2,out,8,4,(complete partition) parent_func
-hls_coding_unit_hls_dup3,1,515,pu_intra_pred_mode_3,out,8,4,(complete partition) parent_func
-hls_coding_unit_hls_dup3,0,540,qPy_pred,out,32,1,parent_func
-hls_coding_unit_hls_dup3,0,24,skip_flag_start,out,32,1,parent_func
-hls_coding_unit_hls_dup3,0,368,log2_min_cb_size,in,32,1,parent_func
-hls_coding_unit_hls_dup3,0,360,log2_ctb_size,in,32,1,parent_func
-hls_coding_unit_hls_dup3,0,436,diff_cu_qp_delta_depth,in,32,1,parent_func
-hls_coding_unit_hls_dup3,0,536,qp_y,in,8,1,parent_func
-hls_coding_unit_hls_dup3,0,440,transquant_bypass_enable_flag,in,8,1,parent_func
-hls_coding_unit_hls_dup3,0,392,min_cb_width,in,32,1,parent_func
-hls_coding_unit_hls_dup3,0,568,intra_split_flag,out,8,1,parent_func
-hls_coding_unit_hls_dup3,0,452,slice_type,in,8,1,parent_func
-hls_coding_unit_hls_dup3,0,608,ctb_left_flag,in,8,1,parent_func
-hls_coding_unit_hls_dup3,0,604,ctb_up_flag,in,8,1,parent_func
-hls_coding_unit_hls_dup3,0,320,amp_enabled_flag,in,8,1,parent_func
-hls_coding_unit_hls_dup3,0,400,pcm_enabled_flag,in,32,1,parent_func
-hls_coding_unit_hls_dup3,0,412,log2_min_pcm_cb_size,in,32,1,parent_func
-hls_coding_unit_hls_dup3,0,416,log2_max_pcm_cb_size,in,32,1,parent_func
-hls_coding_unit_hls_dup3,0,464,depth,in,32,1,parent_func
-hls_coding_unit_hls_dup3,0,1288,dc_skip_flag_p,in,32,1,xmem_dcache_pointer parent_func
-hls_coding_unit_hls_dup3,0,1272,dc_qp_y_tab_p,in,32,1,xmem_dcache_pointer parent_func
-hls_coding_unit_hls_dup3,0,1280,dc_tab_ct_depth_p,in,32,1,xmem_dcache_pointer parent_func
-#copy_top_left_pixel_hls,0,0,tid,in,32,1,apcall_arg
-#copy_top_left_pixel_hls,0,0,x0,in,32,1,apcall_arg
-#copy_top_left_pixel_hls,0,0,y0,in,32,1,apcall_arg
-#copy_top_left_pixel_hls,0,0,xBase,in,32,1,apcall_arg
-#copy_top_left_pixel_hls,0,0,yBase,in,32,1,apcall_arg
-copy_top_left_pixel_hls,0,168,log2_trafo_size,in,32,1,parent_func
-#copy_top_left_pixel_hls,0,0,blk_id,in,32,1,apcall_arg
-copy_top_left_pixel_hls,0,360,log2_ctb_size,in,32,1,parent_func
-copy_top_left_pixel_hls,0,376,log2_min_tb_size,in,32,1,parent_func
-copy_top_left_pixel_hls,0,560,pred_mode,in,8,1,parent_func
-copy_top_left_pixel_hls,1,336,hshift_0,in,32,3,(complete partition) parent_func
-copy_top_left_pixel_hls,1,340,hshift_1,in,32,3,(complete partition) parent_func
-copy_top_left_pixel_hls,1,344,hshift_2,in,32,3,(complete partition) parent_func
-copy_top_left_pixel_hls,1,348,vshift_0,in,32,3,(complete partition) parent_func
-copy_top_left_pixel_hls,1,352,vshift_1,in,32,3,(complete partition) parent_func
-copy_top_left_pixel_hls,1,356,vshift_2,in,32,3,(complete partition) parent_func
-copy_top_left_pixel_hls,1,1240,buf_data_0,in,32,3,(complete partition) parent_func
-copy_top_left_pixel_hls,1,1244,buf_data_1,in,32,3,(complete partition) parent_func
-copy_top_left_pixel_hls,1,1248,buf_data_2,in,32,3,(complete partition) parent_func
-copy_top_left_pixel_hls,1,1144,xm_linesize_0,in,32,3,(complete partition) parent_func
-copy_top_left_pixel_hls,1,1148,xm_linesize_1,in,32,3,(complete partition) parent_func
-copy_top_left_pixel_hls,1,1152,xm_linesize_2,in,32,3,(complete partition) parent_func
-copy_top_left_pixel_hls,0,1136,cmdr_run_i,in,8,1,parent_func
-copy_top_left_pixel_hls,0,1136,cmdr_run_o,out,8,1,parent_func
-genPredCol_hls,1,180,predColBuf_0,out,32,17,(complete partition)
-genPredCol_hls,1,184,predColBuf_1,out,32,17,(complete partition)
-genPredCol_hls,1,188,predColBuf_2,out,32,17,(complete partition)
-genPredCol_hls,1,192,predColBuf_3,out,32,17,(complete partition)
-genPredCol_hls,1,196,predColBuf_4,out,32,17,(complete partition)
-genPredCol_hls,1,200,predColBuf_5,out,32,17,(complete partition)
-genPredCol_hls,1,204,predColBuf_6,out,32,17,(complete partition)
-genPredCol_hls,1,208,predColBuf_7,out,32,17,(complete partition)
-genPredCol_hls,1,212,predColBuf_8,out,32,17,(complete partition)
-genPredCol_hls,1,216,predColBuf_9,out,32,17,(complete partition)
-genPredCol_hls,1,220,predColBuf_10,out,32,17,(complete partition)
-genPredCol_hls,1,224,predColBuf_11,out,32,17,(complete partition)
-genPredCol_hls,1,228,predColBuf_12,out,32,17,(complete partition)
-genPredCol_hls,1,232,predColBuf_13,out,32,17,(complete partition)
-genPredCol_hls,1,236,predColBuf_14,out,32,17,(complete partition)
-genPredCol_hls,1,240,predColBuf_15,out,32,17,(complete partition)
-genPredCol_hls,1,244,predColBuf_16_i,in,32,17,(complete partition)
-genPredCol_hls,1,244,predColBuf_16_o,out,32,17,(complete partition)
-genPredCol_hls,0,172,log2_width,in,8,1,
-genPredCol_hls,0,1276,dc_tab_mvf_pred_flag_row_p,in,32,1,xmem_dcache_pointer
-#genPredCol_hls,0,0,x0,in,32,1,apcall_arg
-#genPredCol_hls,0,0,y0,in,32,1,apcall_arg
-genPredCol_hls,0,1284,dc_cbf_luma_p,in,32,1,xmem_dcache_pointer
-genPredCol_hls,0,376,log2_min_tb_size,in,32,1,
-genPredCol_hls,0,388,min_tb_width,in,32,1,
-#genPredCol_hls,0,0,min_tb_height,in,32,1,apcall_arg
-ff_hevc_get_sub_cu_zscan_id_hls,0,360,log2_ctb_size,in,32,1,
-#ff_hevc_get_sub_cu_zscan_id_hls,0,0,x0,in,32,1,apcall_arg
-#ff_hevc_get_sub_cu_zscan_id_hls,0,0,y0,in,32,1,apcall_arg
-ff_hevc_get_sub_cu_zscan_id_hls,0,248,zscan_id,out,32,1,
-#ff_hevc_skip_flag_decode_hls,0,0,left_skip_flag,in,8,1,apcall_arg
-#ff_hevc_skip_flag_decode_hls,0,0,up_skip_flag,in,8,1,apcall_arg
-ff_hevc_skip_flag_decode_hls,0,360,log2_ctb_size,in,32,1,
-ff_hevc_skip_flag_decode_hls,0,608,ctb_left_flag,in,8,1,
-ff_hevc_skip_flag_decode_hls,0,604,ctb_up_flag,in,8,1,
-#ff_hevc_skip_flag_decode_hls,0,0,x0,in,32,1,apcall_arg
-#ff_hevc_skip_flag_decode_hls,0,0,y0,in,32,1,apcall_arg
+intra_prediction_unit_ex_hls,1,286180,tab_ipm_Din_A,out,8,1,bram_xmem xmem_pointer addr_width=32 we_width=1 parent_func
+intra_prediction_unit_ex_hls,1,286180,tab_ipm_Dout_A,in,8,1,bram_xmem xmem_pointer addr_width=32 we_width=1 parent_func
 ff_hevc_set_qPy_hls,0,536,qp_y,out,8,1,
 ff_hevc_set_qPy_hls,0,532,first_qp_group_i,in,8,1,
 ff_hevc_set_qPy_hls,0,532,first_qp_group_o,out,8,1,
@@ -1079,11 +99,53 @@ ff_hevc_set_qPy_hls,0,460,slice_qp,in,8,1,
 #ff_hevc_set_qPy_hls,0,0,xBase,in,32,1,apcall_arg
 #ff_hevc_set_qPy_hls,0,0,yBase,in,32,1,apcall_arg
 #ff_hevc_set_qPy_hls,0,0,log2_cb_size,in,32,1,apcall_arg
-ff_hevc_set_qPy_hls,0,1272,dc_qp_y_tab_p,in,32,1,xmem_dcache_pointer
+ff_hevc_set_qPy_hls,1,286204,qp_y_tab_Din_A,out,8,1,bram_xmem xmem_pointer addr_width=32 we_width=1
+ff_hevc_set_qPy_hls,1,286204,qp_y_tab_Dout_A,in,8,1,bram_xmem xmem_pointer addr_width=32 we_width=1
 ff_hevc_set_qPy_hls,0,468,tu_cu_qp_delta,in,32,1,
-ff_hevc_set_qPy_hls,0,1132,qp_bd_offset,in,32,1,
-#hls_decode_neighbour_hls,0,0,dc_ctb_addr_rs_to_ts_p,in,32,1,apcall_arg_dcache_pointer
-#hls_decode_neighbour_hls,0,0,dc_tile_id_p,in,32,1,apcall_arg_dcache_pointer
+ff_hevc_set_qPy_hls,0,1136,qp_bd_offset,in,32,1,
+#,1,286240,tab_mvf,,32,1,struct_pointer struct_size=32
+#ff_hevc_deblocking_boundary_strengths_hls,0,0,x0,in,32,1,apcall_arg
+#ff_hevc_deblocking_boundary_strengths_hls,0,0,y0,in,32,1,apcall_arg
+ff_hevc_deblocking_boundary_strengths_hls,0,168,log2_trafo_size,in,32,1,
+ff_hevc_deblocking_boundary_strengths_hls,0,1512,bs_width,in,32,1,
+ff_hevc_deblocking_boundary_strengths_hls,1,286260,horizontal_bs_Din_A,out,8,1,bram_xmem xmem_pointer addr_width=32 we_width=1
+ff_hevc_deblocking_boundary_strengths_hls,1,286260,horizontal_bs_Dout_A,in,8,1,bram_xmem xmem_pointer addr_width=32 we_width=1
+ff_hevc_deblocking_boundary_strengths_hls,1,286264,vertical_bs_Din_A,out,8,1,bram_xmem xmem_pointer addr_width=32 we_width=1
+ff_hevc_deblocking_boundary_strengths_hls,1,286264,vertical_bs_Dout_A,in,8,1,bram_xmem xmem_pointer addr_width=32 we_width=1
+ff_hevc_deblocking_boundary_strengths_hls,0,1508,slice_loop_filter_across_slices_enabled_flag,in,8,1,
+ff_hevc_deblocking_boundary_strengths_hls,0,372,log2_min_pu_size,in,32,1,
+ff_hevc_deblocking_boundary_strengths_hls,0,376,log2_min_tb_size,in,32,1,
+ff_hevc_deblocking_boundary_strengths_hls,0,360,log2_ctb_size,in,32,1,
+ff_hevc_deblocking_boundary_strengths_hls,0,396,min_pu_width,in,32,1,
+ff_hevc_deblocking_boundary_strengths_hls,0,388,min_tb_width,in,32,1,
+ff_hevc_deblocking_boundary_strengths_hls,0,172,log2_width,in,8,1,
+ff_hevc_deblocking_boundary_strengths_hls,0,264,slice_or_tiles_up_boundary,in,8,1,
+ff_hevc_deblocking_boundary_strengths_hls,0,260,slice_or_tiles_left_boundary,in,8,1,
+ff_hevc_deblocking_boundary_strengths_hls,0,268,loop_filter_across_tiles_enabled_flag,in,8,1,
+ff_hevc_deblocking_boundary_strengths_hls,1,286200,cbf_luma_base_Din_A,out,32,1,bram_xmem xmem_pointer addr_width=32 we_width=4
+ff_hevc_deblocking_boundary_strengths_hls,1,286200,cbf_luma_base_Dout_A,in,32,1,bram_xmem xmem_pointer addr_width=32 we_width=4
+ff_hevc_deblocking_boundary_strengths_hls,1,286244,tab_mvf_pred_flag_row_Din_A,out,32,1,bram_xmem xmem_pointer addr_width=32 we_width=4
+ff_hevc_deblocking_boundary_strengths_hls,1,286244,tab_mvf_pred_flag_row_Dout_A,in,32,1,bram_xmem xmem_pointer addr_width=32 we_width=4
+ff_hevc_deblocking_boundary_strengths_hls,1,286240,tab_mvf_mv_0_x_Din_A,out,16,1,bram_xmem struct_element addr_width=32 we_width=2 struct_size=32 struct_base=286240 struct_var=tab_mvf
+ff_hevc_deblocking_boundary_strengths_hls,1,286240,tab_mvf_mv_0_x_Dout_A,in,16,1,bram_xmem struct_element addr_width=32 we_width=2 struct_size=32 struct_base=286240 struct_var=tab_mvf
+ff_hevc_deblocking_boundary_strengths_hls,1,286244,tab_mvf_mv_0_y_Din_A,out,16,1,bram_xmem struct_element addr_width=32 we_width=2 struct_size=32 struct_base=286240 struct_var=tab_mvf
+ff_hevc_deblocking_boundary_strengths_hls,1,286244,tab_mvf_mv_0_y_Dout_A,in,16,1,bram_xmem struct_element addr_width=32 we_width=2 struct_size=32 struct_base=286240 struct_var=tab_mvf
+ff_hevc_deblocking_boundary_strengths_hls,1,286248,tab_mvf_mv_1_x_Din_A,out,16,1,bram_xmem struct_element addr_width=32 we_width=2 struct_size=32 struct_base=286240 struct_var=tab_mvf
+ff_hevc_deblocking_boundary_strengths_hls,1,286248,tab_mvf_mv_1_x_Dout_A,in,16,1,bram_xmem struct_element addr_width=32 we_width=2 struct_size=32 struct_base=286240 struct_var=tab_mvf
+ff_hevc_deblocking_boundary_strengths_hls,1,286252,tab_mvf_mv_1_y_Din_A,out,16,1,bram_xmem struct_element addr_width=32 we_width=2 struct_size=32 struct_base=286240 struct_var=tab_mvf
+ff_hevc_deblocking_boundary_strengths_hls,1,286252,tab_mvf_mv_1_y_Dout_A,in,16,1,bram_xmem struct_element addr_width=32 we_width=2 struct_size=32 struct_base=286240 struct_var=tab_mvf
+ff_hevc_deblocking_boundary_strengths_hls,1,286256,tab_mvf_poc_0_Din_A,out,32,1,bram_xmem struct_element addr_width=32 we_width=4 struct_size=32 struct_base=286240 struct_var=tab_mvf
+ff_hevc_deblocking_boundary_strengths_hls,1,286256,tab_mvf_poc_0_Dout_A,in,32,1,bram_xmem struct_element addr_width=32 we_width=4 struct_size=32 struct_base=286240 struct_var=tab_mvf
+ff_hevc_deblocking_boundary_strengths_hls,1,286260,tab_mvf_poc_1_Din_A,out,32,1,bram_xmem struct_element addr_width=32 we_width=4 struct_size=32 struct_base=286240 struct_var=tab_mvf
+ff_hevc_deblocking_boundary_strengths_hls,1,286260,tab_mvf_poc_1_Dout_A,in,32,1,bram_xmem struct_element addr_width=32 we_width=4 struct_size=32 struct_base=286240 struct_var=tab_mvf
+ff_hevc_deblocking_boundary_strengths_hls,1,286264,tab_mvf_ref_idx_0_Din_A,out,8,1,bram_xmem struct_element addr_width=32 we_width=1 struct_size=32 struct_base=286240 struct_var=tab_mvf
+ff_hevc_deblocking_boundary_strengths_hls,1,286264,tab_mvf_ref_idx_0_Dout_A,in,8,1,bram_xmem struct_element addr_width=32 we_width=1 struct_size=32 struct_base=286240 struct_var=tab_mvf
+ff_hevc_deblocking_boundary_strengths_hls,1,286268,tab_mvf_ref_idx_1_Din_A,out,8,1,bram_xmem struct_element addr_width=32 we_width=1 struct_size=32 struct_base=286240 struct_var=tab_mvf
+ff_hevc_deblocking_boundary_strengths_hls,1,286268,tab_mvf_ref_idx_1_Dout_A,in,8,1,bram_xmem struct_element addr_width=32 we_width=1 struct_size=32 struct_base=286240 struct_var=tab_mvf
+hls_decode_neighbour_hls,1,286192,ctb_addr_rs_to_ts_Din_A,out,16,1,bram_xmem xmem_pointer addr_width=32 we_width=2
+hls_decode_neighbour_hls,1,286192,ctb_addr_rs_to_ts_Dout_A,in,16,1,bram_xmem xmem_pointer addr_width=32 we_width=2
+hls_decode_neighbour_hls,1,286196,tile_id_Din_A,out,16,1,bram_xmem xmem_pointer addr_width=32 we_width=2
+hls_decode_neighbour_hls,1,286196,tile_id_Dout_A,in,16,1,bram_xmem xmem_pointer addr_width=32 we_width=2
 hls_decode_neighbour_hls,0,532,first_qp_group,out,8,1,
 hls_decode_neighbour_hls,0,620,end_of_tiles_x,out,16,1,
 hls_decode_neighbour_hls,0,624,end_of_tiles_y,out,16,1,
@@ -1102,7 +164,8 @@ hls_decode_neighbour_hls,0,288,slice_addr,in,32,1,
 hls_decode_neighbour_hls,0,252,entropy_coding_sync_enabled_flag,in,8,1,
 hls_decode_neighbour_hls,0,256,tiles_enabled_flag,in,8,1,
 hls_decode_neighbour_hls,0,444,num_tile_columns,in,32,1,
-hls_decode_neighbour_hls,1,8192,column_width_q0,in,16,20,addr_width=5
+hls_decode_neighbour_hls,1,286164,column_width_Din_A,out,16,1,bram_xmem xmem_pointer addr_width=32 we_width=2
+hls_decode_neighbour_hls,1,286164,column_width_Dout_A,in,16,1,bram_xmem xmem_pointer addr_width=32 we_width=2
 hls_decode_neighbour_hls,0,408,width,in,32,1,
 hls_decode_neighbour_hls,0,332,height,in,32,1,
 #set_tab_mvf_pred_flag_hls,0,0,x0,in,32,1,apcall_arg
@@ -1111,7 +174,8 @@ hls_decode_neighbour_hls,0,332,height,in,32,1,
 set_tab_mvf_pred_flag_hls,0,372,log2_min_pu_size,in,32,1,
 set_tab_mvf_pred_flag_hls,0,396,min_pu_width,in,32,1,
 set_tab_mvf_pred_flag_hls,0,172,log2_width,in,8,1,
-set_tab_mvf_pred_flag_hls,0,1276,dc_tab_mvf_pred_flag_row_p,in,32,1,xmem_dcache_pointer
+set_tab_mvf_pred_flag_hls,1,286244,tab_mvf_pred_flag_row_Din_A,out,32,1,bram_xmem xmem_pointer addr_width=32 we_width=4
+set_tab_mvf_pred_flag_hls,1,286244,tab_mvf_pred_flag_row_Dout_A,in,32,1,bram_xmem xmem_pointer addr_width=32 we_width=4
 set_tab_mvf_pred_flag_hls,1,180,predColBuf_0_i,in,32,17,(complete partition)
 set_tab_mvf_pred_flag_hls,1,180,predColBuf_0_o,out,32,17,(complete partition)
 set_tab_mvf_pred_flag_hls,1,184,predColBuf_1_i,in,32,17,(complete partition)
@@ -1146,130 +210,1038 @@ set_tab_mvf_pred_flag_hls,1,240,predColBuf_15_i,in,32,17,(complete partition)
 set_tab_mvf_pred_flag_hls,1,240,predColBuf_15_o,out,32,17,(complete partition)
 set_tab_mvf_pred_flag_hls,1,244,predColBuf_16_i,in,32,17,(complete partition)
 set_tab_mvf_pred_flag_hls,1,244,predColBuf_16_o,out,32,17,(complete partition)
-init_intra_neighbors_hls,1,336,hshift_0,in,32,3,(complete partition)
-init_intra_neighbors_hls,1,340,hshift_1,in,32,3,(complete partition)
-init_intra_neighbors_hls,1,344,hshift_2,in,32,3,(complete partition)
-init_intra_neighbors_hls,1,348,vshift_0,in,32,3,(complete partition)
-init_intra_neighbors_hls,1,352,vshift_1,in,32,3,(complete partition)
-init_intra_neighbors_hls,1,356,vshift_2,in,32,3,(complete partition)
-init_intra_neighbors_hls,0,372,log2_min_pu_size,in,32,1,
-init_intra_neighbors_hls,0,376,log2_min_tb_size,in,32,1,
-init_intra_neighbors_hls,0,360,log2_ctb_size,in,32,1,
-init_intra_neighbors_hls,0,404,tb_mask,in,8,1,
-init_intra_neighbors_hls,0,408,width,in,32,1,
-init_intra_neighbors_hls,0,332,height,in,32,1,
-init_intra_neighbors_hls,0,172,log2_width,in,8,1,
-init_intra_neighbors_hls,0,176,log2_height,in,8,1,
-init_intra_neighbors_hls,0,424,constrained_intra_pred_flag,in,8,1,
-init_intra_neighbors_hls,0,1260,dc_min_tb_addr_zs_p,in,32,1,xmem_dcache_pointer
-#init_intra_neighbors_hls,0,0,x0,in,32,1,apcall_arg
-#init_intra_neighbors_hls,0,0,y0,in,32,1,apcall_arg
-#init_intra_neighbors_hls,0,0,log2_size,in,32,1,apcall_arg
-#init_intra_neighbors_hls,0,0,c_idx,in,32,1,apcall_arg
-init_intra_neighbors_hls,0,600,cand_bottom_left,in,8,1,
-init_intra_neighbors_hls,0,584,cand_left,in,8,1,
-init_intra_neighbors_hls,0,588,cand_up_left,in,8,1,
-init_intra_neighbors_hls,0,580,cand_up,in,8,1,
-init_intra_neighbors_hls,0,596,cand_up_right,in,8,1,
-init_intra_neighbors_hls,0,644,numIntraNeighbor,out,32,1,
-init_intra_neighbors_hls,0,648,totalUnits,out,32,1,
-init_intra_neighbors_hls,0,652,aboveUnits,out,32,1,
-init_intra_neighbors_hls,0,656,leftUnits,out,32,1,
-init_intra_neighbors_hls,0,660,unitWidth,out,32,1,
-init_intra_neighbors_hls,0,664,unitHeight,out,32,1,
-init_intra_neighbors_hls,0,668,log2TrSize,out,32,1,
-init_intra_neighbors_hls,0,672,bNeighborFlags_i,in,65,1,
-init_intra_neighbors_hls,0,672,bNeighborFlags_o,out,65,1,
-init_intra_neighbors_hls,0,396,min_pu_width,in,32,1,
-init_intra_neighbors_hls,0,1276,dc_tab_mvf_pred_flag_row_p,in,32,1,xmem_dcache_pointer
-init_intra_neighbors_hls,1,180,predColBuf_0,in,32,17,(complete partition)
-init_intra_neighbors_hls,1,184,predColBuf_1,in,32,17,(complete partition)
-init_intra_neighbors_hls,1,188,predColBuf_2,in,32,17,(complete partition)
-init_intra_neighbors_hls,1,192,predColBuf_3,in,32,17,(complete partition)
-init_intra_neighbors_hls,1,196,predColBuf_4,in,32,17,(complete partition)
-init_intra_neighbors_hls,1,200,predColBuf_5,in,32,17,(complete partition)
-init_intra_neighbors_hls,1,204,predColBuf_6,in,32,17,(complete partition)
-init_intra_neighbors_hls,1,208,predColBuf_7,in,32,17,(complete partition)
-init_intra_neighbors_hls,1,212,predColBuf_8,in,32,17,(complete partition)
-init_intra_neighbors_hls,1,216,predColBuf_9,in,32,17,(complete partition)
-init_intra_neighbors_hls,1,220,predColBuf_10,in,32,17,(complete partition)
-init_intra_neighbors_hls,1,224,predColBuf_11,in,32,17,(complete partition)
-init_intra_neighbors_hls,1,228,predColBuf_12,in,32,17,(complete partition)
-init_intra_neighbors_hls,1,232,predColBuf_13,in,32,17,(complete partition)
-init_intra_neighbors_hls,1,236,predColBuf_14,in,32,17,(complete partition)
-init_intra_neighbors_hls,1,240,predColBuf_15,in,32,17,(complete partition)
-init_intra_neighbors_hls,1,244,predColBuf_16,in,32,17,(complete partition)
-init_intra_neighbors_hls,0,452,slice_type,in,8,1,
-init_intra_neighbors_chroma_hls,1,336,hshift_0,in,32,3,(complete partition)
-init_intra_neighbors_chroma_hls,1,340,hshift_1,in,32,3,(complete partition)
-init_intra_neighbors_chroma_hls,1,344,hshift_2,in,32,3,(complete partition)
-init_intra_neighbors_chroma_hls,1,348,vshift_0,in,32,3,(complete partition)
-init_intra_neighbors_chroma_hls,1,352,vshift_1,in,32,3,(complete partition)
-init_intra_neighbors_chroma_hls,1,356,vshift_2,in,32,3,(complete partition)
-init_intra_neighbors_chroma_hls,0,372,log2_min_pu_size,in,32,1,
-init_intra_neighbors_chroma_hls,0,376,log2_min_tb_size,in,32,1,
-init_intra_neighbors_chroma_hls,0,360,log2_ctb_size,in,32,1,
-init_intra_neighbors_chroma_hls,0,404,tb_mask,in,8,1,
-init_intra_neighbors_chroma_hls,0,408,width,in,32,1,
-init_intra_neighbors_chroma_hls,0,332,height,in,32,1,
-init_intra_neighbors_chroma_hls,0,172,log2_width,in,8,1,
-init_intra_neighbors_chroma_hls,0,176,log2_height,in,8,1,
-init_intra_neighbors_chroma_hls,0,424,constrained_intra_pred_flag,in,8,1,
-init_intra_neighbors_chroma_hls,0,1260,dc_min_tb_addr_zs_p,in,32,1,xmem_dcache_pointer
-#init_intra_neighbors_chroma_hls,0,0,x0,in,32,1,apcall_arg
-#init_intra_neighbors_chroma_hls,0,0,y0,in,32,1,apcall_arg
-#init_intra_neighbors_chroma_hls,0,0,log2_size,in,32,1,apcall_arg
-#init_intra_neighbors_chroma_hls,0,0,c_idx,in,32,1,apcall_arg
-init_intra_neighbors_chroma_hls,0,1508,cand_bottom_left_c,in,8,1,
-init_intra_neighbors_chroma_hls,0,1492,cand_left_c,in,8,1,
-init_intra_neighbors_chroma_hls,0,1496,cand_up_left_c,in,8,1,
-init_intra_neighbors_chroma_hls,0,1488,cand_up_c,in,8,1,
-init_intra_neighbors_chroma_hls,0,1504,cand_up_right_c,in,8,1,
-init_intra_neighbors_chroma_hls,0,684,numIntraNeighbor_c,out,32,1,
-init_intra_neighbors_chroma_hls,0,688,totalUnits_c,out,32,1,
-init_intra_neighbors_chroma_hls,0,692,aboveUnits_c,out,32,1,
-init_intra_neighbors_chroma_hls,0,696,leftUnits_c,out,32,1,
-init_intra_neighbors_chroma_hls,0,700,unitWidth_c,out,32,1,
-init_intra_neighbors_chroma_hls,0,704,unitHeight_c,out,32,1,
-init_intra_neighbors_chroma_hls,0,708,log2TrSize_c,out,32,1,
-init_intra_neighbors_chroma_hls,0,712,bNeighborFlags_c_i,in,65,1,
-init_intra_neighbors_chroma_hls,0,712,bNeighborFlags_c_o,out,65,1,
-init_intra_neighbors_chroma_hls,0,396,min_pu_width,in,32,1,
-init_intra_neighbors_chroma_hls,0,1276,dc_tab_mvf_pred_flag_row_p,in,32,1,xmem_dcache_pointer
-init_intra_neighbors_chroma_hls,1,180,predColBuf_0,in,32,17,(complete partition)
-init_intra_neighbors_chroma_hls,1,184,predColBuf_1,in,32,17,(complete partition)
-init_intra_neighbors_chroma_hls,1,188,predColBuf_2,in,32,17,(complete partition)
-init_intra_neighbors_chroma_hls,1,192,predColBuf_3,in,32,17,(complete partition)
-init_intra_neighbors_chroma_hls,1,196,predColBuf_4,in,32,17,(complete partition)
-init_intra_neighbors_chroma_hls,1,200,predColBuf_5,in,32,17,(complete partition)
-init_intra_neighbors_chroma_hls,1,204,predColBuf_6,in,32,17,(complete partition)
-init_intra_neighbors_chroma_hls,1,208,predColBuf_7,in,32,17,(complete partition)
-init_intra_neighbors_chroma_hls,1,212,predColBuf_8,in,32,17,(complete partition)
-init_intra_neighbors_chroma_hls,1,216,predColBuf_9,in,32,17,(complete partition)
-init_intra_neighbors_chroma_hls,1,220,predColBuf_10,in,32,17,(complete partition)
-init_intra_neighbors_chroma_hls,1,224,predColBuf_11,in,32,17,(complete partition)
-init_intra_neighbors_chroma_hls,1,228,predColBuf_12,in,32,17,(complete partition)
-init_intra_neighbors_chroma_hls,1,232,predColBuf_13,in,32,17,(complete partition)
-init_intra_neighbors_chroma_hls,1,236,predColBuf_14,in,32,17,(complete partition)
-init_intra_neighbors_chroma_hls,1,240,predColBuf_15,in,32,17,(complete partition)
-init_intra_neighbors_chroma_hls,1,244,predColBuf_16,in,32,17,(complete partition)
-init_intra_neighbors_chroma_hls,0,452,slice_type,in,8,1,
-ff_hevc_set_neighbour_available_hls,0,580,cand_up,out,1,1,
-ff_hevc_set_neighbour_available_hls,0,584,cand_left,out,1,1,
-ff_hevc_set_neighbour_available_hls,0,588,cand_up_left,out,1,1,
-ff_hevc_set_neighbour_available_hls,0,592,cand_up_right_sap,out,1,1,
-ff_hevc_set_neighbour_available_hls,0,596,cand_up_right,out,1,1,
-ff_hevc_set_neighbour_available_hls,0,600,cand_bottom_left,out,1,1,
-ff_hevc_set_neighbour_available_hls,0,360,log2_ctb_size,in,32,1,
-ff_hevc_set_neighbour_available_hls,0,604,ctb_up_flag,in,8,1,
-ff_hevc_set_neighbour_available_hls,0,608,ctb_left_flag,in,8,1,
-ff_hevc_set_neighbour_available_hls,0,612,ctb_up_left_flag,in,8,1,
-ff_hevc_set_neighbour_available_hls,0,616,ctb_up_right_flag,in,8,1,
-ff_hevc_set_neighbour_available_hls,0,620,end_of_tiles_x,in,16,1,
-ff_hevc_set_neighbour_available_hls,0,624,end_of_tiles_y,in,16,1,
-#ff_hevc_set_neighbour_available_hls,0,0,x0,in,32,1,apcall_arg
-#ff_hevc_set_neighbour_available_hls,0,0,y0,in,32,1,apcall_arg
-ff_hevc_set_neighbour_available_hls,0,160,nPbW,out,32,1,
-ff_hevc_set_neighbour_available_hls,0,164,nPbH,out,32,1,
-#ff_hevc_set_neighbour_available_hls,0,0,arg_nPbW,in,32,1,apcall_arg
-#ff_hevc_set_neighbour_available_hls,0,0,arg_nPbH,in,32,1,apcall_arg
+z_scan_block_avail_hls,0,404,tb_mask,in,8,1,
+z_scan_block_avail_hls,0,360,log2_ctb_size,in,32,1,
+z_scan_block_avail_hls,0,376,log2_min_tb_size,in,32,1,
+z_scan_block_avail_hls,0,552,xm_x0,in,32,1,
+z_scan_block_avail_hls,0,556,xm_y0,in,32,1,
+#z_scan_block_avail_hls,0,0,xN,in,32,1,apcall_arg
+#z_scan_block_avail_hls,0,0,yN,in,32,1,apcall_arg
+z_scan_block_avail_hls,1,286188,min_tb_addr_zs_Din_A,out,32,1,bram_xmem xmem_pointer addr_width=32 we_width=4
+z_scan_block_avail_hls,1,286188,min_tb_addr_zs_Dout_A,in,32,1,bram_xmem xmem_pointer addr_width=32 we_width=4
+#,0,784,current_mv,,256,1,struct struct_size=32
+luma_mc_uni_libx265_hls,1,286160,xcache_null_base_Din_A,out,8,1,bram_xmem xmem_pointer addr_width=32 we_width=1
+luma_mc_uni_libx265_hls,1,286160,xcache_null_base_Dout_A,in,8,1,bram_xmem xmem_pointer addr_width=32 we_width=1
+luma_mc_uni_libx265_hls,1,1556,frame_data_0,in,32,3,(complete partition)
+luma_mc_uni_libx265_hls,1,1560,frame_data_1,in,32,3,(complete partition)
+luma_mc_uni_libx265_hls,1,1564,frame_data_2,in,32,3,(complete partition)
+luma_mc_uni_libx265_hls,1,1568,frame_linesize_0,in,32,3,(complete partition)
+luma_mc_uni_libx265_hls,1,1572,frame_linesize_1,in,32,3,(complete partition)
+luma_mc_uni_libx265_hls,1,1576,frame_linesize_2,in,32,3,(complete partition)
+luma_mc_uni_libx265_hls,1,284944,refPicList_frame_data_Din_A,out,32,96,bram_xmem addr_width=32 we_width=4
+luma_mc_uni_libx265_hls,1,284944,refPicList_frame_data_Dout_A,in,32,96,bram_xmem addr_width=32 we_width=4
+luma_mc_uni_libx265_hls,1,285328,refPicList_frame_linesize_Din_A,out,32,96,bram_xmem addr_width=32 we_width=4
+luma_mc_uni_libx265_hls,1,285328,refPicList_frame_linesize_Dout_A,in,32,96,bram_xmem addr_width=32 we_width=4
+luma_mc_uni_libx265_hls,0,784,current_mv_mv_0_x,in,16,1,struct_element struct_var=current_mv
+luma_mc_uni_libx265_hls,0,788,current_mv_mv_0_y,in,16,1,struct_element struct_var=current_mv
+luma_mc_uni_libx265_hls,0,792,current_mv_mv_1_x,in,16,1,struct_element struct_var=current_mv
+luma_mc_uni_libx265_hls,0,796,current_mv_mv_1_y,in,16,1,struct_element struct_var=current_mv
+luma_mc_uni_libx265_hls,0,800,current_mv_poc_0,in,32,1,struct_element struct_var=current_mv
+luma_mc_uni_libx265_hls,0,804,current_mv_poc_1,in,32,1,struct_element struct_var=current_mv
+luma_mc_uni_libx265_hls,0,808,current_mv_ref_idx_0,in,8,1,struct_element struct_var=current_mv
+luma_mc_uni_libx265_hls,0,812,current_mv_ref_idx_1,in,8,1,struct_element struct_var=current_mv
+luma_mc_uni_libx265_hls,0,816,current_mv_pred_flag,in,8,1,
+#luma_mc_uni_libx265_hls,0,0,x_off,in,32,1,apcall_arg
+#luma_mc_uni_libx265_hls,0,0,y_off,in,32,1,apcall_arg
+#luma_mc_uni_libx265_hls,0,0,block_w,in,32,1,apcall_arg
+#luma_mc_uni_libx265_hls,0,0,block_h,in,32,1,apcall_arg
+#luma_mc_uni_libx265_hls,0,0,c_idx,in,32,1,apcall_arg
+luma_mc_uni_libx265_hls,0,728,ref_idx,in,32,1,
+luma_mc_uni_libx265_hls,0,452,slice_type,in,8,1,
+luma_mc_uni_libx265_hls,0,1532,weighted_pred_flag,in,8,1,
+luma_mc_uni_libx265_hls,0,1536,weighted_bipred_flag,in,8,1,
+luma_mc_uni_libx265_hls,0,1144,pixel_shift,in,32,1,
+luma_mc_uni_libx265_hls,0,408,width,in,32,1,
+luma_mc_uni_libx265_hls,0,332,height,in,32,1,
+luma_mc_uni_libx265_hls,1,336,hshift_0,in,32,3,(complete partition)
+luma_mc_uni_libx265_hls,1,340,hshift_1,in,32,3,(complete partition)
+luma_mc_uni_libx265_hls,1,344,hshift_2,in,32,3,(complete partition)
+luma_mc_uni_libx265_hls,1,348,vshift_0,in,32,3,(complete partition)
+luma_mc_uni_libx265_hls,1,352,vshift_1,in,32,3,(complete partition)
+luma_mc_uni_libx265_hls,1,356,vshift_2,in,32,3,(complete partition)
+luma_mc_uni_libx265_hls,0,1524,bit_depth,in,8,1,
+luma_mc_uni_libx265_hls,0,1516,luma_log2_weight_denom,in,8,1,
+luma_mc_uni_libx265_hls,1,285712,luma_weight_l0_flag_Din_A,out,8,16,bram_xmem addr_width=32 we_width=1
+luma_mc_uni_libx265_hls,1,285712,luma_weight_l0_flag_Dout_A,in,8,16,bram_xmem addr_width=32 we_width=1
+luma_mc_uni_libx265_hls,1,285728,luma_weight_l1_flag_Din_A,out,8,16,bram_xmem addr_width=32 we_width=1
+luma_mc_uni_libx265_hls,1,285728,luma_weight_l1_flag_Dout_A,in,8,16,bram_xmem addr_width=32 we_width=1
+luma_mc_uni_libx265_hls,1,285744,luma_weight_l0_Din_A,out,16,16,bram_xmem addr_width=32 we_width=2
+luma_mc_uni_libx265_hls,1,285744,luma_weight_l0_Dout_A,in,16,16,bram_xmem addr_width=32 we_width=2
+luma_mc_uni_libx265_hls,1,285776,luma_weight_l1_Din_A,out,16,16,bram_xmem addr_width=32 we_width=2
+luma_mc_uni_libx265_hls,1,285776,luma_weight_l1_Dout_A,in,16,16,bram_xmem addr_width=32 we_width=2
+luma_mc_uni_libx265_hls,1,285808,luma_offset_l0_Din_A,out,16,16,bram_xmem addr_width=32 we_width=2
+luma_mc_uni_libx265_hls,1,285808,luma_offset_l0_Dout_A,in,16,16,bram_xmem addr_width=32 we_width=2
+luma_mc_uni_libx265_hls,1,285840,luma_offset_l1_Din_A,out,16,16,bram_xmem addr_width=32 we_width=2
+luma_mc_uni_libx265_hls,1,285840,luma_offset_l1_Dout_A,in,16,16,bram_xmem addr_width=32 we_width=2
+luma_mc_uni_libx265_hls,1,12304,edge_buffer_Din_A,out,32,68160,bram_xmem addr_width=32 we_width=4
+luma_mc_uni_libx265_hls,1,12304,edge_buffer_Dout_A,in,32,68160,bram_xmem addr_width=32 we_width=4
+luma_mc_uni_libx265_hls,0,1528,dst_depth,out,8,1,
+#luma_mc_uni_libx265_hls,0,0,tid,in,32,1,apcall_arg
+chroma_mc_uni_libx265_hls,1,286160,xcache_null_base_Din_A,out,8,1,bram_xmem xmem_pointer addr_width=32 we_width=1
+chroma_mc_uni_libx265_hls,1,286160,xcache_null_base_Dout_A,in,8,1,bram_xmem xmem_pointer addr_width=32 we_width=1
+chroma_mc_uni_libx265_hls,1,1556,frame_data_0,in,32,3,(complete partition)
+chroma_mc_uni_libx265_hls,1,1560,frame_data_1,in,32,3,(complete partition)
+chroma_mc_uni_libx265_hls,1,1564,frame_data_2,in,32,3,(complete partition)
+chroma_mc_uni_libx265_hls,1,1568,frame_linesize_0,in,32,3,(complete partition)
+chroma_mc_uni_libx265_hls,1,1572,frame_linesize_1,in,32,3,(complete partition)
+chroma_mc_uni_libx265_hls,1,1576,frame_linesize_2,in,32,3,(complete partition)
+chroma_mc_uni_libx265_hls,1,284944,refPicList_frame_data_Din_A,out,32,96,bram_xmem addr_width=32 we_width=4
+chroma_mc_uni_libx265_hls,1,284944,refPicList_frame_data_Dout_A,in,32,96,bram_xmem addr_width=32 we_width=4
+chroma_mc_uni_libx265_hls,1,285328,refPicList_frame_linesize_Din_A,out,32,96,bram_xmem addr_width=32 we_width=4
+chroma_mc_uni_libx265_hls,1,285328,refPicList_frame_linesize_Dout_A,in,32,96,bram_xmem addr_width=32 we_width=4
+chroma_mc_uni_libx265_hls,0,784,current_mv_mv_0_x,in,16,1,struct_element struct_var=current_mv
+chroma_mc_uni_libx265_hls,0,788,current_mv_mv_0_y,in,16,1,struct_element struct_var=current_mv
+chroma_mc_uni_libx265_hls,0,792,current_mv_mv_1_x,in,16,1,struct_element struct_var=current_mv
+chroma_mc_uni_libx265_hls,0,796,current_mv_mv_1_y,in,16,1,struct_element struct_var=current_mv
+chroma_mc_uni_libx265_hls,0,800,current_mv_poc_0,in,32,1,struct_element struct_var=current_mv
+chroma_mc_uni_libx265_hls,0,804,current_mv_poc_1,in,32,1,struct_element struct_var=current_mv
+chroma_mc_uni_libx265_hls,0,808,current_mv_ref_idx_0,in,8,1,struct_element struct_var=current_mv
+chroma_mc_uni_libx265_hls,0,812,current_mv_ref_idx_1,in,8,1,struct_element struct_var=current_mv
+chroma_mc_uni_libx265_hls,0,816,current_mv_pred_flag,in,8,1,
+#chroma_mc_uni_libx265_hls,0,0,x_off,in,32,1,apcall_arg
+#chroma_mc_uni_libx265_hls,0,0,y_off,in,32,1,apcall_arg
+#chroma_mc_uni_libx265_hls,0,0,block_w,in,32,1,apcall_arg
+#chroma_mc_uni_libx265_hls,0,0,block_h,in,32,1,apcall_arg
+#chroma_mc_uni_libx265_hls,0,0,c_idx,in,32,1,apcall_arg
+chroma_mc_uni_libx265_hls,0,728,ref_idx,in,32,1,
+#chroma_mc_uni_libx265_hls,0,0,plane,in,32,1,apcall_arg
+chroma_mc_uni_libx265_hls,0,452,slice_type,in,8,1,
+chroma_mc_uni_libx265_hls,0,1532,weighted_pred_flag,in,8,1,
+chroma_mc_uni_libx265_hls,0,1536,weighted_bipred_flag,in,8,1,
+chroma_mc_uni_libx265_hls,0,1144,pixel_shift,in,32,1,
+chroma_mc_uni_libx265_hls,0,408,width,in,32,1,
+chroma_mc_uni_libx265_hls,0,332,height,in,32,1,
+chroma_mc_uni_libx265_hls,1,336,hshift_0,in,32,3,(complete partition)
+chroma_mc_uni_libx265_hls,1,340,hshift_1,in,32,3,(complete partition)
+chroma_mc_uni_libx265_hls,1,344,hshift_2,in,32,3,(complete partition)
+chroma_mc_uni_libx265_hls,1,348,vshift_0,in,32,3,(complete partition)
+chroma_mc_uni_libx265_hls,1,352,vshift_1,in,32,3,(complete partition)
+chroma_mc_uni_libx265_hls,1,356,vshift_2,in,32,3,(complete partition)
+chroma_mc_uni_libx265_hls,0,1524,bit_depth,in,8,1,
+chroma_mc_uni_libx265_hls,0,1520,chroma_log2_weight_denom,in,16,1,
+chroma_mc_uni_libx265_hls,1,285872,chroma_weight_l0_flag_Din_A,out,8,16,bram_xmem addr_width=32 we_width=1
+chroma_mc_uni_libx265_hls,1,285872,chroma_weight_l0_flag_Dout_A,in,8,16,bram_xmem addr_width=32 we_width=1
+chroma_mc_uni_libx265_hls,1,285888,chroma_weight_l1_flag_Din_A,out,8,16,bram_xmem addr_width=32 we_width=1
+chroma_mc_uni_libx265_hls,1,285888,chroma_weight_l1_flag_Dout_A,in,8,16,bram_xmem addr_width=32 we_width=1
+chroma_mc_uni_libx265_hls,1,285904,chroma_weight_l0_Din_A,out,16,32,bram_xmem addr_width=32 we_width=2
+chroma_mc_uni_libx265_hls,1,285904,chroma_weight_l0_Dout_A,in,16,32,bram_xmem addr_width=32 we_width=2
+chroma_mc_uni_libx265_hls,1,285968,chroma_weight_l1_Din_A,out,16,32,bram_xmem addr_width=32 we_width=2
+chroma_mc_uni_libx265_hls,1,285968,chroma_weight_l1_Dout_A,in,16,32,bram_xmem addr_width=32 we_width=2
+chroma_mc_uni_libx265_hls,1,286032,chroma_offset_l0_Din_A,out,16,32,bram_xmem addr_width=32 we_width=2
+chroma_mc_uni_libx265_hls,1,286032,chroma_offset_l0_Dout_A,in,16,32,bram_xmem addr_width=32 we_width=2
+chroma_mc_uni_libx265_hls,1,286096,chroma_offset_l1_Din_A,out,16,32,bram_xmem addr_width=32 we_width=2
+chroma_mc_uni_libx265_hls,1,286096,chroma_offset_l1_Dout_A,in,16,32,bram_xmem addr_width=32 we_width=2
+chroma_mc_uni_libx265_hls,1,12304,edge_buffer_Din_A,out,32,68160,bram_xmem addr_width=32 we_width=4
+chroma_mc_uni_libx265_hls,1,12304,edge_buffer_Dout_A,in,32,68160,bram_xmem addr_width=32 we_width=4
+chroma_mc_uni_libx265_hls,0,752,xm_buf_linesize,out,32,1,
+chroma_mc_uni_libx265_hls,0,1528,dst_depth,out,8,1,
+#chroma_mc_uni_libx265_hls,0,0,tid,in,32,1,apcall_arg
+#,0,1044,up_sao,,608,1,struct struct_size=76
+#,0,968,left_sao,,608,1,struct struct_size=76
+#,0,892,curr_sao,,608,1,struct struct_size=76
+#sao_param_hls,0,0,rx,in,32,1,apcall_arg
+#sao_param_hls,0,0,ry,in,32,1,apcall_arg
+sao_param_hls,1,892,curr_sao_offset_abs_0_0_i,in,8,12,(complete partition) 2d struct_element struct_var=curr_sao
+sao_param_hls,1,892,curr_sao_offset_abs_0_0_o,out,8,12,(complete partition) 2d struct_element struct_var=curr_sao
+sao_param_hls,1,893,curr_sao_offset_abs_0_1_i,in,8,12,(complete partition) 2d struct_element struct_var=curr_sao
+sao_param_hls,1,893,curr_sao_offset_abs_0_1_o,out,8,12,(complete partition) 2d struct_element struct_var=curr_sao
+sao_param_hls,1,894,curr_sao_offset_abs_0_2_i,in,8,12,(complete partition) 2d struct_element struct_var=curr_sao
+sao_param_hls,1,894,curr_sao_offset_abs_0_2_o,out,8,12,(complete partition) 2d struct_element struct_var=curr_sao
+sao_param_hls,1,895,curr_sao_offset_abs_0_3_i,in,8,12,(complete partition) 2d struct_element struct_var=curr_sao
+sao_param_hls,1,895,curr_sao_offset_abs_0_3_o,out,8,12,(complete partition) 2d struct_element struct_var=curr_sao
+sao_param_hls,1,896,curr_sao_offset_abs_1_0_i,in,8,12,(complete partition) 2d struct_element struct_var=curr_sao
+sao_param_hls,1,896,curr_sao_offset_abs_1_0_o,out,8,12,(complete partition) 2d struct_element struct_var=curr_sao
+sao_param_hls,1,897,curr_sao_offset_abs_1_1_i,in,8,12,(complete partition) 2d struct_element struct_var=curr_sao
+sao_param_hls,1,897,curr_sao_offset_abs_1_1_o,out,8,12,(complete partition) 2d struct_element struct_var=curr_sao
+sao_param_hls,1,898,curr_sao_offset_abs_1_2_i,in,8,12,(complete partition) 2d struct_element struct_var=curr_sao
+sao_param_hls,1,898,curr_sao_offset_abs_1_2_o,out,8,12,(complete partition) 2d struct_element struct_var=curr_sao
+sao_param_hls,1,899,curr_sao_offset_abs_1_3_i,in,8,12,(complete partition) 2d struct_element struct_var=curr_sao
+sao_param_hls,1,899,curr_sao_offset_abs_1_3_o,out,8,12,(complete partition) 2d struct_element struct_var=curr_sao
+sao_param_hls,1,900,curr_sao_offset_abs_2_0_i,in,8,12,(complete partition) 2d struct_element struct_var=curr_sao
+sao_param_hls,1,900,curr_sao_offset_abs_2_0_o,out,8,12,(complete partition) 2d struct_element struct_var=curr_sao
+sao_param_hls,1,901,curr_sao_offset_abs_2_1_i,in,8,12,(complete partition) 2d struct_element struct_var=curr_sao
+sao_param_hls,1,901,curr_sao_offset_abs_2_1_o,out,8,12,(complete partition) 2d struct_element struct_var=curr_sao
+sao_param_hls,1,902,curr_sao_offset_abs_2_2_i,in,8,12,(complete partition) 2d struct_element struct_var=curr_sao
+sao_param_hls,1,902,curr_sao_offset_abs_2_2_o,out,8,12,(complete partition) 2d struct_element struct_var=curr_sao
+sao_param_hls,1,903,curr_sao_offset_abs_2_3_i,in,8,12,(complete partition) 2d struct_element struct_var=curr_sao
+sao_param_hls,1,903,curr_sao_offset_abs_2_3_o,out,8,12,(complete partition) 2d struct_element struct_var=curr_sao
+sao_param_hls,1,904,curr_sao_offset_sign_0_0_i,in,8,12,(complete partition) 2d struct_element struct_var=curr_sao
+sao_param_hls,1,904,curr_sao_offset_sign_0_0_o,out,8,12,(complete partition) 2d struct_element struct_var=curr_sao
+sao_param_hls,1,905,curr_sao_offset_sign_0_1_i,in,8,12,(complete partition) 2d struct_element struct_var=curr_sao
+sao_param_hls,1,905,curr_sao_offset_sign_0_1_o,out,8,12,(complete partition) 2d struct_element struct_var=curr_sao
+sao_param_hls,1,906,curr_sao_offset_sign_0_2_i,in,8,12,(complete partition) 2d struct_element struct_var=curr_sao
+sao_param_hls,1,906,curr_sao_offset_sign_0_2_o,out,8,12,(complete partition) 2d struct_element struct_var=curr_sao
+sao_param_hls,1,907,curr_sao_offset_sign_0_3_i,in,8,12,(complete partition) 2d struct_element struct_var=curr_sao
+sao_param_hls,1,907,curr_sao_offset_sign_0_3_o,out,8,12,(complete partition) 2d struct_element struct_var=curr_sao
+sao_param_hls,1,908,curr_sao_offset_sign_1_0_i,in,8,12,(complete partition) 2d struct_element struct_var=curr_sao
+sao_param_hls,1,908,curr_sao_offset_sign_1_0_o,out,8,12,(complete partition) 2d struct_element struct_var=curr_sao
+sao_param_hls,1,909,curr_sao_offset_sign_1_1_i,in,8,12,(complete partition) 2d struct_element struct_var=curr_sao
+sao_param_hls,1,909,curr_sao_offset_sign_1_1_o,out,8,12,(complete partition) 2d struct_element struct_var=curr_sao
+sao_param_hls,1,910,curr_sao_offset_sign_1_2_i,in,8,12,(complete partition) 2d struct_element struct_var=curr_sao
+sao_param_hls,1,910,curr_sao_offset_sign_1_2_o,out,8,12,(complete partition) 2d struct_element struct_var=curr_sao
+sao_param_hls,1,911,curr_sao_offset_sign_1_3_i,in,8,12,(complete partition) 2d struct_element struct_var=curr_sao
+sao_param_hls,1,911,curr_sao_offset_sign_1_3_o,out,8,12,(complete partition) 2d struct_element struct_var=curr_sao
+sao_param_hls,1,912,curr_sao_offset_sign_2_0_i,in,8,12,(complete partition) 2d struct_element struct_var=curr_sao
+sao_param_hls,1,912,curr_sao_offset_sign_2_0_o,out,8,12,(complete partition) 2d struct_element struct_var=curr_sao
+sao_param_hls,1,913,curr_sao_offset_sign_2_1_i,in,8,12,(complete partition) 2d struct_element struct_var=curr_sao
+sao_param_hls,1,913,curr_sao_offset_sign_2_1_o,out,8,12,(complete partition) 2d struct_element struct_var=curr_sao
+sao_param_hls,1,914,curr_sao_offset_sign_2_2_i,in,8,12,(complete partition) 2d struct_element struct_var=curr_sao
+sao_param_hls,1,914,curr_sao_offset_sign_2_2_o,out,8,12,(complete partition) 2d struct_element struct_var=curr_sao
+sao_param_hls,1,915,curr_sao_offset_sign_2_3_i,in,8,12,(complete partition) 2d struct_element struct_var=curr_sao
+sao_param_hls,1,915,curr_sao_offset_sign_2_3_o,out,8,12,(complete partition) 2d struct_element struct_var=curr_sao
+sao_param_hls,1,916,curr_sao_band_position_0,out,8,3,(complete partition) struct_element struct_var=curr_sao
+sao_param_hls,1,917,curr_sao_band_position_1,out,8,3,(complete partition) struct_element struct_var=curr_sao
+sao_param_hls,1,918,curr_sao_band_position_2,out,8,3,(complete partition) struct_element struct_var=curr_sao
+#sao_param_hls,0,0,curr_sao_padding_1a,in,8,1,apcall_arg
+sao_param_hls,1,920,curr_sao_offset_val_0_0,out,16,15,(complete partition) 2d struct_element struct_var=curr_sao
+sao_param_hls,1,922,curr_sao_offset_val_0_1_i,in,16,15,(complete partition) 2d struct_element struct_var=curr_sao
+sao_param_hls,1,922,curr_sao_offset_val_0_1_o,out,16,15,(complete partition) 2d struct_element struct_var=curr_sao
+sao_param_hls,1,924,curr_sao_offset_val_0_2_i,in,16,15,(complete partition) 2d struct_element struct_var=curr_sao
+sao_param_hls,1,924,curr_sao_offset_val_0_2_o,out,16,15,(complete partition) 2d struct_element struct_var=curr_sao
+sao_param_hls,1,926,curr_sao_offset_val_0_3_i,in,16,15,(complete partition) 2d struct_element struct_var=curr_sao
+sao_param_hls,1,926,curr_sao_offset_val_0_3_o,out,16,15,(complete partition) 2d struct_element struct_var=curr_sao
+sao_param_hls,1,928,curr_sao_offset_val_0_4_i,in,16,15,(complete partition) 2d struct_element struct_var=curr_sao
+sao_param_hls,1,928,curr_sao_offset_val_0_4_o,out,16,15,(complete partition) 2d struct_element struct_var=curr_sao
+sao_param_hls,1,930,curr_sao_offset_val_1_0,out,16,15,(complete partition) 2d struct_element struct_var=curr_sao
+sao_param_hls,1,932,curr_sao_offset_val_1_1_i,in,16,15,(complete partition) 2d struct_element struct_var=curr_sao
+sao_param_hls,1,932,curr_sao_offset_val_1_1_o,out,16,15,(complete partition) 2d struct_element struct_var=curr_sao
+sao_param_hls,1,934,curr_sao_offset_val_1_2_i,in,16,15,(complete partition) 2d struct_element struct_var=curr_sao
+sao_param_hls,1,934,curr_sao_offset_val_1_2_o,out,16,15,(complete partition) 2d struct_element struct_var=curr_sao
+sao_param_hls,1,936,curr_sao_offset_val_1_3_i,in,16,15,(complete partition) 2d struct_element struct_var=curr_sao
+sao_param_hls,1,936,curr_sao_offset_val_1_3_o,out,16,15,(complete partition) 2d struct_element struct_var=curr_sao
+sao_param_hls,1,938,curr_sao_offset_val_1_4_i,in,16,15,(complete partition) 2d struct_element struct_var=curr_sao
+sao_param_hls,1,938,curr_sao_offset_val_1_4_o,out,16,15,(complete partition) 2d struct_element struct_var=curr_sao
+sao_param_hls,1,940,curr_sao_offset_val_2_0,out,16,15,(complete partition) 2d struct_element struct_var=curr_sao
+sao_param_hls,1,942,curr_sao_offset_val_2_1_i,in,16,15,(complete partition) 2d struct_element struct_var=curr_sao
+sao_param_hls,1,942,curr_sao_offset_val_2_1_o,out,16,15,(complete partition) 2d struct_element struct_var=curr_sao
+sao_param_hls,1,944,curr_sao_offset_val_2_2_i,in,16,15,(complete partition) 2d struct_element struct_var=curr_sao
+sao_param_hls,1,944,curr_sao_offset_val_2_2_o,out,16,15,(complete partition) 2d struct_element struct_var=curr_sao
+sao_param_hls,1,946,curr_sao_offset_val_2_3_i,in,16,15,(complete partition) 2d struct_element struct_var=curr_sao
+sao_param_hls,1,946,curr_sao_offset_val_2_3_o,out,16,15,(complete partition) 2d struct_element struct_var=curr_sao
+sao_param_hls,1,948,curr_sao_offset_val_2_4_i,in,16,15,(complete partition) 2d struct_element struct_var=curr_sao
+sao_param_hls,1,948,curr_sao_offset_val_2_4_o,out,16,15,(complete partition) 2d struct_element struct_var=curr_sao
+#sao_param_hls,0,0,curr_sao_padding_2a,in,16,1,apcall_arg
+sao_param_hls,1,952,curr_sao_eo_class_0,out,8,3,(complete partition) struct_element struct_var=curr_sao
+sao_param_hls,1,953,curr_sao_eo_class_1_i,in,8,3,(complete partition) struct_element struct_var=curr_sao
+sao_param_hls,1,953,curr_sao_eo_class_1_o,out,8,3,(complete partition) struct_element struct_var=curr_sao
+sao_param_hls,1,954,curr_sao_eo_class_2,out,8,3,(complete partition) struct_element struct_var=curr_sao
+#sao_param_hls,0,0,curr_sao_padding_3a,in,8,1,apcall_arg
+sao_param_hls,1,956,curr_sao_type_idx_0_i,in,8,3,(complete partition) struct_element struct_var=curr_sao
+sao_param_hls,1,956,curr_sao_type_idx_0_o,out,8,3,(complete partition) struct_element struct_var=curr_sao
+sao_param_hls,1,957,curr_sao_type_idx_1_i,in,8,3,(complete partition) struct_element struct_var=curr_sao
+sao_param_hls,1,957,curr_sao_type_idx_1_o,out,8,3,(complete partition) struct_element struct_var=curr_sao
+sao_param_hls,1,958,curr_sao_type_idx_2_i,in,8,3,(complete partition) struct_element struct_var=curr_sao
+sao_param_hls,1,958,curr_sao_type_idx_2_o,out,8,3,(complete partition) struct_element struct_var=curr_sao
+#sao_param_hls,0,0,curr_sao_padding_4a,in,8,1,apcall_arg
+sao_param_hls,0,960,curr_sao_sao_merge_left_flag,out,32,1,struct_element struct_var=curr_sao
+sao_param_hls,0,964,curr_sao_sao_merge_up_flag,out,32,1,struct_element struct_var=curr_sao
+sao_param_hls,1,968,left_sao_offset_abs_0_0,in,8,12,(complete partition) 2d struct_element struct_var=left_sao
+sao_param_hls,1,969,left_sao_offset_abs_0_1,in,8,12,(complete partition) 2d struct_element struct_var=left_sao
+sao_param_hls,1,970,left_sao_offset_abs_0_2,in,8,12,(complete partition) 2d struct_element struct_var=left_sao
+sao_param_hls,1,971,left_sao_offset_abs_0_3,in,8,12,(complete partition) 2d struct_element struct_var=left_sao
+sao_param_hls,1,972,left_sao_offset_abs_1_0,in,8,12,(complete partition) 2d struct_element struct_var=left_sao
+sao_param_hls,1,973,left_sao_offset_abs_1_1,in,8,12,(complete partition) 2d struct_element struct_var=left_sao
+sao_param_hls,1,974,left_sao_offset_abs_1_2,in,8,12,(complete partition) 2d struct_element struct_var=left_sao
+sao_param_hls,1,975,left_sao_offset_abs_1_3,in,8,12,(complete partition) 2d struct_element struct_var=left_sao
+sao_param_hls,1,976,left_sao_offset_abs_2_0,in,8,12,(complete partition) 2d struct_element struct_var=left_sao
+sao_param_hls,1,977,left_sao_offset_abs_2_1,in,8,12,(complete partition) 2d struct_element struct_var=left_sao
+sao_param_hls,1,978,left_sao_offset_abs_2_2,in,8,12,(complete partition) 2d struct_element struct_var=left_sao
+sao_param_hls,1,979,left_sao_offset_abs_2_3,in,8,12,(complete partition) 2d struct_element struct_var=left_sao
+sao_param_hls,1,980,left_sao_offset_sign_0_0,in,8,12,(complete partition) 2d struct_element struct_var=left_sao
+sao_param_hls,1,981,left_sao_offset_sign_0_1,in,8,12,(complete partition) 2d struct_element struct_var=left_sao
+sao_param_hls,1,982,left_sao_offset_sign_0_2,in,8,12,(complete partition) 2d struct_element struct_var=left_sao
+sao_param_hls,1,983,left_sao_offset_sign_0_3,in,8,12,(complete partition) 2d struct_element struct_var=left_sao
+sao_param_hls,1,984,left_sao_offset_sign_1_0,in,8,12,(complete partition) 2d struct_element struct_var=left_sao
+sao_param_hls,1,985,left_sao_offset_sign_1_1,in,8,12,(complete partition) 2d struct_element struct_var=left_sao
+sao_param_hls,1,986,left_sao_offset_sign_1_2,in,8,12,(complete partition) 2d struct_element struct_var=left_sao
+sao_param_hls,1,987,left_sao_offset_sign_1_3,in,8,12,(complete partition) 2d struct_element struct_var=left_sao
+sao_param_hls,1,988,left_sao_offset_sign_2_0,in,8,12,(complete partition) 2d struct_element struct_var=left_sao
+sao_param_hls,1,989,left_sao_offset_sign_2_1,in,8,12,(complete partition) 2d struct_element struct_var=left_sao
+sao_param_hls,1,990,left_sao_offset_sign_2_2,in,8,12,(complete partition) 2d struct_element struct_var=left_sao
+sao_param_hls,1,991,left_sao_offset_sign_2_3,in,8,12,(complete partition) 2d struct_element struct_var=left_sao
+sao_param_hls,1,992,left_sao_band_position_0,in,8,3,(complete partition) struct_element struct_var=left_sao
+sao_param_hls,1,993,left_sao_band_position_1,in,8,3,(complete partition) struct_element struct_var=left_sao
+sao_param_hls,1,994,left_sao_band_position_2,in,8,3,(complete partition) struct_element struct_var=left_sao
+#sao_param_hls,0,0,left_sao_padding_1a,in,8,1,apcall_arg
+sao_param_hls,1,996,left_sao_offset_val_0_0,in,16,15,(complete partition) 2d struct_element struct_var=left_sao
+sao_param_hls,1,998,left_sao_offset_val_0_1,in,16,15,(complete partition) 2d struct_element struct_var=left_sao
+sao_param_hls,1,1000,left_sao_offset_val_0_2,in,16,15,(complete partition) 2d struct_element struct_var=left_sao
+sao_param_hls,1,1002,left_sao_offset_val_0_3,in,16,15,(complete partition) 2d struct_element struct_var=left_sao
+sao_param_hls,1,1004,left_sao_offset_val_0_4,in,16,15,(complete partition) 2d struct_element struct_var=left_sao
+sao_param_hls,1,1006,left_sao_offset_val_1_0,in,16,15,(complete partition) 2d struct_element struct_var=left_sao
+sao_param_hls,1,1008,left_sao_offset_val_1_1,in,16,15,(complete partition) 2d struct_element struct_var=left_sao
+sao_param_hls,1,1010,left_sao_offset_val_1_2,in,16,15,(complete partition) 2d struct_element struct_var=left_sao
+sao_param_hls,1,1012,left_sao_offset_val_1_3,in,16,15,(complete partition) 2d struct_element struct_var=left_sao
+sao_param_hls,1,1014,left_sao_offset_val_1_4,in,16,15,(complete partition) 2d struct_element struct_var=left_sao
+sao_param_hls,1,1016,left_sao_offset_val_2_0,in,16,15,(complete partition) 2d struct_element struct_var=left_sao
+sao_param_hls,1,1018,left_sao_offset_val_2_1,in,16,15,(complete partition) 2d struct_element struct_var=left_sao
+sao_param_hls,1,1020,left_sao_offset_val_2_2,in,16,15,(complete partition) 2d struct_element struct_var=left_sao
+sao_param_hls,1,1022,left_sao_offset_val_2_3,in,16,15,(complete partition) 2d struct_element struct_var=left_sao
+sao_param_hls,1,1024,left_sao_offset_val_2_4,in,16,15,(complete partition) 2d struct_element struct_var=left_sao
+#sao_param_hls,0,0,left_sao_padding_2a,in,16,1,apcall_arg
+sao_param_hls,1,1028,left_sao_eo_class_0,in,8,3,(complete partition) struct_element struct_var=left_sao
+sao_param_hls,1,1029,left_sao_eo_class_1,in,8,3,(complete partition) struct_element struct_var=left_sao
+sao_param_hls,1,1030,left_sao_eo_class_2,in,8,3,(complete partition) struct_element struct_var=left_sao
+#sao_param_hls,0,0,left_sao_padding_3a,in,8,1,apcall_arg
+sao_param_hls,1,1032,left_sao_type_idx_0,in,8,3,(complete partition) struct_element struct_var=left_sao
+sao_param_hls,1,1033,left_sao_type_idx_1,in,8,3,(complete partition) struct_element struct_var=left_sao
+sao_param_hls,1,1034,left_sao_type_idx_2,in,8,3,(complete partition) struct_element struct_var=left_sao
+#sao_param_hls,0,0,left_sao_padding_4a,in,8,1,apcall_arg
+sao_param_hls,0,1036,left_sao_sao_merge_left_flag,in,32,1,struct_element struct_var=left_sao
+sao_param_hls,0,1040,left_sao_sao_merge_up_flag,in,32,1,struct_element struct_var=left_sao
+sao_param_hls,1,1044,up_sao_offset_abs_0_0,in,8,12,(complete partition) 2d struct_element struct_var=up_sao
+sao_param_hls,1,1045,up_sao_offset_abs_0_1,in,8,12,(complete partition) 2d struct_element struct_var=up_sao
+sao_param_hls,1,1046,up_sao_offset_abs_0_2,in,8,12,(complete partition) 2d struct_element struct_var=up_sao
+sao_param_hls,1,1047,up_sao_offset_abs_0_3,in,8,12,(complete partition) 2d struct_element struct_var=up_sao
+sao_param_hls,1,1048,up_sao_offset_abs_1_0,in,8,12,(complete partition) 2d struct_element struct_var=up_sao
+sao_param_hls,1,1049,up_sao_offset_abs_1_1,in,8,12,(complete partition) 2d struct_element struct_var=up_sao
+sao_param_hls,1,1050,up_sao_offset_abs_1_2,in,8,12,(complete partition) 2d struct_element struct_var=up_sao
+sao_param_hls,1,1051,up_sao_offset_abs_1_3,in,8,12,(complete partition) 2d struct_element struct_var=up_sao
+sao_param_hls,1,1052,up_sao_offset_abs_2_0,in,8,12,(complete partition) 2d struct_element struct_var=up_sao
+sao_param_hls,1,1053,up_sao_offset_abs_2_1,in,8,12,(complete partition) 2d struct_element struct_var=up_sao
+sao_param_hls,1,1054,up_sao_offset_abs_2_2,in,8,12,(complete partition) 2d struct_element struct_var=up_sao
+sao_param_hls,1,1055,up_sao_offset_abs_2_3,in,8,12,(complete partition) 2d struct_element struct_var=up_sao
+sao_param_hls,1,1056,up_sao_offset_sign_0_0,in,8,12,(complete partition) 2d struct_element struct_var=up_sao
+sao_param_hls,1,1057,up_sao_offset_sign_0_1,in,8,12,(complete partition) 2d struct_element struct_var=up_sao
+sao_param_hls,1,1058,up_sao_offset_sign_0_2,in,8,12,(complete partition) 2d struct_element struct_var=up_sao
+sao_param_hls,1,1059,up_sao_offset_sign_0_3,in,8,12,(complete partition) 2d struct_element struct_var=up_sao
+sao_param_hls,1,1060,up_sao_offset_sign_1_0,in,8,12,(complete partition) 2d struct_element struct_var=up_sao
+sao_param_hls,1,1061,up_sao_offset_sign_1_1,in,8,12,(complete partition) 2d struct_element struct_var=up_sao
+sao_param_hls,1,1062,up_sao_offset_sign_1_2,in,8,12,(complete partition) 2d struct_element struct_var=up_sao
+sao_param_hls,1,1063,up_sao_offset_sign_1_3,in,8,12,(complete partition) 2d struct_element struct_var=up_sao
+sao_param_hls,1,1064,up_sao_offset_sign_2_0,in,8,12,(complete partition) 2d struct_element struct_var=up_sao
+sao_param_hls,1,1065,up_sao_offset_sign_2_1,in,8,12,(complete partition) 2d struct_element struct_var=up_sao
+sao_param_hls,1,1066,up_sao_offset_sign_2_2,in,8,12,(complete partition) 2d struct_element struct_var=up_sao
+sao_param_hls,1,1067,up_sao_offset_sign_2_3,in,8,12,(complete partition) 2d struct_element struct_var=up_sao
+sao_param_hls,1,1068,up_sao_band_position_0,in,8,3,(complete partition) struct_element struct_var=up_sao
+sao_param_hls,1,1069,up_sao_band_position_1,in,8,3,(complete partition) struct_element struct_var=up_sao
+sao_param_hls,1,1070,up_sao_band_position_2,in,8,3,(complete partition) struct_element struct_var=up_sao
+#sao_param_hls,0,0,up_sao_padding_1a,in,8,1,apcall_arg
+sao_param_hls,1,1072,up_sao_offset_val_0_0,in,16,15,(complete partition) 2d struct_element struct_var=up_sao
+sao_param_hls,1,1074,up_sao_offset_val_0_1,in,16,15,(complete partition) 2d struct_element struct_var=up_sao
+sao_param_hls,1,1076,up_sao_offset_val_0_2,in,16,15,(complete partition) 2d struct_element struct_var=up_sao
+sao_param_hls,1,1078,up_sao_offset_val_0_3,in,16,15,(complete partition) 2d struct_element struct_var=up_sao
+sao_param_hls,1,1080,up_sao_offset_val_0_4,in,16,15,(complete partition) 2d struct_element struct_var=up_sao
+sao_param_hls,1,1082,up_sao_offset_val_1_0,in,16,15,(complete partition) 2d struct_element struct_var=up_sao
+sao_param_hls,1,1084,up_sao_offset_val_1_1,in,16,15,(complete partition) 2d struct_element struct_var=up_sao
+sao_param_hls,1,1086,up_sao_offset_val_1_2,in,16,15,(complete partition) 2d struct_element struct_var=up_sao
+sao_param_hls,1,1088,up_sao_offset_val_1_3,in,16,15,(complete partition) 2d struct_element struct_var=up_sao
+sao_param_hls,1,1090,up_sao_offset_val_1_4,in,16,15,(complete partition) 2d struct_element struct_var=up_sao
+sao_param_hls,1,1092,up_sao_offset_val_2_0,in,16,15,(complete partition) 2d struct_element struct_var=up_sao
+sao_param_hls,1,1094,up_sao_offset_val_2_1,in,16,15,(complete partition) 2d struct_element struct_var=up_sao
+sao_param_hls,1,1096,up_sao_offset_val_2_2,in,16,15,(complete partition) 2d struct_element struct_var=up_sao
+sao_param_hls,1,1098,up_sao_offset_val_2_3,in,16,15,(complete partition) 2d struct_element struct_var=up_sao
+sao_param_hls,1,1100,up_sao_offset_val_2_4,in,16,15,(complete partition) 2d struct_element struct_var=up_sao
+#sao_param_hls,0,0,up_sao_padding_2a,in,16,1,apcall_arg
+sao_param_hls,1,1104,up_sao_eo_class_0,in,8,3,(complete partition) struct_element struct_var=up_sao
+sao_param_hls,1,1105,up_sao_eo_class_1,in,8,3,(complete partition) struct_element struct_var=up_sao
+sao_param_hls,1,1106,up_sao_eo_class_2,in,8,3,(complete partition) struct_element struct_var=up_sao
+#sao_param_hls,0,0,up_sao_padding_3a,in,8,1,apcall_arg
+sao_param_hls,1,1108,up_sao_type_idx_0,in,8,3,(complete partition) struct_element struct_var=up_sao
+sao_param_hls,1,1109,up_sao_type_idx_1,in,8,3,(complete partition) struct_element struct_var=up_sao
+sao_param_hls,1,1110,up_sao_type_idx_2,in,8,3,(complete partition) struct_element struct_var=up_sao
+#sao_param_hls,0,0,up_sao_padding_4a,in,8,1,apcall_arg
+sao_param_hls,0,1112,up_sao_sao_merge_left_flag,in,32,1,struct_element struct_var=up_sao
+sao_param_hls,0,1116,up_sao_sao_merge_up_flag,in,32,1,struct_element struct_var=up_sao
+sao_param_hls,1,1288,slice_sample_adaptive_offset_flag_0,in,8,3,(complete partition)
+sao_param_hls,1,1289,slice_sample_adaptive_offset_flag_1,in,8,3,(complete partition)
+sao_param_hls,1,1290,slice_sample_adaptive_offset_flag_2,in,8,3,(complete partition)
+sao_param_hls,0,608,ctb_left_flag,in,8,1,
+sao_param_hls,0,604,ctb_up_flag,in,8,1,
+#sao_param_hls,0,0,log2_sao_offset_scale_luma,in,8,1,apcall_arg
+#sao_param_hls,0,0,log2_sao_offset_scale_chroma,in,8,1,apcall_arg
+sao_param_hls,0,1524,bit_depth,in,8,1,
+xmem_copy_mvfield_hls,1,286240,tab_mvf_mv_0_x_Din_A,out,16,1,bram_xmem struct_element addr_width=32 we_width=2 struct_size=32 struct_base=286240 struct_var=tab_mvf
+xmem_copy_mvfield_hls,1,286240,tab_mvf_mv_0_x_Dout_A,in,16,1,bram_xmem struct_element addr_width=32 we_width=2 struct_size=32 struct_base=286240 struct_var=tab_mvf
+xmem_copy_mvfield_hls,1,286244,tab_mvf_mv_0_y_Din_A,out,16,1,bram_xmem struct_element addr_width=32 we_width=2 struct_size=32 struct_base=286240 struct_var=tab_mvf
+xmem_copy_mvfield_hls,1,286244,tab_mvf_mv_0_y_Dout_A,in,16,1,bram_xmem struct_element addr_width=32 we_width=2 struct_size=32 struct_base=286240 struct_var=tab_mvf
+xmem_copy_mvfield_hls,1,286248,tab_mvf_mv_1_x_Din_A,out,16,1,bram_xmem struct_element addr_width=32 we_width=2 struct_size=32 struct_base=286240 struct_var=tab_mvf
+xmem_copy_mvfield_hls,1,286248,tab_mvf_mv_1_x_Dout_A,in,16,1,bram_xmem struct_element addr_width=32 we_width=2 struct_size=32 struct_base=286240 struct_var=tab_mvf
+xmem_copy_mvfield_hls,1,286252,tab_mvf_mv_1_y_Din_A,out,16,1,bram_xmem struct_element addr_width=32 we_width=2 struct_size=32 struct_base=286240 struct_var=tab_mvf
+xmem_copy_mvfield_hls,1,286252,tab_mvf_mv_1_y_Dout_A,in,16,1,bram_xmem struct_element addr_width=32 we_width=2 struct_size=32 struct_base=286240 struct_var=tab_mvf
+xmem_copy_mvfield_hls,1,286256,tab_mvf_poc_0_Din_A,out,32,1,bram_xmem struct_element addr_width=32 we_width=4 struct_size=32 struct_base=286240 struct_var=tab_mvf
+xmem_copy_mvfield_hls,1,286256,tab_mvf_poc_0_Dout_A,in,32,1,bram_xmem struct_element addr_width=32 we_width=4 struct_size=32 struct_base=286240 struct_var=tab_mvf
+xmem_copy_mvfield_hls,1,286260,tab_mvf_poc_1_Din_A,out,32,1,bram_xmem struct_element addr_width=32 we_width=4 struct_size=32 struct_base=286240 struct_var=tab_mvf
+xmem_copy_mvfield_hls,1,286260,tab_mvf_poc_1_Dout_A,in,32,1,bram_xmem struct_element addr_width=32 we_width=4 struct_size=32 struct_base=286240 struct_var=tab_mvf
+xmem_copy_mvfield_hls,1,286264,tab_mvf_ref_idx_0_Din_A,out,8,1,bram_xmem struct_element addr_width=32 we_width=1 struct_size=32 struct_base=286240 struct_var=tab_mvf
+xmem_copy_mvfield_hls,1,286264,tab_mvf_ref_idx_0_Dout_A,in,8,1,bram_xmem struct_element addr_width=32 we_width=1 struct_size=32 struct_base=286240 struct_var=tab_mvf
+xmem_copy_mvfield_hls,1,286268,tab_mvf_ref_idx_1_Din_A,out,8,1,bram_xmem struct_element addr_width=32 we_width=1 struct_size=32 struct_base=286240 struct_var=tab_mvf
+xmem_copy_mvfield_hls,1,286268,tab_mvf_ref_idx_1_Dout_A,in,8,1,bram_xmem struct_element addr_width=32 we_width=1 struct_size=32 struct_base=286240 struct_var=tab_mvf
+#xmem_copy_mvfield_hls,0,0,index,in,32,1,apcall_arg
+xmem_copy_mvfield_hls,0,784,current_mv_mv_0_x,in,16,1,struct_element struct_var=current_mv
+xmem_copy_mvfield_hls,0,788,current_mv_mv_0_y,in,16,1,struct_element struct_var=current_mv
+xmem_copy_mvfield_hls,0,792,current_mv_mv_1_x,in,16,1,struct_element struct_var=current_mv
+xmem_copy_mvfield_hls,0,796,current_mv_mv_1_y,in,16,1,struct_element struct_var=current_mv
+xmem_copy_mvfield_hls,0,800,current_mv_poc_0,in,32,1,struct_element struct_var=current_mv
+xmem_copy_mvfield_hls,0,804,current_mv_poc_1,in,32,1,struct_element struct_var=current_mv
+xmem_copy_mvfield_hls,0,808,current_mv_ref_idx_0,in,8,1,struct_element struct_var=current_mv
+xmem_copy_mvfield_hls,0,812,current_mv_ref_idx_1,in,8,1,struct_element struct_var=current_mv
+#intra_pred_libx265_hls,0,0,x0,in,32,1,apcall_arg
+#intra_pred_libx265_hls,0,0,y0,in,32,1,apcall_arg
+#intra_pred_libx265_hls,0,0,log2_size,in,32,1,apcall_arg
+#intra_pred_libx265_hls,0,0,c_idx,in,32,1,apcall_arg
+intra_pred_libx265_hls,0,488,tu_intra_pred_mode_c,in,32,1,parent_func
+intra_pred_libx265_hls,0,484,tu_intra_pred_mode,in,32,1,parent_func
+#intra_pred_libx265_hls,0,0,self_id,in,32,1,apcall_arg
+intra_pred_libx265_hls,1,336,hshift_0,in,32,3,(complete partition) parent_func
+intra_pred_libx265_hls,1,340,hshift_1,in,32,3,(complete partition) parent_func
+intra_pred_libx265_hls,1,344,hshift_2,in,32,3,(complete partition) parent_func
+#,0,1212,mxx,,64,1,struct struct_size=8
+#mv_mp_mode_mx_hls,0,0,x,in,32,1,apcall_arg
+#mv_mp_mode_mx_hls,0,0,y,in,32,1,apcall_arg
+mv_mp_mode_mx_hls,0,172,log2_width,in,8,1,
+mv_mp_mode_mx_hls,0,396,min_pu_width,in,32,1,
+mv_mp_mode_mx_hls,0,372,log2_min_pu_size,in,32,1,
+#mv_mp_mode_mx_hls,0,0,ref_pic_curr,in,32,1,apcall_arg
+#mv_mp_mode_mx_hls,0,0,pred_flag_index,in,32,1,apcall_arg
+mv_mp_mode_mx_hls,0,1212,mxx_x,out,16,1,struct_element struct_var=mxx
+mv_mp_mode_mx_hls,0,1216,mxx_y,out,16,1,struct_element struct_var=mxx
+mv_mp_mode_mx_hls,1,286240,tab_mvf_mv_0_x_Din_A,out,16,1,bram_xmem struct_element addr_width=32 we_width=2 struct_size=32 struct_base=286240 struct_var=tab_mvf
+mv_mp_mode_mx_hls,1,286240,tab_mvf_mv_0_x_Dout_A,in,16,1,bram_xmem struct_element addr_width=32 we_width=2 struct_size=32 struct_base=286240 struct_var=tab_mvf
+mv_mp_mode_mx_hls,1,286244,tab_mvf_mv_0_y_Din_A,out,16,1,bram_xmem struct_element addr_width=32 we_width=2 struct_size=32 struct_base=286240 struct_var=tab_mvf
+mv_mp_mode_mx_hls,1,286244,tab_mvf_mv_0_y_Dout_A,in,16,1,bram_xmem struct_element addr_width=32 we_width=2 struct_size=32 struct_base=286240 struct_var=tab_mvf
+mv_mp_mode_mx_hls,1,286248,tab_mvf_mv_1_x_Din_A,out,16,1,bram_xmem struct_element addr_width=32 we_width=2 struct_size=32 struct_base=286240 struct_var=tab_mvf
+mv_mp_mode_mx_hls,1,286248,tab_mvf_mv_1_x_Dout_A,in,16,1,bram_xmem struct_element addr_width=32 we_width=2 struct_size=32 struct_base=286240 struct_var=tab_mvf
+mv_mp_mode_mx_hls,1,286252,tab_mvf_mv_1_y_Din_A,out,16,1,bram_xmem struct_element addr_width=32 we_width=2 struct_size=32 struct_base=286240 struct_var=tab_mvf
+mv_mp_mode_mx_hls,1,286252,tab_mvf_mv_1_y_Dout_A,in,16,1,bram_xmem struct_element addr_width=32 we_width=2 struct_size=32 struct_base=286240 struct_var=tab_mvf
+mv_mp_mode_mx_hls,1,286256,tab_mvf_poc_0_Din_A,out,32,1,bram_xmem struct_element addr_width=32 we_width=4 struct_size=32 struct_base=286240 struct_var=tab_mvf
+mv_mp_mode_mx_hls,1,286256,tab_mvf_poc_0_Dout_A,in,32,1,bram_xmem struct_element addr_width=32 we_width=4 struct_size=32 struct_base=286240 struct_var=tab_mvf
+mv_mp_mode_mx_hls,1,286260,tab_mvf_poc_1_Din_A,out,32,1,bram_xmem struct_element addr_width=32 we_width=4 struct_size=32 struct_base=286240 struct_var=tab_mvf
+mv_mp_mode_mx_hls,1,286260,tab_mvf_poc_1_Dout_A,in,32,1,bram_xmem struct_element addr_width=32 we_width=4 struct_size=32 struct_base=286240 struct_var=tab_mvf
+mv_mp_mode_mx_hls,1,286264,tab_mvf_ref_idx_0_Din_A,out,8,1,bram_xmem struct_element addr_width=32 we_width=1 struct_size=32 struct_base=286240 struct_var=tab_mvf
+mv_mp_mode_mx_hls,1,286264,tab_mvf_ref_idx_0_Dout_A,in,8,1,bram_xmem struct_element addr_width=32 we_width=1 struct_size=32 struct_base=286240 struct_var=tab_mvf
+mv_mp_mode_mx_hls,1,286268,tab_mvf_ref_idx_1_Din_A,out,8,1,bram_xmem struct_element addr_width=32 we_width=1 struct_size=32 struct_base=286240 struct_var=tab_mvf
+mv_mp_mode_mx_hls,1,286268,tab_mvf_ref_idx_1_Dout_A,in,8,1,bram_xmem struct_element addr_width=32 we_width=1 struct_size=32 struct_base=286240 struct_var=tab_mvf
+mv_mp_mode_mx_hls,1,286244,tab_mvf_pred_flag_row_Din_A,out,32,1,bram_xmem xmem_pointer addr_width=32 we_width=4
+mv_mp_mode_mx_hls,1,286244,tab_mvf_pred_flag_row_Dout_A,in,32,1,bram_xmem xmem_pointer addr_width=32 we_width=4
+#mv_mp_mode_mx_lt_hls,0,0,x,in,32,1,apcall_arg
+#mv_mp_mode_mx_lt_hls,0,0,y,in,32,1,apcall_arg
+mv_mp_mode_mx_lt_hls,0,172,log2_width,in,8,1,
+mv_mp_mode_mx_lt_hls,0,396,min_pu_width,in,32,1,
+#mv_mp_mode_mx_lt_hls,0,0,pred_flag_index,in,32,1,apcall_arg
+#mv_mp_mode_mx_lt_hls,0,0,currIsLongTerm,in,32,1,apcall_arg
+#mv_mp_mode_mx_lt_hls,0,0,ref_pic_curr,in,32,1,apcall_arg
+mv_mp_mode_mx_lt_hls,0,372,log2_min_pu_size,in,32,1,
+mv_mp_mode_mx_lt_hls,0,1548,poc,in,32,1,
+mv_mp_mode_mx_lt_hls,1,286216,refPicList_0_isLongTerm_Din_A,out,32,1,bram_xmem xmem_pointer addr_width=32 we_width=4
+mv_mp_mode_mx_lt_hls,1,286216,refPicList_0_isLongTerm_Dout_A,in,32,1,bram_xmem xmem_pointer addr_width=32 we_width=4
+mv_mp_mode_mx_lt_hls,1,286220,refPicList_1_isLongTerm_Din_A,out,32,1,bram_xmem xmem_pointer addr_width=32 we_width=4
+mv_mp_mode_mx_lt_hls,1,286220,refPicList_1_isLongTerm_Dout_A,in,32,1,bram_xmem xmem_pointer addr_width=32 we_width=4
+mv_mp_mode_mx_lt_hls,0,1212,mxx_x,out,16,1,struct_element struct_var=mxx
+mv_mp_mode_mx_lt_hls,0,1216,mxx_y,out,16,1,struct_element struct_var=mxx
+mv_mp_mode_mx_lt_hls,1,286240,tab_mvf_mv_0_x_Din_A,out,16,1,bram_xmem struct_element addr_width=32 we_width=2 struct_size=32 struct_base=286240 struct_var=tab_mvf
+mv_mp_mode_mx_lt_hls,1,286240,tab_mvf_mv_0_x_Dout_A,in,16,1,bram_xmem struct_element addr_width=32 we_width=2 struct_size=32 struct_base=286240 struct_var=tab_mvf
+mv_mp_mode_mx_lt_hls,1,286244,tab_mvf_mv_0_y_Din_A,out,16,1,bram_xmem struct_element addr_width=32 we_width=2 struct_size=32 struct_base=286240 struct_var=tab_mvf
+mv_mp_mode_mx_lt_hls,1,286244,tab_mvf_mv_0_y_Dout_A,in,16,1,bram_xmem struct_element addr_width=32 we_width=2 struct_size=32 struct_base=286240 struct_var=tab_mvf
+mv_mp_mode_mx_lt_hls,1,286248,tab_mvf_mv_1_x_Din_A,out,16,1,bram_xmem struct_element addr_width=32 we_width=2 struct_size=32 struct_base=286240 struct_var=tab_mvf
+mv_mp_mode_mx_lt_hls,1,286248,tab_mvf_mv_1_x_Dout_A,in,16,1,bram_xmem struct_element addr_width=32 we_width=2 struct_size=32 struct_base=286240 struct_var=tab_mvf
+mv_mp_mode_mx_lt_hls,1,286252,tab_mvf_mv_1_y_Din_A,out,16,1,bram_xmem struct_element addr_width=32 we_width=2 struct_size=32 struct_base=286240 struct_var=tab_mvf
+mv_mp_mode_mx_lt_hls,1,286252,tab_mvf_mv_1_y_Dout_A,in,16,1,bram_xmem struct_element addr_width=32 we_width=2 struct_size=32 struct_base=286240 struct_var=tab_mvf
+mv_mp_mode_mx_lt_hls,1,286256,tab_mvf_poc_0_Din_A,out,32,1,bram_xmem struct_element addr_width=32 we_width=4 struct_size=32 struct_base=286240 struct_var=tab_mvf
+mv_mp_mode_mx_lt_hls,1,286256,tab_mvf_poc_0_Dout_A,in,32,1,bram_xmem struct_element addr_width=32 we_width=4 struct_size=32 struct_base=286240 struct_var=tab_mvf
+mv_mp_mode_mx_lt_hls,1,286260,tab_mvf_poc_1_Din_A,out,32,1,bram_xmem struct_element addr_width=32 we_width=4 struct_size=32 struct_base=286240 struct_var=tab_mvf
+mv_mp_mode_mx_lt_hls,1,286260,tab_mvf_poc_1_Dout_A,in,32,1,bram_xmem struct_element addr_width=32 we_width=4 struct_size=32 struct_base=286240 struct_var=tab_mvf
+mv_mp_mode_mx_lt_hls,1,286264,tab_mvf_ref_idx_0_Din_A,out,8,1,bram_xmem struct_element addr_width=32 we_width=1 struct_size=32 struct_base=286240 struct_var=tab_mvf
+mv_mp_mode_mx_lt_hls,1,286264,tab_mvf_ref_idx_0_Dout_A,in,8,1,bram_xmem struct_element addr_width=32 we_width=1 struct_size=32 struct_base=286240 struct_var=tab_mvf
+mv_mp_mode_mx_lt_hls,1,286268,tab_mvf_ref_idx_1_Din_A,out,8,1,bram_xmem struct_element addr_width=32 we_width=1 struct_size=32 struct_base=286240 struct_var=tab_mvf
+mv_mp_mode_mx_lt_hls,1,286268,tab_mvf_ref_idx_1_Dout_A,in,8,1,bram_xmem struct_element addr_width=32 we_width=1 struct_size=32 struct_base=286240 struct_var=tab_mvf
+mv_mp_mode_mx_lt_hls,1,286244,tab_mvf_pred_flag_row_Din_A,out,32,1,bram_xmem xmem_pointer addr_width=32 we_width=4
+mv_mp_mode_mx_lt_hls,1,286244,tab_mvf_pred_flag_row_Dout_A,in,32,1,bram_xmem xmem_pointer addr_width=32 we_width=4
+#,1,286248,collocated_tab_mvf,,32,1,struct_pointer struct_size=32
+#,0,1220,mvLXCol,,64,1,struct struct_size=8
+temporal_luma_motion_vector_hls,0,172,log2_width,in,8,1,
+temporal_luma_motion_vector_hls,0,1188,HEVCFrameSize,in,32,1,
+temporal_luma_motion_vector_hls,0,1192,RefPicListSize,in,32,1,
+temporal_luma_motion_vector_hls,0,552,xm_x0,in,32,1,
+temporal_luma_motion_vector_hls,0,556,xm_y0,in,32,1,
+temporal_luma_motion_vector_hls,0,160,nPbW,in,32,1,
+temporal_luma_motion_vector_hls,0,164,nPbH,in,32,1,
+#temporal_luma_motion_vector_hls,0,0,refIdxLx,in,32,1,apcall_arg
+temporal_luma_motion_vector_hls,0,1220,mvLXCol_x,out,16,1,struct_element struct_var=mvLXCol
+temporal_luma_motion_vector_hls,0,1224,mvLXCol_y,out,16,1,struct_element struct_var=mvLXCol
+#temporal_luma_motion_vector_hls,0,0,X,in,32,1,apcall_arg
+#temporal_luma_motion_vector_hls,0,0,colPic,in,32,1,apcall_arg
+temporal_luma_motion_vector_hls,0,396,min_pu_width,in,32,1,
+temporal_luma_motion_vector_hls,0,360,log2_ctb_size,in,32,1,
+temporal_luma_motion_vector_hls,0,372,log2_min_pu_size,in,32,1,
+temporal_luma_motion_vector_hls,0,332,height,in,32,1,
+temporal_luma_motion_vector_hls,0,408,width,in,32,1,
+temporal_luma_motion_vector_hls,0,284,ctb_width,in,32,1,
+temporal_luma_motion_vector_hls,0,1208,collocated_list,in,8,1,
+temporal_luma_motion_vector_hls,0,1548,poc,in,32,1,
+temporal_luma_motion_vector_hls,1,286256,rpl_tab_void_Din_A,out,32,1,bram_xmem xmem_pointer addr_width=32 we_width=4
+temporal_luma_motion_vector_hls,1,286256,rpl_tab_void_Dout_A,in,32,1,bram_xmem xmem_pointer addr_width=32 we_width=4
+temporal_luma_motion_vector_hls,0,1196,refPicList_0_nb_refs,in,32,1,
+temporal_luma_motion_vector_hls,0,1200,refPicList_1_nb_refs,in,32,1,
+temporal_luma_motion_vector_hls,1,286216,refPicList_0_isLongTerm_Din_A,out,32,1,bram_xmem xmem_pointer addr_width=32 we_width=4
+temporal_luma_motion_vector_hls,1,286216,refPicList_0_isLongTerm_Dout_A,in,32,1,bram_xmem xmem_pointer addr_width=32 we_width=4
+temporal_luma_motion_vector_hls,1,286220,refPicList_1_isLongTerm_Din_A,out,32,1,bram_xmem xmem_pointer addr_width=32 we_width=4
+temporal_luma_motion_vector_hls,1,286220,refPicList_1_isLongTerm_Dout_A,in,32,1,bram_xmem xmem_pointer addr_width=32 we_width=4
+temporal_luma_motion_vector_hls,1,286224,refPicList_0_list_Din_A,out,32,1,bram_xmem xmem_pointer addr_width=32 we_width=4
+temporal_luma_motion_vector_hls,1,286224,refPicList_0_list_Dout_A,in,32,1,bram_xmem xmem_pointer addr_width=32 we_width=4
+temporal_luma_motion_vector_hls,1,286228,refPicList_1_list_Din_A,out,32,1,bram_xmem xmem_pointer addr_width=32 we_width=4
+temporal_luma_motion_vector_hls,1,286228,refPicList_1_list_Dout_A,in,32,1,bram_xmem xmem_pointer addr_width=32 we_width=4
+temporal_luma_motion_vector_hls,1,286248,collocated_tab_mvf_mv_0_x_Din_A,out,16,1,bram_xmem struct_element addr_width=32 we_width=2 struct_size=32 struct_base=286248 struct_var=collocated_tab_mvf
+temporal_luma_motion_vector_hls,1,286248,collocated_tab_mvf_mv_0_x_Dout_A,in,16,1,bram_xmem struct_element addr_width=32 we_width=2 struct_size=32 struct_base=286248 struct_var=collocated_tab_mvf
+temporal_luma_motion_vector_hls,1,286252,collocated_tab_mvf_mv_0_y_Din_A,out,16,1,bram_xmem struct_element addr_width=32 we_width=2 struct_size=32 struct_base=286248 struct_var=collocated_tab_mvf
+temporal_luma_motion_vector_hls,1,286252,collocated_tab_mvf_mv_0_y_Dout_A,in,16,1,bram_xmem struct_element addr_width=32 we_width=2 struct_size=32 struct_base=286248 struct_var=collocated_tab_mvf
+temporal_luma_motion_vector_hls,1,286256,collocated_tab_mvf_mv_1_x_Din_A,out,16,1,bram_xmem struct_element addr_width=32 we_width=2 struct_size=32 struct_base=286248 struct_var=collocated_tab_mvf
+temporal_luma_motion_vector_hls,1,286256,collocated_tab_mvf_mv_1_x_Dout_A,in,16,1,bram_xmem struct_element addr_width=32 we_width=2 struct_size=32 struct_base=286248 struct_var=collocated_tab_mvf
+temporal_luma_motion_vector_hls,1,286260,collocated_tab_mvf_mv_1_y_Din_A,out,16,1,bram_xmem struct_element addr_width=32 we_width=2 struct_size=32 struct_base=286248 struct_var=collocated_tab_mvf
+temporal_luma_motion_vector_hls,1,286260,collocated_tab_mvf_mv_1_y_Dout_A,in,16,1,bram_xmem struct_element addr_width=32 we_width=2 struct_size=32 struct_base=286248 struct_var=collocated_tab_mvf
+temporal_luma_motion_vector_hls,1,286264,collocated_tab_mvf_poc_0_Din_A,out,32,1,bram_xmem struct_element addr_width=32 we_width=4 struct_size=32 struct_base=286248 struct_var=collocated_tab_mvf
+temporal_luma_motion_vector_hls,1,286264,collocated_tab_mvf_poc_0_Dout_A,in,32,1,bram_xmem struct_element addr_width=32 we_width=4 struct_size=32 struct_base=286248 struct_var=collocated_tab_mvf
+temporal_luma_motion_vector_hls,1,286268,collocated_tab_mvf_poc_1_Din_A,out,32,1,bram_xmem struct_element addr_width=32 we_width=4 struct_size=32 struct_base=286248 struct_var=collocated_tab_mvf
+temporal_luma_motion_vector_hls,1,286268,collocated_tab_mvf_poc_1_Dout_A,in,32,1,bram_xmem struct_element addr_width=32 we_width=4 struct_size=32 struct_base=286248 struct_var=collocated_tab_mvf
+temporal_luma_motion_vector_hls,1,286272,collocated_tab_mvf_ref_idx_0_Din_A,out,8,1,bram_xmem struct_element addr_width=32 we_width=1 struct_size=32 struct_base=286248 struct_var=collocated_tab_mvf
+temporal_luma_motion_vector_hls,1,286272,collocated_tab_mvf_ref_idx_0_Dout_A,in,8,1,bram_xmem struct_element addr_width=32 we_width=1 struct_size=32 struct_base=286248 struct_var=collocated_tab_mvf
+temporal_luma_motion_vector_hls,1,286276,collocated_tab_mvf_ref_idx_1_Din_A,out,8,1,bram_xmem struct_element addr_width=32 we_width=1 struct_size=32 struct_base=286248 struct_var=collocated_tab_mvf
+temporal_luma_motion_vector_hls,1,286276,collocated_tab_mvf_ref_idx_1_Dout_A,in,8,1,bram_xmem struct_element addr_width=32 we_width=1 struct_size=32 struct_base=286248 struct_var=collocated_tab_mvf
+temporal_luma_motion_vector_hls,1,286252,collocated_tab_mvf_pred_flag_row_Din_A,out,32,1,bram_xmem xmem_pointer addr_width=32 we_width=4
+temporal_luma_motion_vector_hls,1,286252,collocated_tab_mvf_pred_flag_row_Dout_A,in,32,1,bram_xmem xmem_pointer addr_width=32 we_width=4
+#is_diff_mer_hls,0,0,xN,in,32,1,apcall_arg
+#is_diff_mer_hls,0,0,yN,in,32,1,apcall_arg
+is_diff_mer_hls,0,552,xm_x0,in,32,1,
+is_diff_mer_hls,0,556,xm_y0,in,32,1,
+is_diff_mer_hls,0,1236,xm_log2_parallel_merge_level,in,8,1,
+#append_zero_motion_vector_candidates_hls,0,0,nb_refs_sel,in,32,1,apcall_arg
+append_zero_motion_vector_candidates_hls,0,1444,merge_idx,in,32,1,
+append_zero_motion_vector_candidates_hls,1,1300,mergecand_list_mv0_x_0,out,16,5,(complete partition)
+append_zero_motion_vector_candidates_hls,1,1302,mergecand_list_mv0_x_1,out,16,5,(complete partition)
+append_zero_motion_vector_candidates_hls,1,1304,mergecand_list_mv0_x_2,out,16,5,(complete partition)
+append_zero_motion_vector_candidates_hls,1,1306,mergecand_list_mv0_x_3,out,16,5,(complete partition)
+append_zero_motion_vector_candidates_hls,1,1308,mergecand_list_mv0_x_4,out,16,5,(complete partition)
+append_zero_motion_vector_candidates_hls,1,1312,mergecand_list_mv0_y_0,out,16,5,(complete partition)
+append_zero_motion_vector_candidates_hls,1,1314,mergecand_list_mv0_y_1,out,16,5,(complete partition)
+append_zero_motion_vector_candidates_hls,1,1316,mergecand_list_mv0_y_2,out,16,5,(complete partition)
+append_zero_motion_vector_candidates_hls,1,1318,mergecand_list_mv0_y_3,out,16,5,(complete partition)
+append_zero_motion_vector_candidates_hls,1,1320,mergecand_list_mv0_y_4,out,16,5,(complete partition)
+append_zero_motion_vector_candidates_hls,1,1324,mergecand_list_mv1_x_0,out,16,5,(complete partition)
+append_zero_motion_vector_candidates_hls,1,1326,mergecand_list_mv1_x_1,out,16,5,(complete partition)
+append_zero_motion_vector_candidates_hls,1,1328,mergecand_list_mv1_x_2,out,16,5,(complete partition)
+append_zero_motion_vector_candidates_hls,1,1330,mergecand_list_mv1_x_3,out,16,5,(complete partition)
+append_zero_motion_vector_candidates_hls,1,1332,mergecand_list_mv1_x_4,out,16,5,(complete partition)
+append_zero_motion_vector_candidates_hls,1,1336,mergecand_list_mv1_y_0,out,16,5,(complete partition)
+append_zero_motion_vector_candidates_hls,1,1338,mergecand_list_mv1_y_1,out,16,5,(complete partition)
+append_zero_motion_vector_candidates_hls,1,1340,mergecand_list_mv1_y_2,out,16,5,(complete partition)
+append_zero_motion_vector_candidates_hls,1,1342,mergecand_list_mv1_y_3,out,16,5,(complete partition)
+append_zero_motion_vector_candidates_hls,1,1344,mergecand_list_mv1_y_4,out,16,5,(complete partition)
+append_zero_motion_vector_candidates_hls,1,1348,mergecand_list_poc0_0,out,32,5,(complete partition)
+append_zero_motion_vector_candidates_hls,1,1352,mergecand_list_poc0_1,out,32,5,(complete partition)
+append_zero_motion_vector_candidates_hls,1,1356,mergecand_list_poc0_2,out,32,5,(complete partition)
+append_zero_motion_vector_candidates_hls,1,1360,mergecand_list_poc0_3,out,32,5,(complete partition)
+append_zero_motion_vector_candidates_hls,1,1364,mergecand_list_poc0_4,out,32,5,(complete partition)
+append_zero_motion_vector_candidates_hls,1,1368,mergecand_list_poc1_0,out,32,5,(complete partition)
+append_zero_motion_vector_candidates_hls,1,1372,mergecand_list_poc1_1,out,32,5,(complete partition)
+append_zero_motion_vector_candidates_hls,1,1376,mergecand_list_poc1_2,out,32,5,(complete partition)
+append_zero_motion_vector_candidates_hls,1,1380,mergecand_list_poc1_3,out,32,5,(complete partition)
+append_zero_motion_vector_candidates_hls,1,1384,mergecand_list_poc1_4,out,32,5,(complete partition)
+append_zero_motion_vector_candidates_hls,1,1388,mergecand_list_ref_idx0_0,out,8,5,(complete partition)
+append_zero_motion_vector_candidates_hls,1,1389,mergecand_list_ref_idx0_1,out,8,5,(complete partition)
+append_zero_motion_vector_candidates_hls,1,1390,mergecand_list_ref_idx0_2,out,8,5,(complete partition)
+append_zero_motion_vector_candidates_hls,1,1391,mergecand_list_ref_idx0_3,out,8,5,(complete partition)
+append_zero_motion_vector_candidates_hls,1,1392,mergecand_list_ref_idx0_4,out,8,5,(complete partition)
+append_zero_motion_vector_candidates_hls,1,1396,mergecand_list_ref_idx1_0,out,8,5,(complete partition)
+append_zero_motion_vector_candidates_hls,1,1397,mergecand_list_ref_idx1_1,out,8,5,(complete partition)
+append_zero_motion_vector_candidates_hls,1,1398,mergecand_list_ref_idx1_2,out,8,5,(complete partition)
+append_zero_motion_vector_candidates_hls,1,1399,mergecand_list_ref_idx1_3,out,8,5,(complete partition)
+append_zero_motion_vector_candidates_hls,1,1400,mergecand_list_ref_idx1_4,out,8,5,(complete partition)
+append_zero_motion_vector_candidates_hls,1,1404,mergecand_list_pred_flag_0,out,8,5,(complete partition)
+append_zero_motion_vector_candidates_hls,1,1405,mergecand_list_pred_flag_1,out,8,5,(complete partition)
+append_zero_motion_vector_candidates_hls,1,1406,mergecand_list_pred_flag_2,out,8,5,(complete partition)
+append_zero_motion_vector_candidates_hls,1,1407,mergecand_list_pred_flag_3,out,8,5,(complete partition)
+append_zero_motion_vector_candidates_hls,1,1408,mergecand_list_pred_flag_4,out,8,5,(complete partition)
+append_zero_motion_vector_candidates_hls,0,132,xm_nb_merge_cand_i,in,8,1,
+append_zero_motion_vector_candidates_hls,0,132,xm_nb_merge_cand_o,out,8,1,
+append_zero_motion_vector_candidates_hls,0,1232,zero_idx_i,in,8,1,
+append_zero_motion_vector_candidates_hls,0,1232,zero_idx_o,out,8,1,
+append_zero_motion_vector_candidates_hls,0,452,slice_type,in,8,1,
+append_zero_motion_vector_candidates_hls,1,286224,refPicList_0_list_Din_A,out,32,1,bram_xmem xmem_pointer addr_width=32 we_width=4
+append_zero_motion_vector_candidates_hls,1,286224,refPicList_0_list_Dout_A,in,32,1,bram_xmem xmem_pointer addr_width=32 we_width=4
+append_zero_motion_vector_candidates_hls,1,286228,refPicList_1_list_Din_A,out,32,1,bram_xmem xmem_pointer addr_width=32 we_width=4
+append_zero_motion_vector_candidates_hls,1,286228,refPicList_1_list_Dout_A,in,32,1,bram_xmem xmem_pointer addr_width=32 we_width=4
+#merge_mode_exit_hls,0,0,nPbW2,in,32,1,apcall_arg
+#merge_mode_exit_hls,0,0,nPbH2,in,32,1,apcall_arg
+merge_mode_exit_hls,0,1444,merge_idx,in,32,1,
+merge_mode_exit_hls,0,816,current_mv_pred_flag,out,8,1,
+merge_mode_exit_hls,0,784,current_mv_mv_0_x,out,16,1,struct_element struct_var=current_mv
+merge_mode_exit_hls,0,788,current_mv_mv_0_y,out,16,1,struct_element struct_var=current_mv
+merge_mode_exit_hls,0,792,current_mv_mv_1_x,out,16,1,struct_element struct_var=current_mv
+merge_mode_exit_hls,0,796,current_mv_mv_1_y,out,16,1,struct_element struct_var=current_mv
+merge_mode_exit_hls,0,800,current_mv_poc_0,out,32,1,struct_element struct_var=current_mv
+merge_mode_exit_hls,0,804,current_mv_poc_1,out,32,1,struct_element struct_var=current_mv
+merge_mode_exit_hls,0,808,current_mv_ref_idx_0,out,8,1,struct_element struct_var=current_mv
+merge_mode_exit_hls,0,812,current_mv_ref_idx_1,out,8,1,struct_element struct_var=current_mv
+merge_mode_exit_hls,1,1300,mergecand_list_mv0_x_0,in,16,5,(complete partition)
+merge_mode_exit_hls,1,1302,mergecand_list_mv0_x_1,in,16,5,(complete partition)
+merge_mode_exit_hls,1,1304,mergecand_list_mv0_x_2,in,16,5,(complete partition)
+merge_mode_exit_hls,1,1306,mergecand_list_mv0_x_3,in,16,5,(complete partition)
+merge_mode_exit_hls,1,1308,mergecand_list_mv0_x_4,in,16,5,(complete partition)
+merge_mode_exit_hls,1,1312,mergecand_list_mv0_y_0,in,16,5,(complete partition)
+merge_mode_exit_hls,1,1314,mergecand_list_mv0_y_1,in,16,5,(complete partition)
+merge_mode_exit_hls,1,1316,mergecand_list_mv0_y_2,in,16,5,(complete partition)
+merge_mode_exit_hls,1,1318,mergecand_list_mv0_y_3,in,16,5,(complete partition)
+merge_mode_exit_hls,1,1320,mergecand_list_mv0_y_4,in,16,5,(complete partition)
+merge_mode_exit_hls,1,1324,mergecand_list_mv1_x_0,in,16,5,(complete partition)
+merge_mode_exit_hls,1,1326,mergecand_list_mv1_x_1,in,16,5,(complete partition)
+merge_mode_exit_hls,1,1328,mergecand_list_mv1_x_2,in,16,5,(complete partition)
+merge_mode_exit_hls,1,1330,mergecand_list_mv1_x_3,in,16,5,(complete partition)
+merge_mode_exit_hls,1,1332,mergecand_list_mv1_x_4,in,16,5,(complete partition)
+merge_mode_exit_hls,1,1336,mergecand_list_mv1_y_0,in,16,5,(complete partition)
+merge_mode_exit_hls,1,1338,mergecand_list_mv1_y_1,in,16,5,(complete partition)
+merge_mode_exit_hls,1,1340,mergecand_list_mv1_y_2,in,16,5,(complete partition)
+merge_mode_exit_hls,1,1342,mergecand_list_mv1_y_3,in,16,5,(complete partition)
+merge_mode_exit_hls,1,1344,mergecand_list_mv1_y_4,in,16,5,(complete partition)
+merge_mode_exit_hls,1,1348,mergecand_list_poc0_0,in,32,5,(complete partition)
+merge_mode_exit_hls,1,1352,mergecand_list_poc0_1,in,32,5,(complete partition)
+merge_mode_exit_hls,1,1356,mergecand_list_poc0_2,in,32,5,(complete partition)
+merge_mode_exit_hls,1,1360,mergecand_list_poc0_3,in,32,5,(complete partition)
+merge_mode_exit_hls,1,1364,mergecand_list_poc0_4,in,32,5,(complete partition)
+merge_mode_exit_hls,1,1368,mergecand_list_poc1_0,in,32,5,(complete partition)
+merge_mode_exit_hls,1,1372,mergecand_list_poc1_1,in,32,5,(complete partition)
+merge_mode_exit_hls,1,1376,mergecand_list_poc1_2,in,32,5,(complete partition)
+merge_mode_exit_hls,1,1380,mergecand_list_poc1_3,in,32,5,(complete partition)
+merge_mode_exit_hls,1,1384,mergecand_list_poc1_4,in,32,5,(complete partition)
+merge_mode_exit_hls,1,1388,mergecand_list_ref_idx0_0,in,8,5,(complete partition)
+merge_mode_exit_hls,1,1389,mergecand_list_ref_idx0_1,in,8,5,(complete partition)
+merge_mode_exit_hls,1,1390,mergecand_list_ref_idx0_2,in,8,5,(complete partition)
+merge_mode_exit_hls,1,1391,mergecand_list_ref_idx0_3,in,8,5,(complete partition)
+merge_mode_exit_hls,1,1392,mergecand_list_ref_idx0_4,in,8,5,(complete partition)
+merge_mode_exit_hls,1,1396,mergecand_list_ref_idx1_0,in,8,5,(complete partition)
+merge_mode_exit_hls,1,1397,mergecand_list_ref_idx1_1,in,8,5,(complete partition)
+merge_mode_exit_hls,1,1398,mergecand_list_ref_idx1_2,in,8,5,(complete partition)
+merge_mode_exit_hls,1,1399,mergecand_list_ref_idx1_3,in,8,5,(complete partition)
+merge_mode_exit_hls,1,1400,mergecand_list_ref_idx1_4,in,8,5,(complete partition)
+merge_mode_exit_hls,1,1404,mergecand_list_pred_flag_0_i,in,8,5,(complete partition)
+merge_mode_exit_hls,1,1404,mergecand_list_pred_flag_0_o,out,8,5,(complete partition)
+merge_mode_exit_hls,1,1405,mergecand_list_pred_flag_1_i,in,8,5,(complete partition)
+merge_mode_exit_hls,1,1405,mergecand_list_pred_flag_1_o,out,8,5,(complete partition)
+merge_mode_exit_hls,1,1406,mergecand_list_pred_flag_2_i,in,8,5,(complete partition)
+merge_mode_exit_hls,1,1406,mergecand_list_pred_flag_2_o,out,8,5,(complete partition)
+merge_mode_exit_hls,1,1407,mergecand_list_pred_flag_3_i,in,8,5,(complete partition)
+merge_mode_exit_hls,1,1407,mergecand_list_pred_flag_3_o,out,8,5,(complete partition)
+merge_mode_exit_hls,1,1408,mergecand_list_pred_flag_4_i,in,8,5,(complete partition)
+merge_mode_exit_hls,1,1408,mergecand_list_pred_flag_4_o,out,8,5,(complete partition)
+#set_to_mergecand_list_hls,0,0,x,in,32,1,apcall_arg
+#set_to_mergecand_list_hls,0,0,y,in,32,1,apcall_arg
+set_to_mergecand_list_hls,0,172,log2_width,in,8,1,
+set_to_mergecand_list_hls,0,132,xm_nb_merge_cand,in,8,1,
+set_to_mergecand_list_hls,0,372,log2_min_pu_size,in,32,1,
+set_to_mergecand_list_hls,0,396,min_pu_width,in,32,1,
+set_to_mergecand_list_hls,1,1404,mergecand_list_pred_flag_0,out,8,5,(complete partition)
+set_to_mergecand_list_hls,1,1405,mergecand_list_pred_flag_1,out,8,5,(complete partition)
+set_to_mergecand_list_hls,1,1406,mergecand_list_pred_flag_2,out,8,5,(complete partition)
+set_to_mergecand_list_hls,1,1407,mergecand_list_pred_flag_3,out,8,5,(complete partition)
+set_to_mergecand_list_hls,1,1408,mergecand_list_pred_flag_4,out,8,5,(complete partition)
+set_to_mergecand_list_hls,1,1300,mergecand_list_mv0_x_0,out,16,5,(complete partition)
+set_to_mergecand_list_hls,1,1302,mergecand_list_mv0_x_1,out,16,5,(complete partition)
+set_to_mergecand_list_hls,1,1304,mergecand_list_mv0_x_2,out,16,5,(complete partition)
+set_to_mergecand_list_hls,1,1306,mergecand_list_mv0_x_3,out,16,5,(complete partition)
+set_to_mergecand_list_hls,1,1308,mergecand_list_mv0_x_4,out,16,5,(complete partition)
+set_to_mergecand_list_hls,1,1312,mergecand_list_mv0_y_0,out,16,5,(complete partition)
+set_to_mergecand_list_hls,1,1314,mergecand_list_mv0_y_1,out,16,5,(complete partition)
+set_to_mergecand_list_hls,1,1316,mergecand_list_mv0_y_2,out,16,5,(complete partition)
+set_to_mergecand_list_hls,1,1318,mergecand_list_mv0_y_3,out,16,5,(complete partition)
+set_to_mergecand_list_hls,1,1320,mergecand_list_mv0_y_4,out,16,5,(complete partition)
+set_to_mergecand_list_hls,1,1324,mergecand_list_mv1_x_0,out,16,5,(complete partition)
+set_to_mergecand_list_hls,1,1326,mergecand_list_mv1_x_1,out,16,5,(complete partition)
+set_to_mergecand_list_hls,1,1328,mergecand_list_mv1_x_2,out,16,5,(complete partition)
+set_to_mergecand_list_hls,1,1330,mergecand_list_mv1_x_3,out,16,5,(complete partition)
+set_to_mergecand_list_hls,1,1332,mergecand_list_mv1_x_4,out,16,5,(complete partition)
+set_to_mergecand_list_hls,1,1336,mergecand_list_mv1_y_0,out,16,5,(complete partition)
+set_to_mergecand_list_hls,1,1338,mergecand_list_mv1_y_1,out,16,5,(complete partition)
+set_to_mergecand_list_hls,1,1340,mergecand_list_mv1_y_2,out,16,5,(complete partition)
+set_to_mergecand_list_hls,1,1342,mergecand_list_mv1_y_3,out,16,5,(complete partition)
+set_to_mergecand_list_hls,1,1344,mergecand_list_mv1_y_4,out,16,5,(complete partition)
+set_to_mergecand_list_hls,1,1348,mergecand_list_poc0_0,out,32,5,(complete partition)
+set_to_mergecand_list_hls,1,1352,mergecand_list_poc0_1,out,32,5,(complete partition)
+set_to_mergecand_list_hls,1,1356,mergecand_list_poc0_2,out,32,5,(complete partition)
+set_to_mergecand_list_hls,1,1360,mergecand_list_poc0_3,out,32,5,(complete partition)
+set_to_mergecand_list_hls,1,1364,mergecand_list_poc0_4,out,32,5,(complete partition)
+set_to_mergecand_list_hls,1,1368,mergecand_list_poc1_0,out,32,5,(complete partition)
+set_to_mergecand_list_hls,1,1372,mergecand_list_poc1_1,out,32,5,(complete partition)
+set_to_mergecand_list_hls,1,1376,mergecand_list_poc1_2,out,32,5,(complete partition)
+set_to_mergecand_list_hls,1,1380,mergecand_list_poc1_3,out,32,5,(complete partition)
+set_to_mergecand_list_hls,1,1384,mergecand_list_poc1_4,out,32,5,(complete partition)
+set_to_mergecand_list_hls,1,1388,mergecand_list_ref_idx0_0,out,8,5,(complete partition)
+set_to_mergecand_list_hls,1,1389,mergecand_list_ref_idx0_1,out,8,5,(complete partition)
+set_to_mergecand_list_hls,1,1390,mergecand_list_ref_idx0_2,out,8,5,(complete partition)
+set_to_mergecand_list_hls,1,1391,mergecand_list_ref_idx0_3,out,8,5,(complete partition)
+set_to_mergecand_list_hls,1,1392,mergecand_list_ref_idx0_4,out,8,5,(complete partition)
+set_to_mergecand_list_hls,1,1396,mergecand_list_ref_idx1_0,out,8,5,(complete partition)
+set_to_mergecand_list_hls,1,1397,mergecand_list_ref_idx1_1,out,8,5,(complete partition)
+set_to_mergecand_list_hls,1,1398,mergecand_list_ref_idx1_2,out,8,5,(complete partition)
+set_to_mergecand_list_hls,1,1399,mergecand_list_ref_idx1_3,out,8,5,(complete partition)
+set_to_mergecand_list_hls,1,1400,mergecand_list_ref_idx1_4,out,8,5,(complete partition)
+set_to_mergecand_list_hls,1,286240,tab_mvf_mv_0_x_Din_A,out,16,1,bram_xmem struct_element addr_width=32 we_width=2 struct_size=32 struct_base=286240 struct_var=tab_mvf
+set_to_mergecand_list_hls,1,286240,tab_mvf_mv_0_x_Dout_A,in,16,1,bram_xmem struct_element addr_width=32 we_width=2 struct_size=32 struct_base=286240 struct_var=tab_mvf
+set_to_mergecand_list_hls,1,286244,tab_mvf_mv_0_y_Din_A,out,16,1,bram_xmem struct_element addr_width=32 we_width=2 struct_size=32 struct_base=286240 struct_var=tab_mvf
+set_to_mergecand_list_hls,1,286244,tab_mvf_mv_0_y_Dout_A,in,16,1,bram_xmem struct_element addr_width=32 we_width=2 struct_size=32 struct_base=286240 struct_var=tab_mvf
+set_to_mergecand_list_hls,1,286248,tab_mvf_mv_1_x_Din_A,out,16,1,bram_xmem struct_element addr_width=32 we_width=2 struct_size=32 struct_base=286240 struct_var=tab_mvf
+set_to_mergecand_list_hls,1,286248,tab_mvf_mv_1_x_Dout_A,in,16,1,bram_xmem struct_element addr_width=32 we_width=2 struct_size=32 struct_base=286240 struct_var=tab_mvf
+set_to_mergecand_list_hls,1,286252,tab_mvf_mv_1_y_Din_A,out,16,1,bram_xmem struct_element addr_width=32 we_width=2 struct_size=32 struct_base=286240 struct_var=tab_mvf
+set_to_mergecand_list_hls,1,286252,tab_mvf_mv_1_y_Dout_A,in,16,1,bram_xmem struct_element addr_width=32 we_width=2 struct_size=32 struct_base=286240 struct_var=tab_mvf
+set_to_mergecand_list_hls,1,286256,tab_mvf_poc_0_Din_A,out,32,1,bram_xmem struct_element addr_width=32 we_width=4 struct_size=32 struct_base=286240 struct_var=tab_mvf
+set_to_mergecand_list_hls,1,286256,tab_mvf_poc_0_Dout_A,in,32,1,bram_xmem struct_element addr_width=32 we_width=4 struct_size=32 struct_base=286240 struct_var=tab_mvf
+set_to_mergecand_list_hls,1,286260,tab_mvf_poc_1_Din_A,out,32,1,bram_xmem struct_element addr_width=32 we_width=4 struct_size=32 struct_base=286240 struct_var=tab_mvf
+set_to_mergecand_list_hls,1,286260,tab_mvf_poc_1_Dout_A,in,32,1,bram_xmem struct_element addr_width=32 we_width=4 struct_size=32 struct_base=286240 struct_var=tab_mvf
+set_to_mergecand_list_hls,1,286264,tab_mvf_ref_idx_0_Din_A,out,8,1,bram_xmem struct_element addr_width=32 we_width=1 struct_size=32 struct_base=286240 struct_var=tab_mvf
+set_to_mergecand_list_hls,1,286264,tab_mvf_ref_idx_0_Dout_A,in,8,1,bram_xmem struct_element addr_width=32 we_width=1 struct_size=32 struct_base=286240 struct_var=tab_mvf
+set_to_mergecand_list_hls,1,286268,tab_mvf_ref_idx_1_Din_A,out,8,1,bram_xmem struct_element addr_width=32 we_width=1 struct_size=32 struct_base=286240 struct_var=tab_mvf
+set_to_mergecand_list_hls,1,286268,tab_mvf_ref_idx_1_Dout_A,in,8,1,bram_xmem struct_element addr_width=32 we_width=1 struct_size=32 struct_base=286240 struct_var=tab_mvf
+set_to_mergecand_list_hls,1,286244,tab_mvf_pred_flag_row_Din_A,out,32,1,bram_xmem xmem_pointer addr_width=32 we_width=4
+set_to_mergecand_list_hls,1,286244,tab_mvf_pred_flag_row_Dout_A,in,32,1,bram_xmem xmem_pointer addr_width=32 we_width=4
+compare_mv_ref_idx_hls,0,172,log2_width,in,8,1,
+#compare_mv_ref_idx_hls,0,0,xa,in,32,1,apcall_arg
+#compare_mv_ref_idx_hls,0,0,ya,in,32,1,apcall_arg
+#compare_mv_ref_idx_hls,0,0,xb,in,32,1,apcall_arg
+#compare_mv_ref_idx_hls,0,0,yb,in,32,1,apcall_arg
+compare_mv_ref_idx_hls,0,396,min_pu_width,in,32,1,
+compare_mv_ref_idx_hls,0,372,log2_min_pu_size,in,32,1,
+compare_mv_ref_idx_hls,1,286240,tab_mvf_mv_0_x_Din_A,out,16,1,bram_xmem struct_element addr_width=32 we_width=2 struct_size=32 struct_base=286240 struct_var=tab_mvf
+compare_mv_ref_idx_hls,1,286240,tab_mvf_mv_0_x_Dout_A,in,16,1,bram_xmem struct_element addr_width=32 we_width=2 struct_size=32 struct_base=286240 struct_var=tab_mvf
+compare_mv_ref_idx_hls,1,286244,tab_mvf_mv_0_y_Din_A,out,16,1,bram_xmem struct_element addr_width=32 we_width=2 struct_size=32 struct_base=286240 struct_var=tab_mvf
+compare_mv_ref_idx_hls,1,286244,tab_mvf_mv_0_y_Dout_A,in,16,1,bram_xmem struct_element addr_width=32 we_width=2 struct_size=32 struct_base=286240 struct_var=tab_mvf
+compare_mv_ref_idx_hls,1,286248,tab_mvf_mv_1_x_Din_A,out,16,1,bram_xmem struct_element addr_width=32 we_width=2 struct_size=32 struct_base=286240 struct_var=tab_mvf
+compare_mv_ref_idx_hls,1,286248,tab_mvf_mv_1_x_Dout_A,in,16,1,bram_xmem struct_element addr_width=32 we_width=2 struct_size=32 struct_base=286240 struct_var=tab_mvf
+compare_mv_ref_idx_hls,1,286252,tab_mvf_mv_1_y_Din_A,out,16,1,bram_xmem struct_element addr_width=32 we_width=2 struct_size=32 struct_base=286240 struct_var=tab_mvf
+compare_mv_ref_idx_hls,1,286252,tab_mvf_mv_1_y_Dout_A,in,16,1,bram_xmem struct_element addr_width=32 we_width=2 struct_size=32 struct_base=286240 struct_var=tab_mvf
+compare_mv_ref_idx_hls,1,286256,tab_mvf_poc_0_Din_A,out,32,1,bram_xmem struct_element addr_width=32 we_width=4 struct_size=32 struct_base=286240 struct_var=tab_mvf
+compare_mv_ref_idx_hls,1,286256,tab_mvf_poc_0_Dout_A,in,32,1,bram_xmem struct_element addr_width=32 we_width=4 struct_size=32 struct_base=286240 struct_var=tab_mvf
+compare_mv_ref_idx_hls,1,286260,tab_mvf_poc_1_Din_A,out,32,1,bram_xmem struct_element addr_width=32 we_width=4 struct_size=32 struct_base=286240 struct_var=tab_mvf
+compare_mv_ref_idx_hls,1,286260,tab_mvf_poc_1_Dout_A,in,32,1,bram_xmem struct_element addr_width=32 we_width=4 struct_size=32 struct_base=286240 struct_var=tab_mvf
+compare_mv_ref_idx_hls,1,286264,tab_mvf_ref_idx_0_Din_A,out,8,1,bram_xmem struct_element addr_width=32 we_width=1 struct_size=32 struct_base=286240 struct_var=tab_mvf
+compare_mv_ref_idx_hls,1,286264,tab_mvf_ref_idx_0_Dout_A,in,8,1,bram_xmem struct_element addr_width=32 we_width=1 struct_size=32 struct_base=286240 struct_var=tab_mvf
+compare_mv_ref_idx_hls,1,286268,tab_mvf_ref_idx_1_Din_A,out,8,1,bram_xmem struct_element addr_width=32 we_width=1 struct_size=32 struct_base=286240 struct_var=tab_mvf
+compare_mv_ref_idx_hls,1,286268,tab_mvf_ref_idx_1_Dout_A,in,8,1,bram_xmem struct_element addr_width=32 we_width=1 struct_size=32 struct_base=286240 struct_var=tab_mvf
+compare_mv_ref_idx_hls,1,286244,tab_mvf_pred_flag_row_Din_A,out,32,1,bram_xmem xmem_pointer addr_width=32 we_width=4
+compare_mv_ref_idx_hls,1,286244,tab_mvf_pred_flag_row_Dout_A,in,32,1,bram_xmem xmem_pointer addr_width=32 we_width=4
+#combined_bi_predictive_merge_candidates_hls,0,0,comb_idx,in,8,1,apcall_arg
+combined_bi_predictive_merge_candidates_hls,1,1300,mergecand_list_mv0_x_0_i,in,16,5,(complete partition)
+combined_bi_predictive_merge_candidates_hls,1,1300,mergecand_list_mv0_x_0_o,out,16,5,(complete partition)
+combined_bi_predictive_merge_candidates_hls,1,1302,mergecand_list_mv0_x_1_i,in,16,5,(complete partition)
+combined_bi_predictive_merge_candidates_hls,1,1302,mergecand_list_mv0_x_1_o,out,16,5,(complete partition)
+combined_bi_predictive_merge_candidates_hls,1,1304,mergecand_list_mv0_x_2_i,in,16,5,(complete partition)
+combined_bi_predictive_merge_candidates_hls,1,1304,mergecand_list_mv0_x_2_o,out,16,5,(complete partition)
+combined_bi_predictive_merge_candidates_hls,1,1306,mergecand_list_mv0_x_3_i,in,16,5,(complete partition)
+combined_bi_predictive_merge_candidates_hls,1,1306,mergecand_list_mv0_x_3_o,out,16,5,(complete partition)
+combined_bi_predictive_merge_candidates_hls,1,1308,mergecand_list_mv0_x_4,out,16,5,(complete partition)
+combined_bi_predictive_merge_candidates_hls,1,1312,mergecand_list_mv0_y_0_i,in,16,5,(complete partition)
+combined_bi_predictive_merge_candidates_hls,1,1312,mergecand_list_mv0_y_0_o,out,16,5,(complete partition)
+combined_bi_predictive_merge_candidates_hls,1,1314,mergecand_list_mv0_y_1_i,in,16,5,(complete partition)
+combined_bi_predictive_merge_candidates_hls,1,1314,mergecand_list_mv0_y_1_o,out,16,5,(complete partition)
+combined_bi_predictive_merge_candidates_hls,1,1316,mergecand_list_mv0_y_2_i,in,16,5,(complete partition)
+combined_bi_predictive_merge_candidates_hls,1,1316,mergecand_list_mv0_y_2_o,out,16,5,(complete partition)
+combined_bi_predictive_merge_candidates_hls,1,1318,mergecand_list_mv0_y_3_i,in,16,5,(complete partition)
+combined_bi_predictive_merge_candidates_hls,1,1318,mergecand_list_mv0_y_3_o,out,16,5,(complete partition)
+combined_bi_predictive_merge_candidates_hls,1,1320,mergecand_list_mv0_y_4,out,16,5,(complete partition)
+combined_bi_predictive_merge_candidates_hls,1,1324,mergecand_list_mv1_x_0_i,in,16,5,(complete partition)
+combined_bi_predictive_merge_candidates_hls,1,1324,mergecand_list_mv1_x_0_o,out,16,5,(complete partition)
+combined_bi_predictive_merge_candidates_hls,1,1326,mergecand_list_mv1_x_1_i,in,16,5,(complete partition)
+combined_bi_predictive_merge_candidates_hls,1,1326,mergecand_list_mv1_x_1_o,out,16,5,(complete partition)
+combined_bi_predictive_merge_candidates_hls,1,1328,mergecand_list_mv1_x_2_i,in,16,5,(complete partition)
+combined_bi_predictive_merge_candidates_hls,1,1328,mergecand_list_mv1_x_2_o,out,16,5,(complete partition)
+combined_bi_predictive_merge_candidates_hls,1,1330,mergecand_list_mv1_x_3_i,in,16,5,(complete partition)
+combined_bi_predictive_merge_candidates_hls,1,1330,mergecand_list_mv1_x_3_o,out,16,5,(complete partition)
+combined_bi_predictive_merge_candidates_hls,1,1332,mergecand_list_mv1_x_4,out,16,5,(complete partition)
+combined_bi_predictive_merge_candidates_hls,1,1336,mergecand_list_mv1_y_0_i,in,16,5,(complete partition)
+combined_bi_predictive_merge_candidates_hls,1,1336,mergecand_list_mv1_y_0_o,out,16,5,(complete partition)
+combined_bi_predictive_merge_candidates_hls,1,1338,mergecand_list_mv1_y_1_i,in,16,5,(complete partition)
+combined_bi_predictive_merge_candidates_hls,1,1338,mergecand_list_mv1_y_1_o,out,16,5,(complete partition)
+combined_bi_predictive_merge_candidates_hls,1,1340,mergecand_list_mv1_y_2_i,in,16,5,(complete partition)
+combined_bi_predictive_merge_candidates_hls,1,1340,mergecand_list_mv1_y_2_o,out,16,5,(complete partition)
+combined_bi_predictive_merge_candidates_hls,1,1342,mergecand_list_mv1_y_3_i,in,16,5,(complete partition)
+combined_bi_predictive_merge_candidates_hls,1,1342,mergecand_list_mv1_y_3_o,out,16,5,(complete partition)
+combined_bi_predictive_merge_candidates_hls,1,1344,mergecand_list_mv1_y_4,out,16,5,(complete partition)
+combined_bi_predictive_merge_candidates_hls,1,1348,mergecand_list_poc0_0_i,in,32,5,(complete partition)
+combined_bi_predictive_merge_candidates_hls,1,1348,mergecand_list_poc0_0_o,out,32,5,(complete partition)
+combined_bi_predictive_merge_candidates_hls,1,1352,mergecand_list_poc0_1_i,in,32,5,(complete partition)
+combined_bi_predictive_merge_candidates_hls,1,1352,mergecand_list_poc0_1_o,out,32,5,(complete partition)
+combined_bi_predictive_merge_candidates_hls,1,1356,mergecand_list_poc0_2_i,in,32,5,(complete partition)
+combined_bi_predictive_merge_candidates_hls,1,1356,mergecand_list_poc0_2_o,out,32,5,(complete partition)
+combined_bi_predictive_merge_candidates_hls,1,1360,mergecand_list_poc0_3_i,in,32,5,(complete partition)
+combined_bi_predictive_merge_candidates_hls,1,1360,mergecand_list_poc0_3_o,out,32,5,(complete partition)
+combined_bi_predictive_merge_candidates_hls,1,1364,mergecand_list_poc0_4,out,32,5,(complete partition)
+combined_bi_predictive_merge_candidates_hls,1,1368,mergecand_list_poc1_0_i,in,32,5,(complete partition)
+combined_bi_predictive_merge_candidates_hls,1,1368,mergecand_list_poc1_0_o,out,32,5,(complete partition)
+combined_bi_predictive_merge_candidates_hls,1,1372,mergecand_list_poc1_1_i,in,32,5,(complete partition)
+combined_bi_predictive_merge_candidates_hls,1,1372,mergecand_list_poc1_1_o,out,32,5,(complete partition)
+combined_bi_predictive_merge_candidates_hls,1,1376,mergecand_list_poc1_2_i,in,32,5,(complete partition)
+combined_bi_predictive_merge_candidates_hls,1,1376,mergecand_list_poc1_2_o,out,32,5,(complete partition)
+combined_bi_predictive_merge_candidates_hls,1,1380,mergecand_list_poc1_3_i,in,32,5,(complete partition)
+combined_bi_predictive_merge_candidates_hls,1,1380,mergecand_list_poc1_3_o,out,32,5,(complete partition)
+combined_bi_predictive_merge_candidates_hls,1,1384,mergecand_list_poc1_4,out,32,5,(complete partition)
+combined_bi_predictive_merge_candidates_hls,1,1388,mergecand_list_ref_idx0_0_i,in,8,5,(complete partition)
+combined_bi_predictive_merge_candidates_hls,1,1388,mergecand_list_ref_idx0_0_o,out,8,5,(complete partition)
+combined_bi_predictive_merge_candidates_hls,1,1389,mergecand_list_ref_idx0_1_i,in,8,5,(complete partition)
+combined_bi_predictive_merge_candidates_hls,1,1389,mergecand_list_ref_idx0_1_o,out,8,5,(complete partition)
+combined_bi_predictive_merge_candidates_hls,1,1390,mergecand_list_ref_idx0_2_i,in,8,5,(complete partition)
+combined_bi_predictive_merge_candidates_hls,1,1390,mergecand_list_ref_idx0_2_o,out,8,5,(complete partition)
+combined_bi_predictive_merge_candidates_hls,1,1391,mergecand_list_ref_idx0_3_i,in,8,5,(complete partition)
+combined_bi_predictive_merge_candidates_hls,1,1391,mergecand_list_ref_idx0_3_o,out,8,5,(complete partition)
+combined_bi_predictive_merge_candidates_hls,1,1392,mergecand_list_ref_idx0_4,out,8,5,(complete partition)
+combined_bi_predictive_merge_candidates_hls,1,1396,mergecand_list_ref_idx1_0_i,in,8,5,(complete partition)
+combined_bi_predictive_merge_candidates_hls,1,1396,mergecand_list_ref_idx1_0_o,out,8,5,(complete partition)
+combined_bi_predictive_merge_candidates_hls,1,1397,mergecand_list_ref_idx1_1_i,in,8,5,(complete partition)
+combined_bi_predictive_merge_candidates_hls,1,1397,mergecand_list_ref_idx1_1_o,out,8,5,(complete partition)
+combined_bi_predictive_merge_candidates_hls,1,1398,mergecand_list_ref_idx1_2_i,in,8,5,(complete partition)
+combined_bi_predictive_merge_candidates_hls,1,1398,mergecand_list_ref_idx1_2_o,out,8,5,(complete partition)
+combined_bi_predictive_merge_candidates_hls,1,1399,mergecand_list_ref_idx1_3_i,in,8,5,(complete partition)
+combined_bi_predictive_merge_candidates_hls,1,1399,mergecand_list_ref_idx1_3_o,out,8,5,(complete partition)
+combined_bi_predictive_merge_candidates_hls,1,1400,mergecand_list_ref_idx1_4,out,8,5,(complete partition)
+combined_bi_predictive_merge_candidates_hls,1,1404,mergecand_list_pred_flag_0_i,in,8,5,(complete partition)
+combined_bi_predictive_merge_candidates_hls,1,1404,mergecand_list_pred_flag_0_o,out,8,5,(complete partition)
+combined_bi_predictive_merge_candidates_hls,1,1405,mergecand_list_pred_flag_1_i,in,8,5,(complete partition)
+combined_bi_predictive_merge_candidates_hls,1,1405,mergecand_list_pred_flag_1_o,out,8,5,(complete partition)
+combined_bi_predictive_merge_candidates_hls,1,1406,mergecand_list_pred_flag_2_i,in,8,5,(complete partition)
+combined_bi_predictive_merge_candidates_hls,1,1406,mergecand_list_pred_flag_2_o,out,8,5,(complete partition)
+combined_bi_predictive_merge_candidates_hls,1,1407,mergecand_list_pred_flag_3_i,in,8,5,(complete partition)
+combined_bi_predictive_merge_candidates_hls,1,1407,mergecand_list_pred_flag_3_o,out,8,5,(complete partition)
+combined_bi_predictive_merge_candidates_hls,1,1408,mergecand_list_pred_flag_4,out,8,5,(complete partition)
+combined_bi_predictive_merge_candidates_hls,0,132,xm_nb_merge_cand_i,in,8,1,
+combined_bi_predictive_merge_candidates_hls,0,132,xm_nb_merge_cand_o,out,8,1,
+combined_bi_predictive_merge_candidates_hls,0,1444,merge_idx,in,32,1,
+ff_hevc_luma_mv_merge_mode_hls,0,172,log2_width,in,8,1,parent_func
+ff_hevc_luma_mv_merge_mode_hls,0,1208,collocated_list,in,8,1,parent_func
+ff_hevc_luma_mv_merge_mode_hls,0,396,min_pu_width,in,32,1,parent_func
+ff_hevc_luma_mv_merge_mode_hls,0,600,cand_bottom_left,in,1,1,parent_func
+ff_hevc_luma_mv_merge_mode_hls,0,584,cand_left,in,1,1,parent_func
+ff_hevc_luma_mv_merge_mode_hls,0,588,cand_up_left,in,1,1,parent_func
+ff_hevc_luma_mv_merge_mode_hls,0,580,cand_up,in,1,1,parent_func
+ff_hevc_luma_mv_merge_mode_hls,0,596,cand_up_right,in,1,1,parent_func
+ff_hevc_luma_mv_merge_mode_hls,0,452,slice_type,in,8,1,parent_func
+ff_hevc_luma_mv_merge_mode_hls,0,564,part_mode,in,8,1,parent_func
+ff_hevc_luma_mv_merge_mode_hls,1,1292,nb_refs_0,in,32,2,(complete partition) parent_func
+ff_hevc_luma_mv_merge_mode_hls,1,1296,nb_refs_1,in,32,2,(complete partition) parent_func
+ff_hevc_luma_mv_merge_mode_hls,0,132,xm_nb_merge_cand_i,in,8,1,parent_func
+ff_hevc_luma_mv_merge_mode_hls,0,132,xm_nb_merge_cand_o,out,8,1,parent_func
+ff_hevc_luma_mv_merge_mode_hls,0,372,log2_min_pu_size,in,32,1,parent_func
+ff_hevc_luma_mv_merge_mode_hls,0,408,width,in,32,1,parent_func
+ff_hevc_luma_mv_merge_mode_hls,0,332,height,in,32,1,parent_func
+ff_hevc_luma_mv_merge_mode_hls,0,456,slice_temporal_mvp_enabled_flag,in,8,1,parent_func
+ff_hevc_luma_mv_merge_mode_hls,0,1220,mvLXCol_x,in,16,1,struct_element parent_func struct_var=mvLXCol
+ff_hevc_luma_mv_merge_mode_hls,0,1224,mvLXCol_y,in,16,1,struct_element parent_func struct_var=mvLXCol
+ff_hevc_luma_mv_merge_mode_hls,0,1204,ref_poc,in,32,1,parent_func
+ff_hevc_luma_mv_merge_mode_hls,0,1232,zero_idx,out,8,1,parent_func
+ff_hevc_luma_mv_merge_mode_hls,0,1196,refPicList_0_nb_refs,in,32,1,parent_func
+ff_hevc_luma_mv_merge_mode_hls,0,1200,refPicList_1_nb_refs,in,32,1,parent_func
+ff_hevc_luma_mv_merge_mode_hls,1,286224,refPicList_0_list_Din_A,out,32,1,bram_xmem xmem_pointer addr_width=32 we_width=4 parent_func
+ff_hevc_luma_mv_merge_mode_hls,1,286224,refPicList_0_list_Dout_A,in,32,1,bram_xmem xmem_pointer addr_width=32 we_width=4 parent_func
+ff_hevc_luma_mv_merge_mode_hls,1,286228,refPicList_1_list_Din_A,out,32,1,bram_xmem xmem_pointer addr_width=32 we_width=4 parent_func
+ff_hevc_luma_mv_merge_mode_hls,1,286228,refPicList_1_list_Dout_A,in,32,1,bram_xmem xmem_pointer addr_width=32 we_width=4 parent_func
+ff_hevc_luma_mv_merge_mode_hls,1,286244,tab_mvf_pred_flag_row_Din_A,out,32,1,bram_xmem xmem_pointer addr_width=32 we_width=4 parent_func
+ff_hevc_luma_mv_merge_mode_hls,1,286244,tab_mvf_pred_flag_row_Dout_A,in,32,1,bram_xmem xmem_pointer addr_width=32 we_width=4 parent_func
+ff_hevc_luma_mv_merge_mode_hls,0,1548,poc,in,32,1,parent_func
+ff_hevc_luma_mv_merge_mode_hls,0,1552,max_num_merge_cand,in,32,1,parent_func
+#ff_hevc_luma_mv_merge_mode_hls,0,0,isTemporal,in,1,1,apcall_arg
+ff_hevc_luma_mv_merge_mode_hls,0,160,nPbW_i,in,32,1,parent_func
+ff_hevc_luma_mv_merge_mode_hls,0,160,nPbW_o,out,32,1,parent_func
+ff_hevc_luma_mv_merge_mode_hls,0,164,nPbH_i,in,32,1,parent_func
+ff_hevc_luma_mv_merge_mode_hls,0,164,nPbH_o,out,32,1,parent_func
+#ff_hevc_luma_mv_merge_mode_hls,0,0,log2_cb_size,in,32,1,apcall_arg
+ff_hevc_luma_mv_merge_mode_hls,0,1544,part_idx,in,32,1,parent_func
+ff_hevc_luma_mv_merge_mode_hls,0,1444,merge_idx,in,32,1,parent_func
+ff_hevc_luma_mv_merge_mode_hls,0,1236,xm_log2_parallel_merge_level,in,8,1,parent_func
+ff_hevc_luma_mv_merge_mode_hls,0,544,xm_x,in,32,1,parent_func
+ff_hevc_luma_mv_merge_mode_hls,0,548,xm_y,in,32,1,parent_func
+ff_hevc_luma_mv_merge_mode_hls,0,552,xm_x0_i,in,32,1,parent_func
+ff_hevc_luma_mv_merge_mode_hls,0,552,xm_x0_o,out,32,1,parent_func
+ff_hevc_luma_mv_merge_mode_hls,0,556,xm_y0_i,in,32,1,parent_func
+ff_hevc_luma_mv_merge_mode_hls,0,556,xm_y0_o,out,32,1,parent_func
+ff_hevc_luma_mv_merge_mode_hls,0,1228,xm_dbg,out,32,1,parent_func
+ff_hevc_luma_mv_merge_mode_hls,1,1300,mergecand_list_mv0_x_0,out,16,5,(complete partition) parent_func
+ff_hevc_luma_mv_merge_mode_hls,1,1302,mergecand_list_mv0_x_1,out,16,5,(complete partition) parent_func
+ff_hevc_luma_mv_merge_mode_hls,1,1304,mergecand_list_mv0_x_2,out,16,5,(complete partition) parent_func
+ff_hevc_luma_mv_merge_mode_hls,1,1306,mergecand_list_mv0_x_3,out,16,5,(complete partition) parent_func
+ff_hevc_luma_mv_merge_mode_hls,1,1308,mergecand_list_mv0_x_4,out,16,5,(complete partition) parent_func
+ff_hevc_luma_mv_merge_mode_hls,1,1312,mergecand_list_mv0_y_0,out,16,5,(complete partition) parent_func
+ff_hevc_luma_mv_merge_mode_hls,1,1314,mergecand_list_mv0_y_1,out,16,5,(complete partition) parent_func
+ff_hevc_luma_mv_merge_mode_hls,1,1316,mergecand_list_mv0_y_2,out,16,5,(complete partition) parent_func
+ff_hevc_luma_mv_merge_mode_hls,1,1318,mergecand_list_mv0_y_3,out,16,5,(complete partition) parent_func
+ff_hevc_luma_mv_merge_mode_hls,1,1320,mergecand_list_mv0_y_4,out,16,5,(complete partition) parent_func
+ff_hevc_luma_mv_merge_mode_hls,1,1324,mergecand_list_mv1_x_0,out,16,5,(complete partition) parent_func
+ff_hevc_luma_mv_merge_mode_hls,1,1326,mergecand_list_mv1_x_1,out,16,5,(complete partition) parent_func
+ff_hevc_luma_mv_merge_mode_hls,1,1328,mergecand_list_mv1_x_2,out,16,5,(complete partition) parent_func
+ff_hevc_luma_mv_merge_mode_hls,1,1330,mergecand_list_mv1_x_3,out,16,5,(complete partition) parent_func
+ff_hevc_luma_mv_merge_mode_hls,1,1332,mergecand_list_mv1_x_4,out,16,5,(complete partition) parent_func
+ff_hevc_luma_mv_merge_mode_hls,1,1336,mergecand_list_mv1_y_0,out,16,5,(complete partition) parent_func
+ff_hevc_luma_mv_merge_mode_hls,1,1338,mergecand_list_mv1_y_1,out,16,5,(complete partition) parent_func
+ff_hevc_luma_mv_merge_mode_hls,1,1340,mergecand_list_mv1_y_2,out,16,5,(complete partition) parent_func
+ff_hevc_luma_mv_merge_mode_hls,1,1342,mergecand_list_mv1_y_3,out,16,5,(complete partition) parent_func
+ff_hevc_luma_mv_merge_mode_hls,1,1344,mergecand_list_mv1_y_4,out,16,5,(complete partition) parent_func
+ff_hevc_luma_mv_merge_mode_hls,1,1348,mergecand_list_poc0_0,out,32,5,(complete partition) parent_func
+ff_hevc_luma_mv_merge_mode_hls,1,1352,mergecand_list_poc0_1,out,32,5,(complete partition) parent_func
+ff_hevc_luma_mv_merge_mode_hls,1,1356,mergecand_list_poc0_2,out,32,5,(complete partition) parent_func
+ff_hevc_luma_mv_merge_mode_hls,1,1360,mergecand_list_poc0_3,out,32,5,(complete partition) parent_func
+ff_hevc_luma_mv_merge_mode_hls,1,1364,mergecand_list_poc0_4,out,32,5,(complete partition) parent_func
+ff_hevc_luma_mv_merge_mode_hls,1,1368,mergecand_list_poc1_0,out,32,5,(complete partition) parent_func
+ff_hevc_luma_mv_merge_mode_hls,1,1372,mergecand_list_poc1_1,out,32,5,(complete partition) parent_func
+ff_hevc_luma_mv_merge_mode_hls,1,1376,mergecand_list_poc1_2,out,32,5,(complete partition) parent_func
+ff_hevc_luma_mv_merge_mode_hls,1,1380,mergecand_list_poc1_3,out,32,5,(complete partition) parent_func
+ff_hevc_luma_mv_merge_mode_hls,1,1384,mergecand_list_poc1_4,out,32,5,(complete partition) parent_func
+ff_hevc_luma_mv_merge_mode_hls,1,1388,mergecand_list_ref_idx0_0,out,8,5,(complete partition) parent_func
+ff_hevc_luma_mv_merge_mode_hls,1,1389,mergecand_list_ref_idx0_1,out,8,5,(complete partition) parent_func
+ff_hevc_luma_mv_merge_mode_hls,1,1390,mergecand_list_ref_idx0_2,out,8,5,(complete partition) parent_func
+ff_hevc_luma_mv_merge_mode_hls,1,1391,mergecand_list_ref_idx0_3,out,8,5,(complete partition) parent_func
+ff_hevc_luma_mv_merge_mode_hls,1,1392,mergecand_list_ref_idx0_4,out,8,5,(complete partition) parent_func
+ff_hevc_luma_mv_merge_mode_hls,1,1396,mergecand_list_ref_idx1_0,out,8,5,(complete partition) parent_func
+ff_hevc_luma_mv_merge_mode_hls,1,1397,mergecand_list_ref_idx1_1,out,8,5,(complete partition) parent_func
+ff_hevc_luma_mv_merge_mode_hls,1,1398,mergecand_list_ref_idx1_2,out,8,5,(complete partition) parent_func
+ff_hevc_luma_mv_merge_mode_hls,1,1399,mergecand_list_ref_idx1_3,out,8,5,(complete partition) parent_func
+ff_hevc_luma_mv_merge_mode_hls,1,1400,mergecand_list_ref_idx1_4,out,8,5,(complete partition) parent_func
+ff_hevc_luma_mv_merge_mode_hls,1,1404,mergecand_list_pred_flag_0,out,8,5,(complete partition) parent_func
+ff_hevc_luma_mv_merge_mode_hls,1,1405,mergecand_list_pred_flag_1,out,8,5,(complete partition) parent_func
+ff_hevc_luma_mv_merge_mode_hls,1,1406,mergecand_list_pred_flag_2,out,8,5,(complete partition) parent_func
+ff_hevc_luma_mv_merge_mode_hls,1,1407,mergecand_list_pred_flag_3,out,8,5,(complete partition) parent_func
+ff_hevc_luma_mv_merge_mode_hls,1,1408,mergecand_list_pred_flag_4,out,8,5,(complete partition) parent_func
+ff_hevc_luma_mv_mvp_mode_hls,0,552,xm_x0,in,32,1,parent_func
+ff_hevc_luma_mv_mvp_mode_hls,0,556,xm_y0,in,32,1,parent_func
+ff_hevc_luma_mv_mvp_mode_hls,0,160,nPbW,in,32,1,parent_func
+ff_hevc_luma_mv_mvp_mode_hls,0,164,nPbH,in,32,1,parent_func
+ff_hevc_luma_mv_mvp_mode_hls,0,172,log2_width,in,8,1,parent_func
+ff_hevc_luma_mv_mvp_mode_hls,0,1544,part_idx,in,32,1,parent_func
+ff_hevc_luma_mv_mvp_mode_hls,0,1548,poc,in,32,1,parent_func
+ff_hevc_luma_mv_mvp_mode_hls,0,456,slice_temporal_mvp_enabled_flag,in,8,1,parent_func
+ff_hevc_luma_mv_mvp_mode_hls,0,1444,merge_idx,in,32,1,parent_func
+ff_hevc_luma_mv_mvp_mode_hls,0,784,current_mv_mv_0_x,out,16,1,struct_element parent_func struct_var=current_mv
+ff_hevc_luma_mv_mvp_mode_hls,0,788,current_mv_mv_0_y,out,16,1,struct_element parent_func struct_var=current_mv
+ff_hevc_luma_mv_mvp_mode_hls,0,792,current_mv_mv_1_x,out,16,1,struct_element parent_func struct_var=current_mv
+ff_hevc_luma_mv_mvp_mode_hls,0,796,current_mv_mv_1_y,out,16,1,struct_element parent_func struct_var=current_mv
+ff_hevc_luma_mv_mvp_mode_hls,0,800,current_mv_poc_0,in,32,1,struct_element parent_func struct_var=current_mv
+ff_hevc_luma_mv_mvp_mode_hls,0,804,current_mv_poc_1,in,32,1,struct_element parent_func struct_var=current_mv
+ff_hevc_luma_mv_mvp_mode_hls,0,808,current_mv_ref_idx_0,in,8,1,struct_element parent_func struct_var=current_mv
+ff_hevc_luma_mv_mvp_mode_hls,0,812,current_mv_ref_idx_1,in,8,1,struct_element parent_func struct_var=current_mv
+ff_hevc_luma_mv_mvp_mode_hls,0,396,min_pu_width,in,32,1,parent_func
+ff_hevc_luma_mv_mvp_mode_hls,0,372,log2_min_pu_size,in,32,1,parent_func
+ff_hevc_luma_mv_mvp_mode_hls,0,1212,mxx_x,in,16,1,struct_element parent_func struct_var=mxx
+ff_hevc_luma_mv_mvp_mode_hls,0,1216,mxx_y,in,16,1,struct_element parent_func struct_var=mxx
+ff_hevc_luma_mv_mvp_mode_hls,0,888,mvp_lx_flag,in,32,1,parent_func
+#ff_hevc_luma_mv_mvp_mode_hls,0,0,lx,in,8,1,apcall_arg
+ff_hevc_luma_mv_mvp_mode_hls,0,600,cand_bottom_left,in,8,1,parent_func
+ff_hevc_luma_mv_mvp_mode_hls,0,584,cand_left,in,8,1,parent_func
+ff_hevc_luma_mv_mvp_mode_hls,0,580,cand_up,in,8,1,parent_func
+ff_hevc_luma_mv_mvp_mode_hls,0,588,cand_up_left,in,8,1,parent_func
+ff_hevc_luma_mv_mvp_mode_hls,0,596,cand_up_right,in,8,1,parent_func
+ff_hevc_luma_mv_mvp_mode_hls,0,408,width,in,32,1,parent_func
+ff_hevc_luma_mv_mvp_mode_hls,0,332,height,in,32,1,parent_func
+ff_hevc_luma_mv_mvp_mode_hls,0,1196,refPicList_0_nb_refs,in,32,1,parent_func
+ff_hevc_luma_mv_mvp_mode_hls,0,1200,refPicList_1_nb_refs,in,32,1,parent_func
+ff_hevc_luma_mv_mvp_mode_hls,0,1220,mvLXCol_x,in,16,1,struct_element parent_func struct_var=mvLXCol
+ff_hevc_luma_mv_mvp_mode_hls,0,1224,mvLXCol_y,in,16,1,struct_element parent_func struct_var=mvLXCol
+ff_hevc_luma_mv_mvp_mode_hls,0,1204,ref_poc,in,32,1,parent_func
+ff_hevc_luma_mv_mvp_mode_hls,0,1208,collocated_list,in,8,1,parent_func
+ff_hevc_luma_mv_mvp_mode_hls,0,1540,is_temporal,in,1,1,parent_func
+ff_hevc_luma_mv_mvp_mode_hls,0,1228,xm_dbg,out,32,1,parent_func
+ff_hevc_luma_mv_mvp_mode_hls,1,286216,refPicList_0_isLongTerm_Din_A,out,32,1,bram_xmem xmem_pointer addr_width=32 we_width=4 parent_func
+ff_hevc_luma_mv_mvp_mode_hls,1,286216,refPicList_0_isLongTerm_Dout_A,in,32,1,bram_xmem xmem_pointer addr_width=32 we_width=4 parent_func
+ff_hevc_luma_mv_mvp_mode_hls,1,286220,refPicList_1_isLongTerm_Din_A,out,32,1,bram_xmem xmem_pointer addr_width=32 we_width=4 parent_func
+ff_hevc_luma_mv_mvp_mode_hls,1,286220,refPicList_1_isLongTerm_Dout_A,in,32,1,bram_xmem xmem_pointer addr_width=32 we_width=4 parent_func
+ff_hevc_luma_mv_mvp_mode_hls,1,286224,refPicList_0_list_Din_A,out,32,1,bram_xmem xmem_pointer addr_width=32 we_width=4 parent_func
+ff_hevc_luma_mv_mvp_mode_hls,1,286224,refPicList_0_list_Dout_A,in,32,1,bram_xmem xmem_pointer addr_width=32 we_width=4 parent_func
+ff_hevc_luma_mv_mvp_mode_hls,1,286228,refPicList_1_list_Din_A,out,32,1,bram_xmem xmem_pointer addr_width=32 we_width=4 parent_func
+ff_hevc_luma_mv_mvp_mode_hls,1,286228,refPicList_1_list_Dout_A,in,32,1,bram_xmem xmem_pointer addr_width=32 we_width=4 parent_func
+ff_hevc_luma_mv_mvp_mode_hls,1,286244,tab_mvf_pred_flag_row_Din_A,out,32,1,bram_xmem xmem_pointer addr_width=32 we_width=4 parent_func
+ff_hevc_luma_mv_mvp_mode_hls,1,286244,tab_mvf_pred_flag_row_Dout_A,in,32,1,bram_xmem xmem_pointer addr_width=32 we_width=4 parent_func
+#,0,1436,pu_mvd,,64,1,struct struct_size=8
+#hls_prediction_unit_hls,0,0,x0,in,32,1,apcall_arg
+#hls_prediction_unit_hls,0,0,y0,in,32,1,apcall_arg
+hls_prediction_unit_hls,0,160,nPbW,in,32,1,parent_func
+hls_prediction_unit_hls,0,164,nPbH,in,32,1,parent_func
+#hls_prediction_unit_hls,0,0,log2_cb_size,in,32,1,apcall_arg
+hls_prediction_unit_hls,0,1544,part_idx,in,32,1,parent_func
+hls_prediction_unit_hls,0,44,idx,in,32,1,parent_func
+hls_prediction_unit_hls,0,396,min_pu_width,in,32,1,parent_func
+hls_prediction_unit_hls,0,368,log2_min_cb_size,in,32,1,parent_func
+hls_prediction_unit_hls,0,392,min_cb_width,in,32,1,parent_func
+hls_prediction_unit_hls,1,286176,skip_flag_Din_A,out,8,1,bram_xmem xmem_pointer addr_width=32 we_width=1 parent_func
+hls_prediction_unit_hls,1,286176,skip_flag_Dout_A,in,8,1,bram_xmem xmem_pointer addr_width=32 we_width=1 parent_func
+hls_prediction_unit_hls,0,1552,max_num_merge_cand,in,32,1,parent_func
+hls_prediction_unit_hls,0,784,current_mv_mv_0_x_i,in,16,1,struct_element parent_func struct_var=current_mv
+hls_prediction_unit_hls,0,784,current_mv_mv_0_x_o,out,16,1,struct_element parent_func struct_var=current_mv
+hls_prediction_unit_hls,0,788,current_mv_mv_0_y_i,in,16,1,struct_element parent_func struct_var=current_mv
+hls_prediction_unit_hls,0,788,current_mv_mv_0_y_o,out,16,1,struct_element parent_func struct_var=current_mv
+hls_prediction_unit_hls,0,792,current_mv_mv_1_x_i,in,16,1,struct_element parent_func struct_var=current_mv
+hls_prediction_unit_hls,0,792,current_mv_mv_1_x_o,out,16,1,struct_element parent_func struct_var=current_mv
+hls_prediction_unit_hls,0,796,current_mv_mv_1_y_i,in,16,1,struct_element parent_func struct_var=current_mv
+hls_prediction_unit_hls,0,796,current_mv_mv_1_y_o,out,16,1,struct_element parent_func struct_var=current_mv
+hls_prediction_unit_hls,0,800,current_mv_poc_0,out,32,1,struct_element parent_func struct_var=current_mv
+hls_prediction_unit_hls,0,804,current_mv_poc_1,out,32,1,struct_element parent_func struct_var=current_mv
+hls_prediction_unit_hls,0,808,current_mv_ref_idx_0_i,in,8,1,struct_element parent_func struct_var=current_mv
+hls_prediction_unit_hls,0,808,current_mv_ref_idx_0_o,out,8,1,struct_element parent_func struct_var=current_mv
+hls_prediction_unit_hls,0,812,current_mv_ref_idx_1_i,in,8,1,struct_element parent_func struct_var=current_mv
+hls_prediction_unit_hls,0,812,current_mv_ref_idx_1_o,out,8,1,struct_element parent_func struct_var=current_mv
+hls_prediction_unit_hls,0,816,current_mv_pred_flag_i,in,8,1,parent_func
+hls_prediction_unit_hls,0,816,current_mv_pred_flag_o,out,8,1,parent_func
+hls_prediction_unit_hls,0,452,slice_type,in,8,1,parent_func
+hls_prediction_unit_hls,0,1456,rv_ff_hevc_luma_mv_merge_mode,in,32,1,parent_func
+hls_prediction_unit_hls,0,1460,rv_ff_hevc_ref_idx_lx_decode,in,32,1,parent_func
+hls_prediction_unit_hls,0,1464,rv_ff_hevc_hls_mvd_coding,in,32,1,parent_func
+hls_prediction_unit_hls,0,1468,rv_ff_hevc_luma_mv_mvp_mode,in,32,1,parent_func
+hls_prediction_unit_hls,0,1472,rv_hevc_await_progress,in,32,1,parent_func
+hls_prediction_unit_hls,0,1476,rv_hevc_await_progress_bl,in,32,1,parent_func
+hls_prediction_unit_hls,0,1480,rv_ff_upsample_block,in,32,1,parent_func
+hls_prediction_unit_hls,0,1484,rv_luma_mc_uni_libx265,in,32,1,parent_func
+hls_prediction_unit_hls,0,1488,rv_chroma_mc_uni_libx265,in,32,1,parent_func
+hls_prediction_unit_hls,0,1492,rv_xmem_copy_mvfield,in,32,1,parent_func
+hls_prediction_unit_hls,0,1496,rv_setMVPOC,in,32,1,parent_func
+hls_prediction_unit_hls,0,1500,rv_checkref,in,32,1,parent_func
+hls_prediction_unit_hls,0,1444,merge_idx,out,32,1,parent_func
+#hls_prediction_unit_hls,0,0,tid,in,32,1,apcall_arg
+hls_prediction_unit_hls,0,888,mvp_lx_flag,out,32,1,parent_func
+hls_prediction_unit_hls,0,1436,pu_mvd_x,out,16,1,struct_element parent_func struct_var=pu_mvd
+hls_prediction_unit_hls,0,1440,pu_mvd_y,out,16,1,struct_element parent_func struct_var=pu_mvd
+hls_prediction_unit_hls,1,286244,tab_mvf_pred_flag_row_Din_A,out,32,1,bram_xmem xmem_pointer addr_width=32 we_width=4 parent_func
+hls_prediction_unit_hls,1,286244,tab_mvf_pred_flag_row_Dout_A,in,32,1,bram_xmem xmem_pointer addr_width=32 we_width=4 parent_func
+hls_prediction_unit_hls,0,1448,skipref,in,1,1,parent_func
+hls_prediction_unit_hls,0,1452,interref,in,1,1,parent_func
+hls_prediction_unit_hls,0,372,log2_min_pu_size,in,32,1,parent_func
+hls_prediction_unit_hls,0,172,log2_width,in,8,1,parent_func
+hls_prediction_unit_hls,0,504,merge_flag,out,8,1,parent_func
+hls_prediction_unit_hls,0,464,depth,in,32,1,parent_func
+hls_prediction_unit_hls,1,1292,nb_refs_0,in,32,2,(complete partition) parent_func
+hls_prediction_unit_hls,1,1296,nb_refs_1,in,32,2,(complete partition) parent_func
+#hls_prediction_unit_hls,0,0,mvd_l1_zero_flag,in,8,1,apcall_arg
+hls_prediction_unit_hls,1,180,predColBuf_0_i,in,32,17,(complete partition) parent_func
+hls_prediction_unit_hls,1,180,predColBuf_0_o,out,32,17,(complete partition) parent_func
+hls_prediction_unit_hls,1,184,predColBuf_1_i,in,32,17,(complete partition) parent_func
+hls_prediction_unit_hls,1,184,predColBuf_1_o,out,32,17,(complete partition) parent_func
+hls_prediction_unit_hls,1,188,predColBuf_2_i,in,32,17,(complete partition) parent_func
+hls_prediction_unit_hls,1,188,predColBuf_2_o,out,32,17,(complete partition) parent_func
+hls_prediction_unit_hls,1,192,predColBuf_3_i,in,32,17,(complete partition) parent_func
+hls_prediction_unit_hls,1,192,predColBuf_3_o,out,32,17,(complete partition) parent_func
+hls_prediction_unit_hls,1,196,predColBuf_4_i,in,32,17,(complete partition) parent_func
+hls_prediction_unit_hls,1,196,predColBuf_4_o,out,32,17,(complete partition) parent_func
+hls_prediction_unit_hls,1,200,predColBuf_5_i,in,32,17,(complete partition) parent_func
+hls_prediction_unit_hls,1,200,predColBuf_5_o,out,32,17,(complete partition) parent_func
+hls_prediction_unit_hls,1,204,predColBuf_6_i,in,32,17,(complete partition) parent_func
+hls_prediction_unit_hls,1,204,predColBuf_6_o,out,32,17,(complete partition) parent_func
+hls_prediction_unit_hls,1,208,predColBuf_7_i,in,32,17,(complete partition) parent_func
+hls_prediction_unit_hls,1,208,predColBuf_7_o,out,32,17,(complete partition) parent_func
+hls_prediction_unit_hls,1,212,predColBuf_8_i,in,32,17,(complete partition) parent_func
+hls_prediction_unit_hls,1,212,predColBuf_8_o,out,32,17,(complete partition) parent_func
+hls_prediction_unit_hls,1,216,predColBuf_9_i,in,32,17,(complete partition) parent_func
+hls_prediction_unit_hls,1,216,predColBuf_9_o,out,32,17,(complete partition) parent_func
+hls_prediction_unit_hls,1,220,predColBuf_10_i,in,32,17,(complete partition) parent_func
+hls_prediction_unit_hls,1,220,predColBuf_10_o,out,32,17,(complete partition) parent_func
+hls_prediction_unit_hls,1,224,predColBuf_11_i,in,32,17,(complete partition) parent_func
+hls_prediction_unit_hls,1,224,predColBuf_11_o,out,32,17,(complete partition) parent_func
+hls_prediction_unit_hls,1,228,predColBuf_12_i,in,32,17,(complete partition) parent_func
+hls_prediction_unit_hls,1,228,predColBuf_12_o,out,32,17,(complete partition) parent_func
+hls_prediction_unit_hls,1,232,predColBuf_13_i,in,32,17,(complete partition) parent_func
+hls_prediction_unit_hls,1,232,predColBuf_13_o,out,32,17,(complete partition) parent_func
+hls_prediction_unit_hls,1,236,predColBuf_14_i,in,32,17,(complete partition) parent_func
+hls_prediction_unit_hls,1,236,predColBuf_14_o,out,32,17,(complete partition) parent_func
+hls_prediction_unit_hls,1,240,predColBuf_15_i,in,32,17,(complete partition) parent_func
+hls_prediction_unit_hls,1,240,predColBuf_15_o,out,32,17,(complete partition) parent_func
+hls_prediction_unit_hls,1,244,predColBuf_16_i,in,32,17,(complete partition) parent_func
+hls_prediction_unit_hls,1,244,predColBuf_16_o,out,32,17,(complete partition) parent_func
+hls_prediction_unit_hls,1,286224,refPicList_0_list_Din_A,out,32,1,bram_xmem xmem_pointer addr_width=32 we_width=4 parent_func
+hls_prediction_unit_hls,1,286224,refPicList_0_list_Dout_A,in,32,1,bram_xmem xmem_pointer addr_width=32 we_width=4 parent_func
+hls_prediction_unit_hls,1,286228,refPicList_1_list_Din_A,out,32,1,bram_xmem xmem_pointer addr_width=32 we_width=4 parent_func
+hls_prediction_unit_hls,1,286228,refPicList_1_list_Dout_A,in,32,1,bram_xmem xmem_pointer addr_width=32 we_width=4 parent_func
+hls_prediction_unit_hls,1,286232,refPicList_0_ref_Din_A,out,32,1,bram_xmem xmem_pointer addr_width=32 we_width=4 parent_func
+hls_prediction_unit_hls,1,286232,refPicList_0_ref_Dout_A,in,32,1,bram_xmem xmem_pointer addr_width=32 we_width=4 parent_func
+hls_prediction_unit_hls,1,286236,refPicList_1_ref_Din_A,out,32,1,bram_xmem xmem_pointer addr_width=32 we_width=4 parent_func
+hls_prediction_unit_hls,1,286236,refPicList_1_ref_Dout_A,in,32,1,bram_xmem xmem_pointer addr_width=32 we_width=4 parent_func
+#hls_prediction_unit_hls,0,0,inter_layer_ref,in,32,1,apcall_arg
+hls_prediction_unit_hls,0,1504,threads_type,in,8,1,parent_func

@@ -8,8 +8,9 @@ package func_arbiter_pkg;
     localparam int CMD_FIFO_AW = 8;
     localparam int RET_FIFO_DEPTH = 8;
     localparam int RET_FIFO_AW = $clog2(RET_FIFO_DEPTH);
-    localparam int CALL_SEQ_W = 2;
-    localparam int ROB_W = (1 << CALL_SEQ_W);
+    //edward: becomes input parameter of call_arbiter during instantiate 
+    //localparam int CALL_SEQ_W = 2;
+    //localparam int ROB_W = (1 << CALL_SEQ_W);
     localparam int L1_GROUP = 8;
 
     function automatic bit [0:L1_GROUP-1][7:0] get_inst_per_group(input int inst_num, input int l1_grp);

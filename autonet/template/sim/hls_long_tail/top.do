@@ -16,8 +16,8 @@ vlib secureip
 vlib xpm
 
 #Include path
-set XIL_SIM_LIB_PATH D:/XMlib/X2022MSE
-#set XIL_SIM_LIB_PATH D:/xilinx_2022_me_10_7_sim_lib
+#set XIL_SIM_LIB_PATH D:/XMlib/X2022MSE
+set XIL_SIM_LIB_PATH D:/xilinx_2022_me_10_7_sim_lib
 
 set RTL_PATH ../rtl
 set TB_PATH ../tb
@@ -26,8 +26,9 @@ set include_path "+incdir+$$RTL_PATH+$$RTL_PATH/xcache+$$TB_PATH+$$RTL_PATH/comm
 #set XMEM_LATENCY_1 1
 #set define_macro +define+XMEM_LATENCY_1=$$XMEM_LATENCY_1
 
-set define_macro +define+HLS_LOCAL_DCACHE=1
+#set define_macro +define+HLS_LOCAL_DCACHE=1
 #set define_macro "+define+HLS_LOCAL_DCACHE=1+HLS_AP_CE_TEST=1+CUSTOM_CONN_RELOAD_TEST=1"
+set define_macro +define+DUMMY_MACRO=1
 
 vmap xil_defaultlib msim/xil_defaultlib
 vmap blk_mem_gen_v8_4_5         $$XIL_SIM_LIB_PATH/blk_mem_gen_v8_4_5/
@@ -97,13 +98,13 @@ vlog -incr -lint -sv -work xil_defaultlib $$define_macro $$include_path ../rtl/c
 
 vlog -incr -lint -sv -work xil_defaultlib $$define_macro $$include_path ../rtl/coherence_cache/cache_axi4_arbiter_v1.sv
 
-vlog -incr -lint -sv -work xil_defaultlib $$define_macro $$include_path ../rtl/func_arbiter/call_arbiter_v4.sv
+vlog -incr -lint -sv -work xil_defaultlib $$define_macro $$include_path ../rtl/func_arbiter/call_arbiter_v7.sv
 vlog -incr -lint -sv -work xil_defaultlib $$define_macro $$include_path ../rtl/func_arbiter/copyEngine_v2.sv
 vlog -incr -lint -sv -work xil_defaultlib $$define_macro $$include_path ../rtl/func_arbiter/dpram.sv
-vlog -incr -lint -sv -work xil_defaultlib $$define_macro $$include_path ../rtl/func_arbiter/func_arbiter_v4.sv
+vlog -incr -lint -sv -work xil_defaultlib $$define_macro $$include_path ../rtl/func_arbiter/func_arbiter_v7.sv
 vlog -incr -lint -sv -work xil_defaultlib $$define_macro $$include_path ../rtl/func_arbiter/linked_fifo_v3a.sv
 vlog -incr -lint -sv -work xil_defaultlib $$define_macro $$include_path ../rtl/func_arbiter/mq_rrpop_fifo.sv
-vlog -incr -lint -sv -work xil_defaultlib $$define_macro $$include_path ../rtl/func_arbiter/return_arbiter_v5_2.sv
+vlog -incr -lint -sv -work xil_defaultlib $$define_macro $$include_path ../rtl/func_arbiter/return_arbiter_v8.sv
 vlog -incr -lint -sv -work xil_defaultlib $$define_macro $$include_path ../rtl/func_arbiter/sync_fifo_v2.sv
 
 vlog -incr -lint -sv -work xil_defaultlib $$define_macro $$include_path ../rtl/dma_axiStream_axi4_t/dma_axiStream_axi4_pkg_t.sv
@@ -111,6 +112,13 @@ vlog -incr -lint -sv -work xil_defaultlib $$define_macro $$include_path ../rtl/d
 vlog -incr -lint -sv -work xil_defaultlib $$define_macro $$include_path ../rtl/dma_axiStream_axi4_t/dma_stream_to_axi4_v2_t.sv
 vlog -incr -lint -sv -work xil_defaultlib $$define_macro $$include_path ../rtl/dma_axiStream_axi4_t/dma_axiStream_axi4_regs_t.sv
 vlog -incr -lint -sv -work xil_defaultlib $$define_macro $$include_path ../rtl/dma_axiStream_axi4_t/dma_axiStream_axi4_top_t.sv
+
+vlog -incr -lint -sv -work xil_defaultlib $$define_macro $$include_path ../rtl/copyEngine/cacheIf_axi4_conv.sv
+vlog -incr -lint -sv -work xil_defaultlib $$define_macro $$include_path ../rtl/copyEngine/cacheIf_axi4_pkg.sv
+vlog -incr -lint -sv -work xil_defaultlib $$define_macro $$include_path ../rtl/copyEngine/cacheIf_axi4_rchan.sv
+vlog -incr -lint -sv -work xil_defaultlib $$define_macro $$include_path ../rtl/copyEngine/cacheIf_axi4_wchan.sv
+vlog -incr -lint -sv -work xil_defaultlib $$define_macro $$include_path ../rtl/copyEngine/copyEngine_axi4_wrp.sv
+vlog -incr -lint -sv -work xil_defaultlib $$define_macro $$include_path ../rtl/copyEngine/copyEngine_v3.sv
 
 vlog -incr -lint -sv -work xil_defaultlib $$define_macro $$include_path ./glbl.v
 

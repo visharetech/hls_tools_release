@@ -27,6 +27,10 @@ task automatic decodeBin_model(string decBin_file, int core_id);
 		logic [31:0] binCnt;
 		logic [31:0] dlyCnt;
 		fp = $fopen (decBin_file, "rb");
+		if (fp == 0) begin
+			$display("Cannot open decodeBin_model file %s", decBin_file);
+			$stop;
+		end
 		fsize = $fread(bin_buf, fp);
 		$fclose(fp);
 		$display ("%s fsize: %d", decBin_file, fsize);

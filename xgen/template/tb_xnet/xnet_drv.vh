@@ -128,7 +128,7 @@ logic [31:0]					rd_cnt=0;
 logic [63:0] 					wr_push_cnt = 0;	//for debug
 logic [63:0] 					wr_pop_cnt = 0;		//for debug
 
-
+logic 							rand_ap_ce[HLS_NUM];
 
 logic [31:0]	debug0=0;
 logic [31:0]	debug1=0;

@@ -4,17 +4,38 @@ localparam RET_PORT      = 4;
 localparam LOG_PARENT    = (PARENT == 1)? 1: $clog2(PARENT);
 localparam LOG_CHILD     = (CHILD == 1)? 1: $clog2(CHILD);
 
-localparam TOTAL_ARGS_W  = ARG_W * ARG_NUM;
-localparam CMD_FIFO_DW   = TOTAL_ARGS_W + LOG_CHILD + 1 + 32;
-localparam FULL_RET_DW   = RET_DW + LOG_CHILD;
+localparam THREAD        = 16;
+localparam LOG_THREAD    = (THREAD == 1)? 1 : $clog2(THREAD);
 
-localparam ARGS_LSB      = 0;
-localparam ARGS_MSB      = ARGS_LSB + TOTAL_ARGS_W - 1;
-localparam CHILD_PC_LSB  = ARGS_MSB + 1;
-localparam CHILD_PC_MSB  = CHILD_PC_LSB + 31;
-localparam CHILD_MOD_LSB = CHILD_PC_MSB + 1;
-localparam CHILD_MOD_MSB = CHILD_MOD_LSB + LOG_CHILD - 1;
-localparam RETREQ_BIT    = CHILD_MOD_MSB + 1;
+localparam TOTAL_ARGS_W  = ARG_W * ARG_NUM;
+localparam CMD_FIFO_DW   = TOTAL_ARGS_W + LOG_THREAD + LOG_CHILD + 2 + 32;
+localparam FULL_RET_DW   = RET_DW + LOG_CHILD + LOG_THREAD;
+
+localparam SEQBUF        = 4;
+localparam SEQ           = SEQBUF * 2;
+localparam LOG_SEQBUF    = $clog2(SEQBUF);
+localparam LOG_SEQ       = $clog2(SEQ);
+
+//func_arbiter_v4
+//localparam ARGS_LSB      = 0;
+//localparam ARGS_MSB      = ARGS_LSB + TOTAL_ARGS_W - 1;
+//localparam CHILD_PC_LSB  = ARGS_MSB + 1;
+//localparam CHILD_PC_MSB  = CHILD_PC_LSB + 31;
+//localparam CHILD_MOD_LSB = CHILD_PC_MSB + 1;
+//localparam CHILD_MOD_MSB = CHILD_MOD_LSB + LOG_CHILD - 1;
+//localparam RETREQ_BIT    = CHILD_MOD_MSB + 1;
+
+//func_arbiter_v7
+localparam int ARGS_LSB = 0;
+localparam int ARGS_MSB = ARGS_LSB + ARG_W*ARG_NUM - 1;
+localparam int THREAD_LSB = ARGS_MSB + 1;
+localparam int THREAD_MSB = THREAD_LSB + LOG_THREAD - 1;
+localparam int CHILD_PC_LSB = THREAD_MSB + 1;
+localparam int CHILD_PC_MSB = CHILD_PC_LSB + 31;
+localparam int CHILD_MOD_LSB = CHILD_PC_MSB + 1;
+localparam int CHILD_MOD_MSB = CHILD_MOD_LSB + LOG_CHILD - 1;
+localparam int RETREQ_LSB = CHILD_MOD_MSB + 1;
+localparam int RETREQ_MSB = RETREQ_LSB + 1;
 
 localparam bit [CALL_PORT-1:0] [7:0] CALL_MUX_IN = getCallPortDistribution(PARENT);
 localparam bit [CALL_PORT-1:0] [7:0] CALL_MUX_OUT = getCallPortDistribution(CHILD);

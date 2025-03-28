@@ -42,7 +42,7 @@ module return_arbiter#(
     input                                   rstn,
     input                                   clk,
 
-    input        [CALL_SEQ_W-1:0]           storeSeq[CHILD],
+    input        [CALL_SEQ_W-1:0]           storeSeq[CHILD][PARENT],
 
     output logic                            child_retRdy_o[CHILD],
     input                                   child_retVld_i[CHILD],
@@ -71,7 +71,7 @@ module return_arbiter#(
     logic [ROB_W-1:0]               clr_robVld[PARENT], clr_robVld_r[PARENT];
     logic [PARENT-1:0]              nextRobVld, nextRobVld_r;
     logic [CALL_SEQ_W-1:0]          popSeq[PARENT], popSeq_r[PARENT];
-    logic [CALL_SEQ_W-1:0]          storeSeq_w[CHILD], storeSeq_r[CHILD];
+    logic [CALL_SEQ_W-1:0]          storeSeq_w[CHILD][PARENT], storeSeq_r[CHILD][PARENT];
 
     logic                           retVld_w[CHILD], retVld_r[CHILD];
     logic [31:0]                    retDin_w[CHILD], retDin_r[CHILD];
@@ -188,7 +188,7 @@ module return_arbiter#(
                     retDin_grp[g][c] = retDin_r[local_c];
                     retVld_grp[g][c] = retVld_r[local_c];
                     parentMod_grp[g][c] = parentMod_r[local_c];
-                    storeSeq_grp[g][c] = storeSeq_r[local_c];
+                    storeSeq_grp[g][c] = storeSeq_r[local_c][parentMod_r[local_c]];
                     local_c++;
                 end
             end
@@ -331,9 +331,11 @@ module return_arbiter#(
 
             retDin_r <= '{default: '0};
             retVld_r <= '{default: '0};
-            parentMod_r <= '{default: '0};
+            parentMod_r <= '{default: '0};            
             for (int c=0; c<CHILD; c++) begin
-                storeSeq_r[c] <= -1;
+                for (int p=0; p<PARENT; p++) begin
+                    storeSeq_r[p][c] <= -1;
+                end
             end
 
             robVld_r <= '{default: '0};

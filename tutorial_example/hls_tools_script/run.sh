@@ -10,14 +10,21 @@
 
 #specify the vitis_hls path
 xilinx_vitis=/mnt/d/Xilinx/Vitis_HLS/2023.2/bin/vitis_hls
+#xilinx_vitis=/tools/Xilinx/Vitis_HLS/2024.2/bin/vitis_hls
+#xilinx_vitis=$(which vitis_hls)
+
+#specify the hls_tools path
+hls_tools_dir=$(dirname $(dirname $(pwd)))
+#hls_tools_dir=~/hls_tools/ 
 
 #specify the project path
 project_dir=$(dirname $(pwd))
 #project_dir=~/hls_tools/tutorial_example
 
-#specify the hls_tools path
-hls_tools_dir=$(dirname $(dirname $(pwd)))
-#hls_tools_dir=~/hls_tools/
+echo "project dir: ${project_dir}"
+echo "hls_tools dir: ${hls_tools_dir}"
+echo "vitis_hls path: ${xilinx_vitis}"
+#set -x
 
 ##################################################################################
 
@@ -37,6 +44,13 @@ xmem_header_file=${project_dir}/source/xmem.h
 
 #Auto generate hls_enum.h 
 enum_header_file=${project_dir}/source/hls_enum.h
+
+#Auto generate from xmem_model
+xmember_enum_h_file=${project_dir}/source/xmember_enum.h
+xmember_grp_h_file=${project_dir}/source/xmember_grp.h
+xmember_enum_vh_file=${export_rtl_conn_dir}/xmember_enum.vh
+xmember_grp_vh_file=${export_rtl_conn_dir}/xmember_grp.vh
+
 
 #HLS source file (Extract function name and autonet cksum)
 hls_src_file=${project_dir}/source/hls.cpp
@@ -251,7 +265,7 @@ clang_get_xmem() {
         clang_path_argv="-l ${clang_path}"
     fi
         
-    python3 ${hls_tools_dir}/autonet/struct2v_clang.py -i ${xmem_header_file} ${clang_path_argv} -o ${prj_rtl_conn_dir}/xmem.info
+    python3 ${hls_tools_dir}/autonet/struct2v_clang.py -i ${xmem_header_file} ${clang_path_argv} -o ${prj_rtl_conn_dir}/xmem.info -f '-D__riscv=1 -DHLS_XMEM=1'
     
     if [ $? -ne 0 ]; then
         echo "clang_get_xmem failed"
@@ -287,17 +301,21 @@ extract_func_name() {
     fi
 
     #echo "$func_filter_argv"
-    
+    additional_cflags=""
+    if [ "$option" = "capture" ]; then
+        additional_cflags=" -DCLANG_EXTRACT_FUNC_NAME=1 -DCAPTURE_COSIM=1"
+    fi
+
     python3 ${hls_tools_dir}/extract_func_name/extract_func_name.py \
         --src ${hls_src_file}   \
         ${func_filter_argv}     \
         ${clang_path_argv}      \
-        --cflags="-I${project_dir}/source"  \
+        --cflag="-I${project_dir}/source${additional_cflags}"                   \
         --json              ${hls_tools_dir}/cosim_code_generator/function_list.json        \
         --short-func-list   ${hls_tools_dir}/vitis_batch_generate_rtl/hls_func_list.txt     \
         --autonet-pragma    ${prj_rtl_conn_dir}/hls_long_tail_instantiate.vh                \
         --autonet-enum      ${prj_rtl_conn_dir}/enum_func.info                              \
-        --autonet-cheader   ${autonet_prj_dir}/c/hls.h                                      \
+        --autonet-json      ${autonet_prj_dir}/c/hls.json                                   \
         --arg-keyword       HEVCCONTEXT_ARG DCACHE_ARG                                      \
         ${prog_argv}
 
@@ -605,11 +623,20 @@ run_autonet(){
     fi
 }
 
-replace_dcache_pattern(){
+replace_xcache_pattern(){
     echo -e "${GREEN}Replace dcache address pattern${NONE}"
     cd ${hls_tools_dir}/autonet
-    python3 ./replace_pattern.py --dir ${autonet_export_dir}/rtl/ --search="dcache_address0 = 'bx;" --replace="dcache_address0 = 0; //by replace_pattern.py"
+    #python3 ./replace_pattern.py --dir ${autonet_export_dir}/rtl/ --search="dcache_address0 = 'bx;" --replace="dcache_address0 = 0; //by replace_pattern.py"
+    #python3 ./replace_pattern.py --dir ${autonet_export_dir}/rtl/ --search="_address0 = 'bx;" --replace="_address0 = 0; //by replace_pattern.py"
+	python3 ./replace_pattern.py --dir ${autonet_export_dir}/rtl/ --search="_Addr_A = 'bx;" --replace="_Addr_A = 0; //by replace_pattern.py"    
+    if [ $? -eq 0 ]; then
+        echo "replace_pattern.py success"
+    else
+        echo "replace_pattern.py failed"
+        exit -1
+    fi
     
+	python3 ./replace_pattern.py --dir ${autonet_export_dir}/rtl/ --search="_Addr_A_orig = 'bx;" --replace="_Addr_A_orig = 0; //by replace_pattern.py"    
     if [ $? -eq 0 ]; then
         echo "replace_pattern.py success"
     else
@@ -626,7 +653,7 @@ print_usage(){
 
 check_and_reorder_xmem(){
     echo -e "${GREEN}check xmem${NONE}"
-    python3 ${hls_tools_dir}/xgen/check_xmem.py --xmem-conf xmem_config.txt --xmem-data ${export_rtl_conn_dir}/xmem_func.csv
+    python3 ${hls_tools_dir}/xgen/check_xmem.py --csv ${export_rtl_conn_dir}/xmem_func.csv --xmem-config xmem_config.txt --src ${xmem_header_file}
     exit_code=$?
 
     if [ $exit_code -eq 0 ]; then
@@ -640,7 +667,7 @@ check_and_reorder_xmem(){
         fi
 
         #execute check_xmem.py
-        python3 ${hls_tools_dir}/xgen/reorder_xmem.py ${clang_path_argv} --xmem-conf xmem_config.txt --src ${xmem_header_file} --csv ${export_rtl_conn_dir}/xmem_func.csv -o ${xmem_header_file}
+        python3 ${hls_tools_dir}/xgen/reorder_xmem.py ${clang_path_argv} --src ${xmem_header_file} --csv ${export_rtl_conn_dir}/xmem_func.csv -o ${xmem_header_file} -f '-D__riscv=1 -DHLS_XMEM=1' --xmem-config xmem_config.txt
 
         if [ $? -eq 0 ]; then
             echo "reorder the xmem element in ${xmem_header_file}, please review the xmem.h source and run xgen again"
@@ -652,7 +679,7 @@ check_and_reorder_xmem(){
             clang_get_xmem
             merge_hls_long_tail_pkg
             run_autonet --conn-handler=xgen
-            replace_dcache_pattern
+            replace_xcache_pattern
         else
             exit -1
         fi
@@ -665,16 +692,23 @@ check_and_reorder_xmem(){
 run_xmem_model(){
     echo -e "${GREEN}Step 1. Run xmem model${NONE}"
     local current_dir=$(pwd)
-    chmod +x ${hls_tools_dir}/xgen/xmem_model
+    chmod+x${hls_tools_dir}/xgen/xmem_model
     ${hls_tools_dir}/xgen/xmem_model  ${export_rtl_conn_dir}/xmem_func.csv               \
                                       ${export_rtl_conn_dir}/custom_connection_tbl.txt   \
                                       ${export_rtl_conn_dir}/xadr.txt                    \
                                       ${export_rtl_conn_dir}/bank_mux_params.svh         \
                                       ${export_rtl_conn_dir}/hw_xmem_info.dat            \
-                                      ${export_rtl_conn_dir}/xmem_param.h                \
+                                      ${export_rtl_conn_dir}/xmem_param.c                \
                                       ${export_rtl_conn_dir}/xmem_param.vh               \
                                       ${export_rtl_conn_dir}/accessFunc.txt              \
-                                      ${current_dir}/xmem_config.txt
+                                      ${current_dir}/xmem_config.txt                     \
+                                      ${xmember_enum_h_file}                             \
+                                      ${xmember_grp_h_file}                              \
+                                      ${xmember_enum_vh_file}                            \
+                                      ${xmember_grp_vh_file}							 \
+                                      ${export_rtl_conn_dir}/xmem_param.h                
+
+	#exit -1
 
     if [ $? -ne 0 ]; then
         echo "run xmem model failed"
@@ -702,17 +736,27 @@ run_xmem_model(){
         echo "copy xmem_param.h to ${project_dir}/source/ directory failed."
         exit -1
     fi
+    
+    echo -e "${GREEN}Step 4. Copy xmem_param.c to source directory${NONE}"
+    cp ${export_rtl_conn_dir}/xmem_param.c \
+       ${project_dir}/source/
+    if [ $? -eq 0 ]; then
+        echo "copy xmem_param.c to ${project_dir}/source/ directory successfully."
+    else
+        echo "copy xmem_param.c to ${project_dir}/source/ directory failed."
+        exit -1
+    fi
 }
 
 run_xgen(){
     echo -e "${GREEN}Step 1. Run xgen to generate xmem rtl${NONE}"
-
+    
     mkdir -p ${export_rtl_tb_xnet_dir}
     mkdir -p ${export_sim_dir}
-
-    python3 ${hls_tools_dir}/xgen/xgen.py --xmem-conf xmem_config.txt                                       \
-                                          --xmem-data ${export_rtl_conn_dir}/xmem_func.csv                  \
+    
+    python3 ${hls_tools_dir}/xgen/xgen.py --xmem-data ${export_rtl_conn_dir}/xmem_func.csv                  \
                                           --xmem-model  ${export_rtl_conn_dir}/custom_connection_tbl.txt    \
+                                          --xmem-config        xmem_config.txt                              \
                                           --export-common-dir  ${export_rtl_common_dir}                     \
                                           --export-conn-dir    ${export_rtl_conn_dir}                       \
                                           --export-tb-dir      ${export_rtl_tb_dir}                         \
@@ -741,8 +785,6 @@ handle_segfault() {
 
 # Trap the SIGSEGV signal and call the handle_segfault function
 trap 'handle_segfault' SIGSEGV
-
-echo "HLS tools directory: $hls_tools_dir"
 
 # Check arguments
 
@@ -850,12 +892,12 @@ fi
 
 if [ "$option" = "all" ] || [ "$option" = "autonet" ]; then
     run_autonet --conn-handler=hls
-    replace_dcache_pattern
+    replace_xcache_pattern
 fi
 
 if [ "$option" = "xall" ] || [ "$option" = "xgen" ]; then
     run_autonet --conn-handler=xgen
-    replace_dcache_pattern
+    replace_xcache_pattern
     check_and_reorder_xmem
     run_xmem_model
     run_xgen

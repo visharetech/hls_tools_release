@@ -5,7 +5,7 @@ This example demonstrates how to use the hls_tools to:
 * Batch synthesis
 * Run c simulation
 * Run cosimulation
-* Run xgen to connect these hls functions to xmem
+* Run autonet to connect these hls functions to xmem
 
 ## Environment
 * Windows with WSL installed, running Ubuntu 22.04. Vitis HLS is installed on the host (Windows)
@@ -26,7 +26,7 @@ git clone https://github.com/frankvisharegrp/hls_tools.git
 
 ## Install required package in python venv
 ```console
-cd hls_tools/tutorial_example/hls_tools_script/
+cd hls_tools/simple_example/hls_tools_script/
 chmod +x ./run.sh
 pip3 install colorama
 pip3 install clang
@@ -57,10 +57,10 @@ If the vitis hls is installed on Windows, it will invoke the vitis_hls for batch
 The synthesis summary (e.g. Latency, LUT, FF count) will be shown on the console.
 The detail synthesis result could be found in hls_tools/vitis_batch_generate_rtl/prj/ subdirectory.
 ```console
-./run.sh xhls all
+./run.sh hls all
 
 # you may select a specific function for synthesis
-./run.sh xhls array_xor
+./run.sh hls array_xor
 ```
 
 ## Run Vitis C simulation
@@ -90,15 +90,15 @@ It will perform cosimulation on Vitis HLS. After cosimulation, vitis will be sta
 ./run.sh cosimwave array_xor
 ```
 
-## Link all the hls by xgen
-After run the xgen script, the RTL will be exported to hls_tools/autonet/export/tutorial_example directory.
+## Link all the hls by autonet
+After run the autonet script, the RTL will be exported to hls_tools/autonet/export/simple_example directory.
 You could customize the export directory in run.sh $autonet_export_dir.
 
 ```console
-./run.sh xgen all
+./run.sh autonet all
 
-# you may select any specific function for xgen
-./run.sh xgen array_xor vector_add
+# you may select any specific function for autonet
+./run.sh autonet array_xor vector_add
 ```
 
 ## (Optional) Test the example on riscv simulator
@@ -119,7 +119,7 @@ source ~/.bashrc
 riscv32-unknown-elf-gcc -v
 
 # Build the program and run on the simulator
-cd ~/hls_tools/tutorial_example/build/riscv32-sim
+cd ~/hls_tools/simple_example/build/riscv32-sim
 source ./make-Makefiles.sh
 chmod +x asim
 ./asim --elfFileName example.elf

@@ -103,6 +103,7 @@ module xcache import xcache_param_pkg::*; #(
 	//For single port bank in array range
 	output logic 							array_argRdy	[BANK_NUM[MEM_TYPE_ARRAY]][ARRAY_MAX_MUX_NUM],
 	input 									array_ap_ce 	[BANK_NUM[MEM_TYPE_ARRAY]][ARRAY_MAX_MUX_NUM],
+    input 			                        array_argWe     [BANK_NUM[MEM_TYPE_ARRAY]][ARRAY_MAX_MUX_NUM],
 	input 									array_argVld	[BANK_NUM[MEM_TYPE_ARRAY]][ARRAY_MAX_MUX_NUM],
 	output logic 							array_argAck 	[BANK_NUM[MEM_TYPE_ARRAY]][ARRAY_MAX_MUX_NUM],
 	input [XMEM_AW-1:0]		        		array_adr		[BANK_NUM[MEM_TYPE_ARRAY]][ARRAY_MAX_MUX_NUM],
@@ -778,6 +779,7 @@ generate
 				//connnect to functional accelerator
                 .f_ap_ce            ( '{default:1'b1}                   ),
 				.f_argRdy			(									),
+				.f_argWe 			( '{default: 'b0}	 				),				
 				.f_argVld			( scalar_argVld_w	    			),
 				.f_argAck			( scalar_argAck_w	    			),
 				.f_adr				( scalar_adr_w		    			),
@@ -900,6 +902,7 @@ generate
 
         logic 						array_argRdy_w	[ARRAY_BANK_MUX_NUM[s]];
         logic 						array_ap_ce_w	[ARRAY_BANK_MUX_NUM[s]];
+        logic 						array_argWe_w	[ARRAY_BANK_MUX_NUM[s]];
         logic 						array_argVld_w	[ARRAY_BANK_MUX_NUM[s]];
         logic  						array_argAck_w  [ARRAY_BANK_MUX_NUM[s]];
         logic [XMEM_AW-1:0]	        array_adr_w	    [ARRAY_BANK_MUX_NUM[s]];
@@ -941,6 +944,7 @@ generate
                 //array_in2Width_w[m]   = array_in2Width[s][m];
                 //array_in2Wport_w[m]   = array_in2Wport[s][m];
 
+				array_argWe_w  [m]	  = array_argWe		[s][m];
                 array_argVld_w [m]    = array_argVld 	[s][m];
 				array_ap_ce_w  [m]	  = array_ap_ce  	[s][m];
                 array_adr_w    [m]    = array_adr    	[s][m];
@@ -1010,6 +1014,7 @@ generate
 			//connnect to functional accelerator
 			.f_argRdy			( array_argRdy_w			),
 			.f_ap_ce 			( array_ap_ce_w				),
+			.f_argWe 			( array_argWe_w				),
 			.f_argVld			( array_argVld_w			),
 			.f_argAck			( array_argAck_w			),
 			.f_adr				( array_adr_w				),
@@ -1275,6 +1280,7 @@ generate
 			//connnect to functional accelerator
 			.f_argRdy			( cyclic_argRdy_w				),
 			.f_ap_ce 			( cyclic_ap_ce_w				),
+			.f_argWe			( '{default: '0}		        ),		//testing 
 			.f_argVld			( cyclic_argVld_w		        ),
 			.f_argAck			( cyclic_argAck_w		        ),
 			.f_adr				( cyclic_adr_w			        ),

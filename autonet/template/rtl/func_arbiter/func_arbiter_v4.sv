@@ -30,7 +30,9 @@ module func_arbiter#(
     input        [CHILD-1:0]                child_ap_done_i,
     output                                  child_retReq_o,
     input                                   child_rdy_i[CHILD],
+    (* mark_debug = "true" *)
     output logic [CHILD-1:0]                child_callVld_o,
+    (* mark_debug = "true" *)
     output       [LOG_PARENT-1:0]           child_parent_o,
     output       [ARG_W-1:0]                child_pc_o,
     output       [ARG_NUM*ARG_W-1:0]        child_args_o,
@@ -45,6 +47,7 @@ module func_arbiter#(
     input        [LOG_PARENT-1:0]           child_parentMod_i[CHILD],
 
     input        [PARENT-1:0]               parent_retFifo_pop_i,
+    (* mark_debug = "true" *)
     output logic [PARENT-1:0]               parent_retFifo_empty_n_o,
     output       [RET_DW+LOG_CHILD-1:0]     parent_retFifo_dout_o[PARENT]
 );
@@ -54,7 +57,16 @@ module func_arbiter#(
     logic [LOG_CHILD-1:0]               callChild_mux;
     logic [CHILD-1:0]                   child_ap_ce_r;
     logic [CHILD-1:0]                   child_ap_done_r;
-    logic [CALL_SEQ_W-1:0]              storeSeq[CHILD];
+    logic [CALL_SEQ_W-1:0]              storeSeq[CHILD][PARENT];
+    
+    (* mark_debug = "true" *) logic [CHILD-1:0] db_child_retVld_i;
+    (* mark_debug = "true" *) logic [PARENT-1:0] db_parent_cmdfifo_write_i;
+    always_comb begin
+        for (int i = 0; i < CHILD; i++)
+            db_child_retVld_i[i] = child_retVld_i[i];
+        for (int i = 0; i < PARENT; i++)
+            db_parent_cmdfifo_write_i[i] = parent_cmdfifo_write_i[i];
+    end
 
     always_ff @(posedge clk or negedge rstn) begin
         if (~rstn) begin

@@ -10,7 +10,7 @@
     #define IMPL(func_name)         func_name##_impl
     #define CAPTURE_(func_name)     func_name##_capture
     #define APCALL(func_name)       func_name
-#elif (CAPTURE_COSIM)
+#elif (CAPTURE_COSIM) && !defined(CLANG_EXTRACT_FUNC_NAME)
     #define HLS_DECLARE(func_name)  func_name
     #define IMPL(func_name)         func_name##_impl
     #define CAPTURE_(func_name)     func_name

@@ -39,6 +39,7 @@ module reqMux_v4 import xcache_param_pkg::*; #(
     //connected to hls functions
     //# different types of xmem request signals sent from each HLS argument port to req_mux
     input                                       f_ap_ce     [MUX_NUM],          //# HLS function ap_ce indicating HLS pipeline is stall or not
+    input                                       f_argWe     [MUX_NUM],          //# requested valid
     input                                       f_argVld    [MUX_NUM],          //# requested valid
     input [AW-1:0]                              f_adr       [MUX_NUM],          //# requested xmem address
     input [DW-1:0]                              f_wdat      [MUX_NUM],          //# requested write data
@@ -82,6 +83,7 @@ localparam int RFIFO_AW = $clog2(RFIFO_DEPTH);
 //-----------------------------------------
 logic [MUX_NUM-1:0]               s0_f_argAck;
 logic [MUX_NUM-1:0]               s0_f_argVld, s0_f_argVld_r;                    //# requested valid
+logic [MUX_NUM-1:0]               s0_f_argWe,  s0_f_argWe_r;                    //#  requested read / write array
 logic [AW-1:0]                    s0_f_adr[MUX_NUM], s0_f_adr_r[MUX_NUM];
 logic [DW-1:0]                    s0_f_wdat[MUX_NUM], s0_f_wdat_r[MUX_NUM];
 logic [MUX_NUM-1:0]               s0_set_fargVld;
@@ -307,8 +309,11 @@ always_comb begin
     //---------------------------------------------
     //# select either the current hls argument request or registered request
     s0_f_argAck     = 0;
+	s0_f_argWe 	    = s0_f_argWe_r;
     s0_f_adr        = s0_f_adr_r;
     s0_f_wdat       = s0_f_wdat_r;
+	
+	
     s0_set_fargVld  = 0;
     for (int a = 0; a < MUX_NUM; a++) begin
         s0_f_argVld[a] = f_argRdy[a] & f_argVld[a];
@@ -317,8 +322,16 @@ always_comb begin
             s0_f_adr      [a] = f_adr[a];
             s0_f_wdat     [a] = f_wdat[a];
             s0_f_argAck   [a] = 1;    //# grant for f_argAck 1
+			s0_f_argWe 	  [a] = f_argWe[a];
         end
-        f_re[a] = f_argVld[a] & f_ap_ce[a] & (in2Type[a] == READ);
+		
+		if (RANGE_TYPE == "SCALAR") begin
+			f_re[a] = f_argVld[a] & f_ap_ce[a] & (in2Type[a] == READ);
+		end
+		else begin 
+			f_re[a] = f_argVld[a] & f_ap_ce[a] & (f_argWe[a] == 0);
+		end 
+			
         //edward 2025-02-14: argAck is output after selected by arbiter at stage1
         //f_argAck[a] = s0_f_argAck[a];
     end
@@ -344,8 +357,15 @@ always_comb begin
         end
     end
     //# Request cache/RAM
-    s1_re       = (s0_f_argVld_r != 0) & ~risc_request & (in2Type[s1_selArg] == READ );
-    s1_we       = (s0_f_argVld_r != 0) & ~risc_request & (in2Type[s1_selArg] == WRITE);
+	if (RANGE_TYPE == "SCALAR") begin 
+		s1_re       = (s0_f_argVld_r != 0) & ~risc_request & (in2Type[s1_selArg] == READ );
+		s1_we       = (s0_f_argVld_r != 0) & ~risc_request & (in2Type[s1_selArg] == WRITE);
+	end 
+	else begin 
+		s1_re       = (s0_f_argVld_r != 0) & ~risc_request & (s0_f_argWe_r[s1_selArg] == 0);
+		s1_we       = (s0_f_argVld_r != 0) & ~risc_request & (s0_f_argWe_r[s1_selArg] == 1);
+	end 
+	
     //edward 2025-01-27
     //s1_adr    = (RANGE_TYPE == "SCALAR")? base[s1_selArg] : (base[s1_selArg] + s0_f_adr_r[s1_selArg][XMEM_PART_AW-1:0]);
     //s1_adr      = (RANGE_TYPE == "SCALAR")? base[s1_selArg] : (base[s1_selArg] + s0_f_adr_r[s1_selArg]);
@@ -424,6 +444,7 @@ end
 always @ (posedge clk or negedge rstn) begin
     if (~rstn) begin
         s0_f_argVld_r    <= 0;
+		s0_f_argWe_r 	 <= '{default: '0};
         s0_f_adr_r       <= '{default: '0};
         s0_f_wdat_r      <= '{default: '0};
         s1_re_r          <= 0;
@@ -436,8 +457,9 @@ always @ (posedge clk or negedge rstn) begin
     end
     else begin
         //Stage 0
-        s0_f_adr_r  <= s0_f_adr;
-        s0_f_wdat_r <= s0_f_wdat;
+		s0_f_argWe_r 	 <= s0_f_argWe;
+        s0_f_adr_r  	 <= s0_f_adr;
+        s0_f_wdat_r 	 <= s0_f_wdat;
         for (int a = 0; a < MUX_NUM; a++) begin
             //Clear and set argVld flag
             if (s0_set_fargVld[a]) begin

@@ -88,7 +88,7 @@ module call_arbiter#(
     output logic                     returnReq_o,
     output logic [ARG_W-1:0]         pc_o,
     output logic [ARG_NUM*ARG_W-1:0] callArgs_mux,
-    output logic [CALL_SEQ_W-1:0]    storeSeq[CHILD]
+    output logic [CALL_SEQ_W-1:0]    storeSeq[CHILD][PARENT]
 );
     localparam int ARGS = ARG_NUM*ARG_W;
     localparam int MQFIFO_PAYLOAD = LOG_CHILD + LOG_PARENT + ARGS + ARG_W + 1 + CALL_SEQ_W;
@@ -173,7 +173,7 @@ module call_arbiter#(
     logic                     callVld_w[PARENT], callVld_r[PARENT];
     logic                     clrCallVld[PARENT];
     logic [CALL_SEQ_W-1:0]    callSeq[PARENT], callSeq_w[PARENT];
-    logic [CALL_SEQ_W-1:0]    storeSeq_r[CHILD];
+    logic [CALL_SEQ_W-1:0]    storeSeq_r[CHILD][PARENT];
 
     linked_fifo #(
         .LEN        (MQFIFO_LEN),
@@ -231,7 +231,7 @@ module call_arbiter#(
 
         storeSeq = storeSeq_r;//output without reg because retVld can arrive at same cycle
         if (callVld_mux && childRdy[callChild_mux] && returnReq_o) begin
-            storeSeq[callChild_mux] = cur_call_seq_r;
+            storeSeq[callChild_mux][parentIdx_r] = cur_call_seq_r;
         end
 
         // Dequeue pipeline stages
@@ -413,7 +413,9 @@ module call_arbiter#(
             end
 
             for (int c=0; c<CHILD; c++) begin
-                storeSeq_r[c] <= -1;
+                for (int p=0; p<PARENT; p++) begin
+                    storeSeq_r[c][p] <= -1;
+                end
             end
 
             {deq_r, deqid_r} <= 0;
