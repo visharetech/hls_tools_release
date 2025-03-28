@@ -153,16 +153,22 @@ void *cnn_task(void *param){
 int test_multithread_cnn_example(){
 
     printf("==== test multi thread cnn example ====\n");
-    const int NUM_THREADS = 4; // Number of threads
+    const int NUM_THREADS = 3; // Number of threads
     pthread_t threads[NUM_THREADS];
 
+
     // Create threads
-    for (long i = 0; i < NUM_THREADS; ++i) {
-        if (pthread_create(&threads[i], nullptr, cnn_task, (void*)i) != 0) {
+    for (int i = 0; i < NUM_THREADS; ++i) {
+        int id = i + 1;
+        //run cnn from created threads, the test data will be saved as cnn_hls_output_tidX.bin
+        if (pthread_create(&threads[i], nullptr, cnn_task, (void*)id) != 0) {
             std::cerr << "Error creating thread " << i << std::endl;
             return 1; // Exit if thread creation fails
         }
     }
+
+    //also run cnn at main thread, the test data will be saved as cnn_hls_output.bin
+    cnn_task(0);
     
     // Wait for all threads to complete
     for (int i = 0; i < NUM_THREADS; ++i) {
